@@ -8,10 +8,4 @@ const client = Binance({
   apiSecret: binanceApiSecret,
 });
 
-async function getCurrentPrice(symbol) {
-  const ticker = await client.book({ symbol, limit: 1 });
-  const price = parseFloat(ticker.bids[0].price);
-  return price;
-}
-
-module.exports = getCurrentPrice;
+module.exports = client;
