@@ -98,9 +98,16 @@ async function checkPriceChanges() {
     const wma = calculateWMA(closePrices, period);
     const rsi = calculateRSI(closePrices, period);
     const currentPrice = closePrices[period];
-    const percentDifferenceFromSMA = ((currentPrice - sma) / sma) * 100;
-    const percentDifferenceFromEMA = ((currentPrice - ema) / ema) * 100;
-    const percentDifferenceFromWMA = ((currentPrice - wma) / wma) * 100;
+    // const percentDifferenceFromSMA = ((currentPrice - sma) / sma) * 100;
+    // const percentDifferenceFromEMA = ((currentPrice - ema) / ema) * 100;
+    // const percentDifferenceFromWMA = ((currentPrice - wma) / wma) * 100;
+
+    const percentDifferenceFromSMA =
+      ((sma - currentPrice) / currentPrice) * 100;
+    const percentDifferenceFromEMA =
+      ((ema - currentPrice) / currentPrice) * 100;
+    const percentDifferenceFromWMA =
+      ((wma - currentPrice) / currentPrice) * 100;
 
     let priceStatus;
     if (sma > currentPrice) {
@@ -109,21 +116,21 @@ async function checkPriceChanges() {
       priceStatus = '📉';
     }
     if (
-      percentDifferenceFromSMA < -10 &&
-      percentDifferenceFromEMA < -10 &&
-      percentDifferenceFromWMA < -10
+      percentDifferenceFromSMA < -20 &&
+      percentDifferenceFromEMA < -20 &&
+      percentDifferenceFromWMA < -20
     ) {
       message += `${pair}:\n`;
       message += `- Текущая цена: ${currentPrice.toFixed(2)}\n`;
-      message += `- SMA ${priceStatus} на ${percentDifferenceFromSMA.toFixed(
+      message += `- SMA ${sma.toFixed(
         2
-      )}%\n`;
-      message += `- EMA ${priceStatus} на ${percentDifferenceFromEMA.toFixed(
+      )} ${priceStatus} ${percentDifferenceFromSMA.toFixed(2)}%\n`;
+      message += `- EMA ${ema.toFixed(
         2
-      )}%\n`;
-      message += `- WMA ${priceStatus} на ${percentDifferenceFromWMA.toFixed(
+      )} ${priceStatus} ${percentDifferenceFromEMA.toFixed(2)}%\n`;
+      message += `- WMA ${wma.toFixed(
         2
-      )}%\n`;
+      )} ${priceStatus} ${percentDifferenceFromWMA.toFixed(2)}%\n`;
       message += `- RSI ${rsi.toFixed(2)}%\n\n`;
     }
   }
@@ -135,7 +142,7 @@ async function checkPriceChanges() {
   }
 }
 
-async function getTop50Pairs() {
+async function getTopPairs() {
   const exchangeInfo = await client.exchangeInfo();
   const symbols = exchangeInfo.symbols;
   const pairsByVolume = symbols
@@ -149,7 +156,7 @@ async function getTop50Pairs() {
       return { pair: `${baseAsset}${quoteAsset}`, volume };
     })
     .sort((a, b) => b.volume - a.volume);
-  const top50Pairs = pairsByVolume.slice(0, 100).map((pair) => pair.pair);
+  const top50Pairs = pairsByVolume.slice(0, 150).map((pair) => pair.pair);
   return top50Pairs;
 }
 
@@ -158,7 +165,7 @@ async function getTop50Pairs() {
 // }, 1000); // update every hour
 
 (async () => {
-  pairsToMonitor = await getTop50Pairs();
+  pairsToMonitor = await getTopPairs();
 })();
 
 setInterval(checkPriceChanges, 5000);
