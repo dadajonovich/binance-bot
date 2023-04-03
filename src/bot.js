@@ -37,12 +37,19 @@ async function checkPriceChanges() {
     const openPrice = candles.map((candle) => parseFloat(candle.open));
     const highPrice = candles.map((candle) => parseFloat(candle.high));
     const lowPrice = candles.map((candle) => parseFloat(candle.low));
+    const tipicalPrice = candles.map(
+      (candle) =>
+        (parseFloat(candle.high) +
+          parseFloat(candle.low) +
+          parseFloat(candle.close)) /
+        3
+    );
 
     const sma = ta.sma(closePrices, period)[0];
     const ema = ta.ema(closePrices, period)[0];
     const wma = ta.wma(closePrices, period)[0];
-    // const macd = ta.macd(closePrices, 12, 24)[0];
-    // const rsi = ta.rsi(closePrices, period)[0];
+    const macd = ta.macd(closePrices, 12, 24)[0];
+    const rsi = ta.rsi(closePrices, period)[0];
     const vwma = ta.vwma(
       closePrices.map((price, index) => [price, volumes[index]]),
       period
@@ -58,6 +65,11 @@ async function checkPriceChanges() {
       period
     )[0];
 
+    const vwap = ta.vwap(
+      tipicalPrice.map((tipicalPrice, index) => [tipicalPrice, volumes[index]]),
+      period
+    )[0];
+
     const percentDifferenceFromSMA =
       ((sma - currentPrice) / currentPrice) * 100;
     const percentDifferenceFromEMA =
@@ -66,8 +78,11 @@ async function checkPriceChanges() {
       ((wma - currentPrice) / currentPrice) * 100;
     const percentDifferenceFromVWMA =
       ((vwma - currentPrice) / currentPrice) * 100;
+    const percentDifferenceFromVWAP =
+      ((vwap - currentPrice) / currentPrice) * 100;
 
     if (percentDifferenceFromSMA < -10) {
+      // if (true) {
       message += `${pair}:\n`;
       message +=
         [
@@ -83,9 +98,13 @@ async function checkPriceChanges() {
             2
           )}%`,
 
-          // `- RSI ${rsi.toFixed(2)}%`,
+          `- VWAP ${vwap.toFixed(2)} / ${percentDifferenceFromVWAP.toFixed(
+            2
+          )}%`,
 
-          // `- MACD ${macd.toFixed(2)}`,
+          `- RSI ${rsi.toFixed(2)}%`,
+
+          `- MACD ${macd.toFixed(2)}`,
 
           `- Balance Of Power ${bop.toFixed(2)}`,
         ].join('\n') + '\n\n';
