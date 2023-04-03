@@ -12,7 +12,7 @@ const telegramChatId = '521450044';
 let pairsToMonitor = [];
 
 const intervalToMonitor = '1d';
-const period = 24;
+const period = 48;
 
 const bot = new TelegramBot(telegramBotToken);
 
@@ -21,22 +21,23 @@ const client = Binance({
   apiSecret: binanceApiSecret,
 });
 
+(async () => {
+  pairsToMonitor = await getTopPairs(client);
+})();
+
 async function checkPriceChanges() {
   let message = '';
-  pairsToMonitor = await getTopPairs(client);
+
   for (const pair of pairsToMonitor) {
     const candles = await client.candles({
       symbol: pair,
       interval: intervalToMonitor,
-      limit: period,
+      limit: period + 1,
     });
 
     const closePrices = candles.map((candle) => parseFloat(candle.close));
     const volumes = candles.map((candle) => parseFloat(candle.quoteVolume));
-    const currentPrice = closePrices[period - 1];
-    const openPrice = candles.map((candle) => parseFloat(candle.open));
-    const highPrice = candles.map((candle) => parseFloat(candle.high));
-    const lowPrice = candles.map((candle) => parseFloat(candle.low));
+    const currentPrice = closePrices[period];
     const tipicalPrice = candles.map(
       (candle) =>
         (parseFloat(candle.high) +
@@ -45,15 +46,28 @@ async function checkPriceChanges() {
         3
     );
 
-    const sma = ta.sma(closePrices, period)[0];
-    const ema = ta.ema(closePrices, period)[0];
-    const wma = ta.wma(closePrices, period)[0];
-    const macd = ta.macd(closePrices, 12, 24)[0];
-    const rsi = ta.rsi(closePrices, period)[0];
-    const vwma = ta.vwma(
-      closePrices.map((price, index) => [price, volumes[index]]),
-      period
-    )[0];
+    const openPrice = candles.map((candle) => parseFloat(candle.open));
+    const highPrice = candles.map((candle) => parseFloat(candle.high));
+    const lowPrice = candles.map((candle) => parseFloat(candle.low));
+
+    const sma = ta.sma(closePrices, period).at(-1);
+    const ema = ta.ema(closePrices, period).at(-1);
+    const wma = ta.wma(closePrices, period).at(-1);
+    const vwma = ta
+      .vwma(closePrices.map((price, index) => [price, volumes[index]]))
+      .at(-1);
+
+    const macd = ta.macd(closePrices, 12, 24);
+    const rsi = ta.rsi(closePrices, period);
+
+    const vwap = ta
+      .vwap(
+        tipicalPrice.map(
+          (tipicalPrice, index) => [tipicalPrice, volumes[index]],
+          period
+        )
+      )
+      .at(-1);
 
     const bop = ta.bop(
       openPrice.map((openPrice, index) => [
@@ -63,12 +77,7 @@ async function checkPriceChanges() {
         closePrices[index],
       ]),
       period
-    )[0];
-
-    const vwap = ta.vwap(
-      tipicalPrice.map((tipicalPrice, index) => [tipicalPrice, volumes[index]]),
-      period
-    )[0];
+    );
 
     const percentDifferenceFromSMA =
       ((sma - currentPrice) / currentPrice) * 100;
@@ -81,8 +90,7 @@ async function checkPriceChanges() {
     const percentDifferenceFromVWAP =
       ((vwap - currentPrice) / currentPrice) * 100;
 
-    if (percentDifferenceFromSMA < -10) {
-      // if (true) {
+    if (macd.at(-1) > 0 && macd.at(-2) < 0) {
       message += `${pair}:\n`;
       message +=
         [
@@ -102,11 +110,11 @@ async function checkPriceChanges() {
             2
           )}%`,
 
-          `- RSI ${rsi.toFixed(2)}%`,
+          `- RSI ${rsi.at(-2).toFixed(2)} to ${rsi.at(-1).toFixed(2)}`,
 
-          `- MACD ${macd.toFixed(2)}`,
+          `- MACD ${macd.at(-2).toFixed(2)} to ${macd.at(-1).toFixed(2)}`,
 
-          `- Balance Of Power ${bop.toFixed(2)}`,
+          `- BOP ${bop.at(-2).toFixed(2)} to ${bop.at(-1).toFixed(2)}`,
         ].join('\n') + '\n\n';
     }
   }
@@ -118,4 +126,4 @@ async function checkPriceChanges() {
   }
 }
 
-setInterval(checkPriceChanges, 5000);
+setInterval(checkPriceChanges, 10 * 1000);

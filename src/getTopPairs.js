@@ -12,7 +12,7 @@ async function getTopPairs(client) {
       return { pair: `${baseAsset}${quoteAsset}`, volume };
     })
     .sort((a, b) => b.volume - a.volume);
-  const topPairs = pairsByVolume.slice(0, 100).map((pair) => pair.pair);
+  const topPairs = pairsByVolume.slice(0, 150).map((pair) => pair.pair);
   return topPairs;
 }
 
