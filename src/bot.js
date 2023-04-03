@@ -1,39 +1,164 @@
-const { calculateSMA } = require('./indicators.js');
-const { client } = require('./binance.js');
-const { bot, telegramChatId } = require('./telegram.js');
+const TelegramBot = require('node-telegram-bot-api');
+const Binance = require('binance-api-node').default;
 
-async function monitorPairs() {
-  try {
-    const prices = await Promise.all(
-      pairsToMonitor.map((symbol) => client.book({ symbol, limit: 1 }))
-    );
+const binanceApiKey =
+  'Mwyek91lg0az1UUzh5W8ql2FZTtoDgQXqKei12yVt3AvKnASRMWbDenGle6cCXCj';
+const binanceApiSecret =
+  '85VgZUt5RlY9ZX79V5BHZELLv1gIIPOeksZzD1ROtIt4RI8J9aOVkFCO3XZ7XkeU';
+const telegramBotToken = '6057048590:AAH1Yi8k_sZuifJ-y2sBbg76bCc7miV4kaA';
+const telegramChatId = '521450044';
+let pairsToMonitor = [];
 
-    if (!prices) {
-      console.error('Error while monitoring pairs: prices is undefined');
-      return;
+const intervalToMonitor = '1d';
+const period = 12;
+
+const bot = new TelegramBot(telegramBotToken);
+
+const client = Binance({
+  apiKey: binanceApiKey,
+  apiSecret: binanceApiSecret,
+});
+
+function calculateSMA(closePrices, smaPeriod) {
+  const sma =
+    closePrices.slice(0, smaPeriod).reduce((sum, price) => sum + price, 0) /
+    smaPeriod;
+  return sma;
+}
+
+function calculateEMA(closePrices, emaPeriod) {
+  const k = 2 / (emaPeriod + 1);
+  let ema =
+    closePrices.slice(0, emaPeriod).reduce((sum, val) => sum + val, 0) /
+    emaPeriod;
+  for (let i = emaPeriod; i < closePrices.length; i++) {
+    ema = (closePrices[i] - ema) * k + ema;
+  }
+  return ema;
+}
+
+function calculateRSI(closePrices, rsiPeriod) {
+  let averageGain = 0;
+  let averageLoss = 0;
+
+  for (let i = 1; i <= rsiPeriod; i++) {
+    const diff = closePrices[i] - closePrices[i - 1];
+    if (diff > 0) {
+      averageGain += diff;
+    } else {
+      averageLoss += Math.abs(diff);
     }
+  }
+  averageGain /= rsiPeriod;
+  averageLoss /= rsiPeriod;
 
-    const smas = prices.map((ticker) =>
-      calculateSMA(
-        ticker.bids.map((bid) => parseFloat(bid.price)),
-        20
-      )
-    );
+  for (let i = rsiPeriod + 1; i < closePrices.length; i++) {
+    const diff = closePrices[i] - closePrices[i - 1];
+    if (diff > 0) {
+      averageGain = (averageGain * (rsiPeriod - 1) + diff) / rsiPeriod;
+      averageLoss = (averageLoss * (rsiPeriod - 1)) / rsiPeriod;
+    } else {
+      averageGain = (averageGain * (rsiPeriod - 1)) / rsiPeriod;
+      averageLoss =
+        (averageLoss * (rsiPeriod - 1) + Math.abs(diff)) / rsiPeriod;
+    }
+  }
 
-    console.log('SMA values:', smas);
-
-    // отправка сообщения в Telegram с информацией о текущей цене и SMA для каждой пары
-    pairsToMonitor.forEach((symbol, index) => {
-      const price = parseFloat(prices[index].bids[0].price);
-      const sma = smas[index];
-      bot.sendMessage(
-        telegramChatId,
-        `${symbol}: Price = ${price.toFixed(2)}, SMA(20) = ${sma.toFixed(2)}`
-      );
-    });
-  } catch (error) {
-    console.error('Error while monitoring pairs:', error);
+  if (averageLoss === 0) {
+    return 100;
+  } else {
+    const RS = averageGain / averageLoss;
+    const RSI = 100 - 100 / (1 + RS);
+    return RSI;
   }
 }
 
-setInterval(monitorPairs, 5000); // мониторить каждые 5 секунд
+function calculateWMA(closePrices, wmaPeriod) {
+  let weightedSum = 0;
+  let weightSum = 0;
+  for (let i = 0; i < wmaPeriod; i++) {
+    weightedSum += closePrices[i] * (wmaPeriod - i);
+    weightSum += wmaPeriod - i;
+  }
+  return weightedSum / weightSum;
+}
+
+async function checkPriceChanges() {
+  let message = '';
+  for (const pair of pairsToMonitor) {
+    const candles = await client.candles({
+      symbol: pair,
+      interval: intervalToMonitor,
+      limit: period + 1,
+    });
+
+    const closePrices = candles.map((candle) => parseFloat(candle.close));
+    const sma = calculateSMA(closePrices, period);
+    const ema = calculateEMA(closePrices, period);
+    const wma = calculateWMA(closePrices, period);
+    const rsi = calculateRSI(closePrices, period);
+    const currentPrice = closePrices[period];
+    const percentDifferenceFromSMA = ((currentPrice - sma) / sma) * 100;
+    const percentDifferenceFromEMA = ((currentPrice - ema) / ema) * 100;
+    const percentDifferenceFromWMA = ((currentPrice - wma) / wma) * 100;
+
+    let priceStatus;
+    if (sma > currentPrice) {
+      priceStatus = '📈';
+    } else {
+      priceStatus = '📉';
+    }
+    if (
+      percentDifferenceFromSMA < -10 &&
+      percentDifferenceFromEMA < -10 &&
+      percentDifferenceFromWMA < -10
+    ) {
+      message += `${pair}:\n`;
+      message += `- Текущая цена: ${currentPrice.toFixed(2)}\n`;
+      message += `- SMA ${priceStatus} на ${percentDifferenceFromSMA.toFixed(
+        2
+      )}%\n`;
+      message += `- EMA ${priceStatus} на ${percentDifferenceFromEMA.toFixed(
+        2
+      )}%\n`;
+      message += `- WMA ${priceStatus} на ${percentDifferenceFromWMA.toFixed(
+        2
+      )}%\n`;
+      message += `- RSI ${rsi.toFixed(2)}%\n\n`;
+    }
+  }
+
+  if (message !== '') {
+    bot.sendMessage(telegramChatId, message);
+  } else {
+    bot.sendMessage(telegramChatId, 'В Багдаде все спокойно...');
+  }
+}
+
+async function getTop50Pairs() {
+  const exchangeInfo = await client.exchangeInfo();
+  const symbols = exchangeInfo.symbols;
+  const pairsByVolume = symbols
+    .filter(
+      (symbol) => symbol.status === 'TRADING' && symbol.quoteAsset === 'USDT'
+    )
+    .map((symbol) => {
+      const baseAsset = symbol.baseAsset;
+      const quoteAsset = symbol.quoteAsset;
+      const volume = symbol.volume;
+      return { pair: `${baseAsset}${quoteAsset}`, volume };
+    })
+    .sort((a, b) => b.volume - a.volume);
+  const top50Pairs = pairsByVolume.slice(0, 100).map((pair) => pair.pair);
+  return top50Pairs;
+}
+
+// setInterval(async () => {
+//   pairsToMonitor = await getTop50Pairs();
+// }, 1000); // update every hour
+
+(async () => {
+  pairsToMonitor = await getTop50Pairs();
+})();
+
+setInterval(checkPriceChanges, 5000);
