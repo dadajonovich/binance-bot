@@ -1,6 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api');
 const Binance = require('binance-api-node').default;
 const ta = require('ta.js');
+const getTopPairs = require('./getTopPairs.js');
 
 const binanceApiKey =
   'Mwyek91lg0az1UUzh5W8ql2FZTtoDgQXqKei12yVt3AvKnASRMWbDenGle6cCXCj';
@@ -11,7 +12,7 @@ const telegramChatId = '521450044';
 let pairsToMonitor = [];
 
 const intervalToMonitor = '1d';
-const period = 20;
+const period = 24;
 
 const bot = new TelegramBot(telegramBotToken);
 
@@ -22,6 +23,7 @@ const client = Binance({
 
 async function checkPriceChanges() {
   let message = '';
+  pairsToMonitor = await getTopPairs(client);
   for (const pair of pairsToMonitor) {
     const candles = await client.candles({
       symbol: pair,
@@ -96,31 +98,5 @@ async function checkPriceChanges() {
     bot.sendMessage(telegramChatId, 'В Багдаде все спокойно...');
   }
 }
-
-async function getTopPairs() {
-  const exchangeInfo = await client.exchangeInfo();
-  const symbols = exchangeInfo.symbols;
-  const pairsByVolume = symbols
-    .filter(
-      (symbol) => symbol.status === 'TRADING' && symbol.quoteAsset === 'USDT'
-    )
-    .map((symbol) => {
-      const baseAsset = symbol.baseAsset;
-      const quoteAsset = symbol.quoteAsset;
-      const volume = symbol.volume;
-      return { pair: `${baseAsset}${quoteAsset}`, volume };
-    })
-    .sort((a, b) => b.volume - a.volume);
-  const topPairs = pairsByVolume.slice(0, 50).map((pair) => pair.pair);
-  return topPairs;
-}
-
-// setInterval(async () => {
-//   pairsToMonitor = await getTop50Pairs();
-// }, 1000); // update every hour
-
-(async () => {
-  pairsToMonitor = await getTopPairs();
-})();
 
 setInterval(checkPriceChanges, 5000);
