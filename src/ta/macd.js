@@ -10,7 +10,9 @@ const getMACD = ({ closePrices }) => {
     .at(-1)
     .toFixed(2)}`;
 
-  return messageMACD;
+  const criterion = macd.at(-1) > 0 && macd.at(-2) < 0;
+
+  return criterion;
 };
 
 module.exports = getMACD;
