@@ -11,19 +11,28 @@ const {
 
 const getCandles = require('./getCandles.js');
 const getPrices = require('./getPrices.js');
-const getSMA = require('./ta/sma.js');
-const getEMA = require('./ta/ema.js');
-const getWMA = require('./ta/wma.js');
-const getVWAP = require('./ta/vwap.js');
-const getVWMA = require('./ta/vwma.js');
-const getMACD = require('./ta/macd.js');
-const getRSI = require('./ta/rsi.js');
-const getBollinger = require('./ta/bollinger.js');
-const getBOP = require('./ta/bop.js');
+const {
+  getSMA,
+  getEMA,
+  getWMA,
+  getVWAP,
+  getVWMA,
+  getMACD,
+  getRSI,
+  getBollinger,
+  getBOP,
+} = require('./ta/indexTA');
+
+const {
+  templateMessageIndicator,
+  templateMessageMA,
+  getMessage,
+} = require('./createMessage');
+
 let pairsToMonitor = [];
 const intervalToMonitor = '1d';
 const period = 28;
-const quantityPars = 150;
+const quantityPars = 5;
 
 const bot = new TelegramBot(telegramBotToken);
 
@@ -39,37 +48,40 @@ async function checkPriceChanges() {
   for (const pair of topPairs) {
     const candles = await getCandles(pair, client, intervalToMonitor, period);
     const prices = getPrices(candles);
-    const macd = getMACD(prices);
-
-    if (macd) {
-      bot.sendMessage(telegramChatId, 'В Багдаде все спокойно...');
-      return;
-    }
 
     const sma = getSMA(prices);
+    const smaMessage = getMessage('SMA', sma, templateMessageMA, prices);
+
     const ema = getEMA(prices);
-    const wma = getWMA(prices);
-    const vwap = getVWAP(prices);
-    const vwma = getVWMA(prices);
+    const emaMessage = getMessage('EMA', ema, templateMessageMA, prices);
+
+    const macd = getMACD(prices);
+    const macdMessage = getMessage('MACD', macd, templateMessageIndicator);
 
     const rsi = getRSI(prices);
-    const bollinger = getBollinger(prices);
+    const rsiMessage = getMessage('RSI', rsi, templateMessageIndicator);
     const bop = getBOP(prices);
+    const bopMessage = getMessage('BOP', bop, templateMessageIndicator);
+
+    // const wma = getWMA(prices);
+    // const vwap = getVWAP(prices);
+    // const vwma = getVWMA(prices);
+
+    // const bollinger = getBollinger(prices);
 
     message += `\n${pair}
-    - Текущая цена: ${prices.currentPrice.toFixed(2)} USDT
-    ${sma}
-    ${ema}
-    ${wma}
-    ${vwap}
-    ${vwma}
-    ${macd}
-    ${rsi}
-    ${bollinger}
-    ${bop}
+- Текущая цена: ${prices.currentPrice.toFixed(2)}
+${smaMessage}
+${emaMessage}
+${macdMessage}
+${rsiMessage}
+${bopMessage}
       `;
-
+  }
+  if (message !== '') {
     bot.sendMessage(telegramChatId, message);
+  } else {
+    bot.sendMessage(telegramChatId, 'В Багдаде все спокойно...');
   }
 }
 

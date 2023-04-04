@@ -10,14 +10,7 @@ const getBOP = ({ openPrice, highPrice, lowPrice, closePrices }) => {
     ])
   );
 
-  let status;
-  bop.at(-1) > bop.at(-2) ? (status = '📈') : (status = '📉');
-
-  const messageBOP = `- ${status}BOP ${bop.at(-2).toFixed(2)} to ${bop
-    .at(-1)
-    .toFixed(2)}`;
-
-  return messageBOP;
+  return bop;
 };
 
 module.exports = getBOP;
