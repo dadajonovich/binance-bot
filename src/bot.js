@@ -12,7 +12,7 @@ const telegramChatId = '521450044';
 let pairsToMonitor = [];
 
 const intervalToMonitor = '1d';
-const period = 48;
+// const period = 48;
 
 const bot = new TelegramBot(telegramBotToken);
 
@@ -32,12 +32,12 @@ async function checkPriceChanges() {
     const candles = await client.candles({
       symbol: pair,
       interval: intervalToMonitor,
-      limit: period + 1,
+      limit: 36,
     });
 
     const closePrices = candles.map((candle) => parseFloat(candle.close));
     const volumes = candles.map((candle) => parseFloat(candle.quoteVolume));
-    const currentPrice = closePrices[period];
+    const currentPrice = closePrices.at(-1);
     const tipicalPrice = candles.map(
       (candle) =>
         (parseFloat(candle.high) +
@@ -50,22 +50,22 @@ async function checkPriceChanges() {
     const highPrice = candles.map((candle) => parseFloat(candle.high));
     const lowPrice = candles.map((candle) => parseFloat(candle.low));
 
-    const sma = ta.sma(closePrices, period).at(-1);
-    const ema = ta.ema(closePrices, period).at(-1);
-    const wma = ta.wma(closePrices, period).at(-1);
+    const sma = ta.sma(closePrices).at(-1);
+    const ema = ta.ema(closePrices).at(-1);
+    const wma = ta.wma(closePrices).at(-1);
     const vwma = ta
       .vwma(closePrices.map((price, index) => [price, volumes[index]]))
       .at(-1);
 
-    const macd = ta.macd(closePrices, 12, 24);
-    const rsi = ta.rsi(closePrices, period);
+    const macd = ta.macd(closePrices);
+    const rsi = ta.rsi(closePrices);
 
     const vwap = ta
       .vwap(
-        tipicalPrice.map(
-          (tipicalPrice, index) => [tipicalPrice, volumes[index]],
-          period
-        )
+        tipicalPrice.map((tipicalPrice, index) => [
+          tipicalPrice,
+          volumes[index],
+        ])
       )
       .at(-1);
 
@@ -75,9 +75,14 @@ async function checkPriceChanges() {
         highPrice[index],
         lowPrice[index],
         closePrices[index],
-      ]),
-      period
+      ])
     );
+
+    const bollinger = ta.bands(closePrices);
+
+    const [lastUpper, lastMiddle, lastLower] = bollinger[bollinger.length - 1];
+    const [penultimateUpper, penultimateMiddle, penultimateLower] =
+      bollinger[bollinger.length - 2];
 
     const percentDifferenceFromSMA =
       ((sma - currentPrice) / currentPrice) * 100;
@@ -91,6 +96,7 @@ async function checkPriceChanges() {
       ((vwap - currentPrice) / currentPrice) * 100;
 
     if (macd.at(-1) > 0 && macd.at(-2) < 0) {
+      // if (true) {
       message += `${pair}:\n`;
       message +=
         [
@@ -113,6 +119,14 @@ async function checkPriceChanges() {
           `- RSI ${rsi.at(-2).toFixed(2)} to ${rsi.at(-1).toFixed(2)}`,
 
           `- MACD ${macd.at(-2).toFixed(2)} to ${macd.at(-1).toFixed(2)}`,
+
+          `- Bollinger Bands U${penultimateUpper.toFixed(
+            2
+          )}/M${penultimateMiddle.toFixed(2)}/L${penultimateLower.toFixed(
+            2
+          )} to U${lastUpper.toFixed(2)}/M${lastMiddle.toFixed(
+            2
+          )}/L${lastLower.toFixed(2)}`,
 
           `- BOP ${bop.at(-2).toFixed(2)} to ${bop.at(-1).toFixed(2)}`,
         ].join('\n') + '\n\n';
