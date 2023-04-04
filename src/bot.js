@@ -15,7 +15,6 @@ const {
   getSMA,
   getEMA,
   getWMA,
-  getVWAP,
   getVWMA,
   getMACD,
   getRSI,
@@ -55,6 +54,12 @@ async function checkPriceChanges() {
     const ema = getEMA(prices);
     const emaMessage = getMessage('EMA', ema, templateMessageMA, prices);
 
+    const wma = getWMA(prices);
+    const wmaMessage = getMessage('WMA', wma, templateMessageMA, prices);
+
+    const vwma = getVWMA(prices);
+    const vwmaMessage = getMessage('WWMA', vwma, templateMessageMA, prices);
+
     const macd = getMACD(prices);
     const macdMessage = getMessage('MACD', macd, templateMessageIndicator);
 
@@ -63,16 +68,14 @@ async function checkPriceChanges() {
     const bop = getBOP(prices);
     const bopMessage = getMessage('BOP', bop, templateMessageIndicator);
 
-    // const wma = getWMA(prices);
-    // const vwap = getVWAP(prices);
-    // const vwma = getVWMA(prices);
-
     // const bollinger = getBollinger(prices);
 
     message += `\n${pair}
 - Текущая цена: ${prices.currentPrice.toFixed(2)}
 ${smaMessage}
 ${emaMessage}
+${wmaMessage}
+${vwmaMessage}
 ${macdMessage}
 ${rsiMessage}
 ${bopMessage}

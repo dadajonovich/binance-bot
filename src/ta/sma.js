@@ -1,6 +1,6 @@
 const ta = require('ta.js');
 
-const getSMA = ({ closePrices, currentPrice }) => {
+const getSMA = ({ closePrices }) => {
   const sma = ta.sma(closePrices);
 
   return sma;
