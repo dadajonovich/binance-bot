@@ -1,4 +1,4 @@
-async function getTopPairs(client, quantityPars) {
+async function getTopPairs(client, quantityPairs = 1) {
   const exchangeInfo = await client.exchangeInfo();
   const symbols = exchangeInfo.symbols;
   const pairsByVolume = symbols
@@ -13,7 +13,7 @@ async function getTopPairs(client, quantityPars) {
     })
     .sort((a, b) => b.volume - a.volume);
   const topPairs = pairsByVolume
-    .slice(0, quantityPars)
+    .slice(0, quantityPairs)
     .map((pair) => pair.pair);
   return topPairs;
 }
