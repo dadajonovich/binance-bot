@@ -10,12 +10,12 @@ const {
 
 const getTopPairs = require('./getTopPairs.js');
 
-const checkPriceChanges = require('./checkPriceChanges.js');
+const { getCoins, getStrCoinsInfo } = require('./getCoins.js');
 
 let pairsToMonitor = [];
 const intervalToMonitor = '1d';
 const period = 26;
-const quantityPairs = 150;
+const quantityPairs = 5;
 
 const bot = new TelegramBot(telegramBotToken, { polling: true });
 
@@ -24,16 +24,7 @@ const client = Binance({
   apiSecret: binanceApiSecret,
 });
 
-// Каррирование
-
-const checkOneCoin = (coin) =>
-  checkPriceChanges(client, coin, intervalToMonitor, period);
-
-const checkTopCoins = (topPairs) =>
-  checkPriceChanges(client, topPairs, intervalToMonitor, period);
-
-async function sendPriceChanges(chatId, messages) {
-  const message = messages.join('');
+async function sendPriceChanges(chatId, message) {
   await bot.sendMessage(
     chatId,
     message !== '' ? message : 'В Багдаде все спокойно...'
@@ -44,7 +35,8 @@ bot.on('message', async (msg) => {
   await bot.sendMessage(telegramChatId, 'Ща все будет...');
   if (msg.text === '/tellme') {
     const topPairs = await getTopPairs(client, quantityPairs);
-    const messages = await checkTopCoins(topPairs);
-    await sendPriceChanges(telegramChatId, messages);
+    const coins = await getCoins(client, topPairs, intervalToMonitor, period);
+    const message = getStrCoinsInfo(coins);
+    await sendPriceChanges(telegramChatId, message);
   }
 });
