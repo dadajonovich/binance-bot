@@ -21,7 +21,7 @@ const getCoins = async (client, pairs, intervalToMonitor, period) => {
 
       const criterion = getCriterion(getMACD(prices));
 
-      // if (!criterion) return;
+      if (!criterion) return;
 
       return {
         pair,
