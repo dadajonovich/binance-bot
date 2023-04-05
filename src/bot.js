@@ -16,6 +16,7 @@ const {
   getEMA,
   getWMA,
   getVWMA,
+  getVWAP,
   getMACD,
   getRSI,
   getBollinger,
@@ -28,12 +29,14 @@ const {
   getMessage,
 } = require('./createMessage');
 
+const getCriterion = require('./criterion.js');
+
 let pairsToMonitor = [];
 const intervalToMonitor = '1d';
 const period = 28;
 const quantityPars = 5;
 
-const bot = new TelegramBot(telegramBotToken);
+const bot = new TelegramBot(telegramBotToken, { polling: true });
 
 const client = Binance({
   apiKey: binanceApiKey,
@@ -41,51 +44,41 @@ const client = Binance({
 });
 
 async function checkPriceChanges() {
-  let message = '';
   const topPairs = await getTopPairs(client, quantityPars);
 
-  for (const pair of topPairs) {
-    const candles = await getCandles(pair, client, intervalToMonitor, period);
-    const prices = getPrices(candles);
+  const messages = await Promise.all(
+    topPairs.map(async (pair) => {
+      const candles = await getCandles(pair, client, intervalToMonitor, period);
+      const prices = getPrices(candles);
 
-    const sma = getSMA(prices);
-    const smaMessage = getMessage('SMA', sma, templateMessageMA, prices);
-
-    const ema = getEMA(prices);
-    const emaMessage = getMessage('EMA', ema, templateMessageMA, prices);
-
-    const wma = getWMA(prices);
-    const wmaMessage = getMessage('WMA', wma, templateMessageMA, prices);
-
-    const vwma = getVWMA(prices);
-    const vwmaMessage = getMessage('WWMA', vwma, templateMessageMA, prices);
-
-    const macd = getMACD(prices);
-    const macdMessage = getMessage('MACD', macd, templateMessageIndicator);
-
-    const rsi = getRSI(prices);
-    const rsiMessage = getMessage('RSI', rsi, templateMessageIndicator);
-    const bop = getBOP(prices);
-    const bopMessage = getMessage('BOP', bop, templateMessageIndicator);
-
-    // const bollinger = getBollinger(prices);
-
-    message += `\n${pair}
+      return `\n${pair}
 - Текущая цена: ${prices.currentPrice.toFixed(2)}
-${smaMessage}
-${emaMessage}
-${wmaMessage}
-${vwmaMessage}
-${macdMessage}
-${rsiMessage}
-${bopMessage}
-      `;
-  }
-  if (message !== '') {
-    bot.sendMessage(telegramChatId, message);
-  } else {
-    bot.sendMessage(telegramChatId, 'В Багдаде все спокойно...');
-  }
+${getMessage('SMA', getSMA(prices), templateMessageMA, prices)}
+${getMessage('EMA', getEMA(prices), templateMessageMA, prices)}
+${getMessage('WMA', getWMA(prices), templateMessageMA, prices)}
+${getMessage('WWMA', getVWMA(prices), templateMessageMA, prices)}
+${getMessage('VWAP', getVWAP(prices), templateMessageMA, prices)}
+${getMessage('MACD', getMACD(prices), templateMessageIndicator)}
+${getMessage('RSI', getRSI(prices), templateMessageIndicator)}
+${getMessage('BOP', getBOP(prices), templateMessageIndicator)}
+`;
+    })
+  );
+  return messages;
 }
 
-setInterval(checkPriceChanges, 10 * 1000);
+async function sendPriceChanges(chatId, messages) {
+  const message = messages.join('');
+  await bot.sendMessage(
+    chatId,
+    message !== '' ? message : 'В Багдаде все спокойно...'
+  );
+}
+
+bot.on('message', async (msg) => {
+  if (msg.text === '/tellme') {
+    await bot.sendMessage(telegramChatId, 'Ща все будет...');
+    const messages = await checkPriceChanges();
+    await sendPriceChanges(telegramChatId, messages);
+  }
+});
