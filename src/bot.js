@@ -13,7 +13,7 @@ const getCoins = require('./getCoins.js');
 const getStrCoinsInfo = require('./getStrCoinsInfo.js');
 
 const intervalToMonitor = '1d';
-const period = 26;
+const period = 28;
 const quantityPairs = 200;
 
 const bot = new TelegramBot(telegramBotToken, { polling: true });

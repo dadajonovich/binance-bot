@@ -3,13 +3,17 @@ const templateMessageMA = (MA, arr, { currentPrice }) => {
   if (len < 2) {
     throw new Error('Массив меньше двух элементов');
   }
+
+  const y = arr[len - 2];
   const x = arr[len - 1];
 
   let statusMA;
   const percentDifference = ((x - currentPrice) / currentPrice) * 100;
 
   x > currentPrice ? (statusMA = '🔴') : (statusMA = '🟢');
-  return `${statusMA}${MA} ${x.toFixed(2)} / ${percentDifference.toFixed(2)}%`;
+  return `${statusMA}${MA} ${y.toFixed(2)} to ${x.toFixed(
+    2
+  )} / ${percentDifference.toFixed(2)}%`;
 };
 
 module.exports = templateMessageMA;
