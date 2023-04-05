@@ -10,9 +10,9 @@ const {
 
 const getTopPairs = require('./getTopPairs.js');
 
-const { getCoins, getStrCoinsInfo } = require('./getCoins.js');
+const getCoins = require('./getCoins.js');
+const getStrCoinsInfo = require('./getStrCoinsInfo.js');
 
-let pairsToMonitor = [];
 const intervalToMonitor = '1d';
 const period = 26;
 const quantityPairs = 5;
