@@ -1,4 +1,4 @@
-async function getTopPairs(client, quantityPairs = 1) {
+const getTopPairs = async (client, quantityPairs = 1) => {
   const exchangeInfo = await client.exchangeInfo();
   const symbols = exchangeInfo.symbols;
   const pairsByVolume = symbols
@@ -16,6 +16,6 @@ async function getTopPairs(client, quantityPairs = 1) {
     .slice(0, quantityPairs)
     .map((pair) => pair.pair);
   return topPairs;
-}
+};
 
 module.exports = getTopPairs;

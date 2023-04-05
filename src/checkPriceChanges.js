@@ -8,7 +8,6 @@ const {
   getVWAP,
   getMACD,
   getRSI,
-  getBollinger,
   getBOP,
 } = require('./ta/indexTA');
 
@@ -18,11 +17,17 @@ const {
   getMessage,
 } = require('./message/indexMessage.js');
 
+const getCriterion = require('./getCriterion.js');
+
 const checkPriceChanges = async (client, pairs, intervalToMonitor, period) => {
   const messages = await Promise.all(
     pairs.map(async (pair) => {
-      const candles = await getCandles(pair, client, intervalToMonitor, period);
+      const candles = await getCandles(client, pair, intervalToMonitor, period);
       const prices = getPrices(candles);
+
+      const criterion = getCriterion(getMACD(prices));
+
+      if (!criterion) return;
 
       return `\n${pair}
   - Текущая цена: ${prices.currentPrice.toFixed(2)}

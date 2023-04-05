@@ -12,12 +12,10 @@ const getTopPairs = require('./getTopPairs.js');
 
 const checkPriceChanges = require('./checkPriceChanges.js');
 
-const getCriterion = require('./criterion.js');
-
 let pairsToMonitor = [];
 const intervalToMonitor = '1d';
-const period = 28;
-const quantityPairs = 5;
+const period = 26;
+const quantityPairs = 150;
 
 const bot = new TelegramBot(telegramBotToken, { polling: true });
 
@@ -25,6 +23,14 @@ const client = Binance({
   apiKey: binanceApiKey,
   apiSecret: binanceApiSecret,
 });
+
+// Каррирование
+
+const checkOneCoin = (coin) =>
+  checkPriceChanges(client, coin, intervalToMonitor, period);
+
+const checkTopCoins = (topPairs) =>
+  checkPriceChanges(client, topPairs, intervalToMonitor, period);
 
 async function sendPriceChanges(chatId, messages) {
   const message = messages.join('');
@@ -35,15 +41,10 @@ async function sendPriceChanges(chatId, messages) {
 }
 
 bot.on('message', async (msg) => {
+  await bot.sendMessage(telegramChatId, 'Ща все будет...');
   if (msg.text === '/tellme') {
-    await bot.sendMessage(telegramChatId, 'Ща все будет...');
     const topPairs = await getTopPairs(client, quantityPairs);
-    const messages = await checkPriceChanges(
-      client,
-      topPairs,
-      intervalToMonitor,
-      period
-    );
+    const messages = await checkTopCoins(topPairs);
     await sendPriceChanges(telegramChatId, messages);
   }
 });

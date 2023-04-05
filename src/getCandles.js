@@ -1,4 +1,4 @@
-const getCandles = async (pair, client, intervalToMonitor, period) => {
+const getCandles = async (client, pair, intervalToMonitor, period) => {
   const candles = await client.candles({
     symbol: pair,
     interval: intervalToMonitor,
