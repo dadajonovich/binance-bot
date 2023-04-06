@@ -11,7 +11,7 @@ const {
   getRSI,
   getOBV,
   getBELL,
-} = require('./ta/indexTA');
+} = require('../ta/indexTA');
 
 const getCriterion = require('./getCriterion.js');
 
@@ -21,7 +21,7 @@ const getCoins = async (client, pairs, intervalToMonitor, period) => {
       const candles = await getCandles(client, pair, intervalToMonitor, period);
       const prices = getPrices(candles);
 
-      const criterion = getCriterion(getMACD(prices), getRSI(prices));
+      const criterion = getCriterion(getSMA(prices), getMACD(prices), prices);
 
       if (!criterion) return;
 

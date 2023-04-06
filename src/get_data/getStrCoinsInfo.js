@@ -3,7 +3,7 @@ const {
   templateMessageMA,
   templateMessageBollinger,
   getMessage,
-} = require('./message/indexMessage.js');
+} = require('../message/indexMessage.js');
 
 const getStrCoinsInfo = (coins) => {
   let message = '';

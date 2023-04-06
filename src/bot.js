@@ -8,11 +8,11 @@ const {
   telegramChatId,
 } = require('./config.js');
 
-const getTopPairs = require('./getTopPairs.js');
-const getCoins = require('./getCoins.js');
-const getStrCoinsInfo = require('./getStrCoinsInfo.js');
+const getTopPairs = require('./get_data/getTopPairs.js');
+const getCoins = require('./get_data/getCoins.js');
+const getStrCoinsInfo = require('./get_data/getStrCoinsInfo.js');
 
-const intervalToMonitor = '1d';
+const intervalToMonitor = '4h';
 const period = 28;
 const quantityPairs = 300;
 
