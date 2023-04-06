@@ -10,6 +10,7 @@ const {
   getMACD,
   getRSI,
   getOBV,
+  getBELL,
 } = require('./ta/indexTA');
 
 const getCriterion = require('./getCriterion.js');
@@ -36,6 +37,7 @@ const getCoins = async (client, pairs, intervalToMonitor, period) => {
         MACD: getMACD(prices),
         RSI: getRSI(prices),
         OBV: getOBV(prices),
+        BELL: getBELL(prices),
       };
     })
   );

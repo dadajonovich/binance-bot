@@ -7,6 +7,7 @@ const getKAMA = require('./kama.js');
 const getMACD = require('./macd.js');
 const getRSI = require('./rsi.js');
 const getOBV = require('./obv.js');
+const getBELL = require('./bollinger.');
 
 module.exports = {
   getSMA,
@@ -18,4 +19,5 @@ module.exports = {
   getMACD,
   getRSI,
   getOBV,
+  getBELL,
 };

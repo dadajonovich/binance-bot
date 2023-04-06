@@ -1,6 +1,7 @@
 const {
   templateMessageIndicator,
   templateMessageMA,
+  templateMessageBollinger,
   getMessage,
 } = require('./message/indexMessage.js');
 
@@ -19,6 +20,7 @@ ${getMessage('KAMA', coin.KAMA, templateMessageMA, coin)}
 ${getMessage('MACD', coin.MACD, templateMessageIndicator)}
 ${getMessage('RSI', coin.RSI, templateMessageIndicator)}
 ${getMessage('OBV', coin.OBV, templateMessageIndicator)}
+${getMessage('Bellinger', coin.BELL, templateMessageBollinger)}
         `;
     })
     .join('');
