@@ -18,6 +18,7 @@ ${getMessage('VWAP', coin.VWAP, templateMessageMA, coin)}
 ${getMessage('KAMA', coin.KAMA, templateMessageMA, coin)}
 ${getMessage('MACD', coin.MACD, templateMessageIndicator)}
 ${getMessage('RSI', coin.RSI, templateMessageIndicator)}
+${getMessage('OBV', coin.OBV, templateMessageIndicator)}
         `;
     })
     .join('');
