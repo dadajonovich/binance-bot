@@ -6,15 +6,10 @@ const {
   getWMA,
   getVWMA,
   getVWAP,
-  getHull,
-  getLSMA,
   getKAMA,
-  getWSMA,
-  getHWMA,
-  getPWMA,
   getMACD,
   getRSI,
-  getBOP,
+  getOBV,
 } = require('./ta/indexTA');
 
 const getCriterion = require('./getCriterion.js');
@@ -25,7 +20,7 @@ const getCoins = async (client, pairs, intervalToMonitor, period) => {
       const candles = await getCandles(client, pair, intervalToMonitor, period);
       const prices = getPrices(candles);
 
-      const criterion = getCriterion(getMACD(prices));
+      const criterion = getCriterion(getMACD(prices), getRSI(prices));
 
       if (!criterion) return;
 
@@ -36,16 +31,11 @@ const getCoins = async (client, pairs, intervalToMonitor, period) => {
         EMA: getEMA(prices),
         WMA: getWMA(prices),
         VWMA: getVWMA(prices),
-        Hull: getHull(prices),
-        LSMA: getLSMA(prices),
-        KAMA: getKAMA(prices),
-        WSMA: getWSMA(prices),
-        HWMA: getHWMA(prices),
-        PWMA: getPWMA(prices),
         VWAP: getVWAP(prices),
+        KAMA: getKAMA(prices),
         MACD: getMACD(prices),
         RSI: getRSI(prices),
-        BOP: getBOP(prices),
+        OBV: getOBV(prices),
       };
     })
   );

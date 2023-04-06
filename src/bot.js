@@ -14,7 +14,7 @@ const getStrCoinsInfo = require('./getStrCoinsInfo.js');
 
 const intervalToMonitor = '1d';
 const period = 28;
-const quantityPairs = 200;
+const quantityPairs = 300;
 
 const bot = new TelegramBot(telegramBotToken, { polling: true });
 
