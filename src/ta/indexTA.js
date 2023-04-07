@@ -7,6 +7,7 @@ const getMACD = require('./macd.js');
 const getRSI = require('./rsi.js');
 const getOBV = require('./obv.js');
 const getBELL = require('./bollinger.');
+const getVolatility = require('./volatility');
 
 module.exports = {
   getSMA,
@@ -18,4 +19,5 @@ module.exports = {
   getRSI,
   getOBV,
   getBELL,
+  getVolatility,
 };

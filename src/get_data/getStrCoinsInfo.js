@@ -11,6 +11,7 @@ const getStrCoinsInfo = (coins) => {
     .map((coin) => {
       return `\n${coin.pair}
 - Текущая цена: ${coin.currentPrice.toFixed(2)}
+- Волатильность: ${coin.volatility.toFixed(2)}%
 ${getMessage('SMA', coin.SMA, templateMessageMA, coin)}
 ${getMessage('EMA', coin.EMA, templateMessageMA, coin)}
 ${getMessage('WMA', coin.WMA, templateMessageMA, coin)}

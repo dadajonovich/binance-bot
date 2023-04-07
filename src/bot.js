@@ -12,9 +12,9 @@ const getTopPairs = require('./get_data/getTopPairs.js');
 const getCoins = require('./get_data/getCoins.js');
 const getStrCoinsInfo = require('./get_data/getStrCoinsInfo.js');
 
-const intervalToMonitor = '1d';
+const intervalToMonitor = '4h';
 const period = 28;
-const quantityPairs = 75;
+const quantityPairs = 200;
 
 const bot = new TelegramBot(telegramBotToken, { polling: true });
 

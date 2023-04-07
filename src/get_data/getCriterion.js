@@ -6,7 +6,6 @@ const getCriterion = (SMA, MACD, RSI, Bollinger, { currentPrice }) => {
   const [lastUpper, lastMiddle, lastLower] = Bollinger[Bollinger.length - 1];
 
   const tunnelPrice = ((lastUpper - lastLower) / lastLower) * 100;
-  console.log(tunnelPrice);
 
   const criterionBollinger =
     currentPrice < lastUpper && currentPrice > lastMiddle && tunnelPrice < 5;

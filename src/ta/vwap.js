@@ -1,7 +1,7 @@
 const ta = require('ta.js');
 
-const getVWAP = ({ typicalPrice, volumes }) => {
-  const inputArray = typicalPrice.map((typicalPrice, index) => [
+const getVWAP = ({ typicalPrices, volumes }) => {
+  const inputArray = typicalPrices.map((typicalPrice, index) => [
     typicalPrice,
     volumes[index],
   ]);

@@ -10,6 +10,7 @@ const {
   getRSI,
   getOBV,
   getBELL,
+  getVolatility,
 } = require('../ta/indexTA');
 
 const getCriterion = require('./getCriterion.js');
@@ -19,19 +20,23 @@ const getCoins = async (client, pairs, intervalToMonitor, period) => {
     pairs.map(async (pair) => {
       const candles = await getCandles(client, pair, intervalToMonitor, period);
       const prices = getPrices(candles);
+      const volatility = getVolatility(prices);
 
-      const criterion = getCriterion(
-        getSMA(prices),
-        getMACD(prices),
-        getRSI(prices),
-        getBELL(prices),
-        prices
-      );
+      // const criterion = getCriterion(
+      //   getSMA(prices),
+      //   getMACD(prices),
+      //   getRSI(prices),
+      //   getBELL(prices),
+      //   prices
+      // );
 
-      if (!criterion) return;
+      // // if (!criterion) return;
+
+      if (volatility < 5) return;
 
       return {
         pair,
+        volatility,
         currentPrice: Number(prices.currentPrice.toFixed(2)),
         SMA: getSMA(prices),
         EMA: getEMA(prices),
