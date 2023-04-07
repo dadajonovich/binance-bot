@@ -6,11 +6,11 @@ const {
   binanceApiSecret,
   telegramBotToken,
   telegramChatId,
-} = require('./config.js');
+} = require('./config');
 
-const getTopPairs = require('./get_data/getTopPairs.js');
-const getCoins = require('./get_data/getCoins.js');
-const getStrCoinsInfo = require('./get_data/getStrCoinsInfo.js');
+const getTopPairs = require('./get_data/getTopPairs');
+const getCoins = require('./get_data/getCoins');
+const getStrCoinsInfo = require('./get_data/getStrCoinsInfo');
 
 const intervalToMonitor = '4h';
 const period = 28;

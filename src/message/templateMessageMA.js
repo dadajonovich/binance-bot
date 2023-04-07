@@ -10,7 +10,10 @@ const templateMessageMA = (MA, arr, { currentPrice }) => {
   let statusMA;
   const percentDifference = ((x - currentPrice) / currentPrice) * 100;
 
-  x > currentPrice ? (statusMA = '🔴') : (statusMA = '🟢');
+  if (x > currentPrice) {
+    statusMA = '🔴';
+  } else statusMA = '🟢';
+
   return `${statusMA}${MA} ${y.toFixed(2)} to ${x.toFixed(
     2
   )} / ${percentDifference.toFixed(2)}%`;

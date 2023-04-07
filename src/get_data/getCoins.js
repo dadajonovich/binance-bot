@@ -1,5 +1,5 @@
-const getCandles = require('./getCandles.js');
-const getPrices = require('./getPrices.js');
+const getCandles = require('./getCandles');
+const getPrices = require('./getPrices');
 const {
   getSMA,
   getEMA,
@@ -13,7 +13,7 @@ const {
   getVolatility,
 } = require('../ta/indexTA');
 
-const getCriterion = require('./getCriterion.js');
+const getCriterion = require('./getCriterion');
 
 const getCoins = async (client, pairs, intervalToMonitor, period) => {
   const coins = await Promise.all(
@@ -32,7 +32,7 @@ const getCoins = async (client, pairs, intervalToMonitor, period) => {
 
       // // if (!criterion) return;
 
-      if (volatility < 5) return;
+      if (volatility < 5) return undefined;
 
       return {
         pair,

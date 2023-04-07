@@ -8,8 +8,7 @@ const templateMessageBollinger = (MA, arr, { currentPrice }) => {
   const [penultimateUpper, penultimateMiddle, penultimateLower] =
     arr[arr.length - 2];
 
-  const percentDifference = (value, currentPrice) =>
-    ((value - currentPrice) / currentPrice) * 100;
+  const percentDifference = (value, price) => ((value - price) / price) * 100;
 
   const percentDifferencePriceLast = [lastUpper, lastMiddle, lastLower].map(
     (price) => percentDifference(price, currentPrice)
@@ -19,9 +18,9 @@ const templateMessageBollinger = (MA, arr, { currentPrice }) => {
     percentDifferencePriceLast;
 
   let statusIndicators;
-  lastMiddle > penultimateMiddle
-    ? (statusIndicators = '📈')
-    : (statusIndicators = '📉');
+  if (lastMiddle > penultimateMiddle) {
+    statusIndicators = '📈';
+  } else statusIndicators = '📉';
 
   return `${statusIndicators}${MA} U${lastUpper.toFixed(
     2

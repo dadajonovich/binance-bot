@@ -1,14 +1,14 @@
 const getTopPairs = async (client, quantityPairs = 1) => {
   const exchangeInfo = await client.exchangeInfo();
-  const symbols = exchangeInfo.symbols;
+  const { symbols } = exchangeInfo;
   const pairsByVolume = symbols
     .filter(
       (symbol) => symbol.status === 'TRADING' && symbol.quoteAsset === 'USDT'
     )
     .map((symbol) => {
-      const baseAsset = symbol.baseAsset;
-      const quoteAsset = symbol.quoteAsset;
-      const volume = symbol.volume;
+      const { baseAsset } = symbol;
+      const { quoteAsset } = symbol;
+      const { volume } = symbol;
       return { pair: `${baseAsset}${quoteAsset}`, volume };
     })
     .sort((a, b) => b.volume - a.volume);
