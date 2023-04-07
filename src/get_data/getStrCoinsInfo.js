@@ -16,11 +16,10 @@ ${getMessage('EMA', coin.EMA, templateMessageMA, coin)}
 ${getMessage('WMA', coin.WMA, templateMessageMA, coin)}
 ${getMessage('VWMA', coin.VWMA, templateMessageMA, coin)}
 ${getMessage('VWAP', coin.VWAP, templateMessageMA, coin)}
-${getMessage('KAMA', coin.KAMA, templateMessageMA, coin)}
 ${getMessage('MACD', coin.MACD, templateMessageIndicator)}
 ${getMessage('RSI', coin.RSI, templateMessageIndicator)}
 ${getMessage('OBV', coin.OBV, templateMessageIndicator)}
-${getMessage('Bellinger', coin.BELL, templateMessageBollinger)}
+${getMessage('Bollinger', coin.BELL, templateMessageBollinger, coin)}
         `;
     })
     .join('');

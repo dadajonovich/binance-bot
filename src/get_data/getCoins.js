@@ -6,7 +6,6 @@ const {
   getWMA,
   getVWMA,
   getVWAP,
-  getKAMA,
   getMACD,
   getRSI,
   getOBV,
@@ -21,7 +20,13 @@ const getCoins = async (client, pairs, intervalToMonitor, period) => {
       const candles = await getCandles(client, pair, intervalToMonitor, period);
       const prices = getPrices(candles);
 
-      const criterion = getCriterion(getSMA(prices), getMACD(prices), prices);
+      const criterion = getCriterion(
+        getSMA(prices),
+        getMACD(prices),
+        getRSI(prices),
+        getBELL(prices),
+        prices
+      );
 
       if (!criterion) return;
 
@@ -33,7 +38,6 @@ const getCoins = async (client, pairs, intervalToMonitor, period) => {
         WMA: getWMA(prices),
         VWMA: getVWMA(prices),
         VWAP: getVWAP(prices),
-        KAMA: getKAMA(prices),
         MACD: getMACD(prices),
         RSI: getRSI(prices),
         OBV: getOBV(prices),
