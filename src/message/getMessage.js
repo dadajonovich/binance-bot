@@ -1,7 +1,4 @@
-const getMessage = (MA, arr, fnCreateMessage, { currentPrice } = {}) => {
-  const str = fnCreateMessage(MA, arr, { currentPrice });
-
-  return str;
-};
+const getMessage = (MA, arr, fnCreateMessage, { currentPrice } = {}) =>
+  fnCreateMessage(MA, arr, { currentPrice });
 
 module.exports = getMessage;

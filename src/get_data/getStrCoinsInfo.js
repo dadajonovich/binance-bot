@@ -10,7 +10,7 @@ const getStrCoinsInfo = (coins) => {
     .map(
       (coin) => `\n${coin.pair}
 - Current Price: ${coin.currentPrice.toFixed(2)}
-- Standard Deviation: ${coin.volatility.toFixed(2)}%
+- Volatility: ${coin.volatility.toFixed(2)}%
 ${getMessage('SMA', coin.SMA, templateMessageMA, coin)}
 ${getMessage('EMA', coin.EMA, templateMessageMA, coin)}
 ${getMessage('MACD', coin.MACD, templateMessageIndicator)}
