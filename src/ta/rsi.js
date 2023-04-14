@@ -1,8 +1,5 @@
 const ta = require('ta.js');
 
-const getRSI = ({ closePrices }) => {
-  const rsi = ta.rsi(closePrices);
-  return rsi;
-};
+const getRSI = ({ closePrices }) => ta.rsi(closePrices);
 
 module.exports = getRSI;
