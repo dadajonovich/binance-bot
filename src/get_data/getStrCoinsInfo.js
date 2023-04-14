@@ -1,7 +1,6 @@
 const {
   templateMessageIndicator,
   templateMessageMA,
-  templateMessageBollinger,
   getMessage,
 } = require('../message/indexMessage');
 
@@ -10,17 +9,12 @@ const getStrCoinsInfo = (coins) => {
   message += coins
     .map(
       (coin) => `\n${coin.pair}
-- Текущая цена: ${coin.currentPrice.toFixed(2)}
-- Волатильность: ${coin.volatility.toFixed(2)}%
+- Current Price: ${coin.currentPrice.toFixed(2)}
+- Standard Deviation: ${coin.volatility.toFixed(2)}%
 ${getMessage('SMA', coin.SMA, templateMessageMA, coin)}
 ${getMessage('EMA', coin.EMA, templateMessageMA, coin)}
-${getMessage('WMA', coin.WMA, templateMessageMA, coin)}
-${getMessage('VWMA', coin.VWMA, templateMessageMA, coin)}
-${getMessage('VWAP', coin.VWAP, templateMessageMA, coin)}
 ${getMessage('MACD', coin.MACD, templateMessageIndicator)}
 ${getMessage('RSI', coin.RSI, templateMessageIndicator)}
-${getMessage('OBV', coin.OBV, templateMessageIndicator)}
-${getMessage('Bollinger', coin.BELL, templateMessageBollinger, coin)}
         `
     )
     .join('');

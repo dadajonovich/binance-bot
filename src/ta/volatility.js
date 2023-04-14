@@ -1,19 +1,8 @@
-const getVolatility = ({ openPrices, closePrices }) => {
-  const priceChanges = closePrices.map(
-    (closePrice, i) => openPrices[i] / closePrice - 1
-  );
-  const averagePriceChange =
-    priceChanges.reduce((sum, change) => sum + change, 0) / priceChanges.length;
+const ta = require('ta.js');
 
-  const variance =
-    priceChanges.reduce(
-      (sum, change) => sum + (change - averagePriceChange) ** 2,
-      0
-    ) / priceChanges.length;
-
-  const standardDeviation = Math.sqrt(variance);
-
-  const volatility = standardDeviation * 100;
+const getVolatility = ({ closePrices, currentPrice }) => {
+  const standartDeviation = ta.std(closePrices);
+  const volatility = (standartDeviation / currentPrice) * 100;
 
   return volatility;
 };

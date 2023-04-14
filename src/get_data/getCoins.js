@@ -3,13 +3,8 @@ const getPrices = require('./getPrices');
 const {
   getSMA,
   getEMA,
-  getWMA,
-  getVWMA,
-  getVWAP,
   getMACD,
   getRSI,
-  getOBV,
-  getBELL,
   getVolatility,
 } = require('../ta/indexTA');
 
@@ -36,17 +31,12 @@ const getCoins = async (client, pairs, intervalToMonitor, period) => {
 
       return {
         pair,
-        volatility,
         currentPrice: Number(prices.currentPrice.toFixed(2)),
+        volatility,
         SMA: getSMA(prices),
         EMA: getEMA(prices),
-        WMA: getWMA(prices),
-        VWMA: getVWMA(prices),
-        VWAP: getVWAP(prices),
         MACD: getMACD(prices),
         RSI: getRSI(prices),
-        OBV: getOBV(prices),
-        BELL: getBELL(prices),
       };
     })
   );
