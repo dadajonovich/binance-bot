@@ -16,7 +16,7 @@ const getTopPairs = async (client, quantityPairs = 1) => {
       .map((pair) => pair.pair);
     return topPairs;
   } catch (err) {
-    console.error('Ошибка в запросе топовых пар', err);
+    console.error('Error in the request for top pairs', err);
     return [];
   }
 };

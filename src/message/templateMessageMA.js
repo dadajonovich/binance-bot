@@ -1,7 +1,7 @@
 const templateMessageMA = (MA, arr, { currentPrice }) => {
   const len = arr.length;
   if (len < 2) {
-    throw new Error('Массив меньше двух элементов');
+    throw new Error('An array of less than two elements');
   }
 
   const y = arr.at(-2);

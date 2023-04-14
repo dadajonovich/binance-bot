@@ -1,6 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api');
 const Binance = require('binance-api-node').default;
 
+// Keys and objects
 const {
   binanceApiKey,
   binanceApiSecret,
@@ -8,23 +9,24 @@ const {
   telegramChatId,
 } = require('./config');
 
-const getTopPairs = require('./get_data/getTopPairs');
-const getCoins = require('./get_data/getCoins');
-
-const getStrCoinsInfo = require('./get_data/getStrCoinsInfo');
-
-const intervalToMonitor = '1d';
-const period = 28;
-
-const quantityPairs = 50;
-
-const bot = new TelegramBot(telegramBotToken, { polling: true });
-
 const client = Binance({
   apiKey: binanceApiKey,
   apiSecret: binanceApiSecret,
 });
 
+const bot = new TelegramBot(telegramBotToken, { polling: true });
+
+// Parameters
+const intervalToMonitor = '1d';
+const period = 28;
+const quantityPairs = 50;
+
+// Functions
+const getTopPairs = require('./get_data/getTopPairs');
+const getCoins = require('./get_data/getCoins');
+const getStrCoinsInfo = require('./get_data/getStrCoinsInfo');
+
+// Compose
 async function sendPriceChanges(chatId, message) {
   await bot.sendMessage(
     chatId,

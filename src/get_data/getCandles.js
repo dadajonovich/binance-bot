@@ -7,7 +7,7 @@ const getCandles = async (client, pair, intervalToMonitor, period) => {
     });
     return candles;
   } catch (err) {
-    console.error('Ошибка в запросе свечей', err);
+    console.error('Error in the candle request', err);
     return [];
   }
 };

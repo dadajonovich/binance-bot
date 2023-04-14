@@ -5,7 +5,7 @@ async function getBalance(asset, client) {
     const balance = accountInfo.balances.find((b) => b.asset === asset);
     return parseFloat(balance.free) + parseFloat(balance.locked);
   } catch (err) {
-    console.error('Ошибка в запросе баланса:', err);
+    console.error('Error in balance request:', err);
   }
 }
 
