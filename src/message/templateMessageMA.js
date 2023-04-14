@@ -4,8 +4,8 @@ const templateMessageMA = (MA, arr, { currentPrice }) => {
     throw new Error('Массив меньше двух элементов');
   }
 
-  const y = arr[len - 2];
-  const x = arr[len - 1];
+  const y = arr.at(-2);
+  const x = arr.at(-1);
 
   let statusMA;
   const percentDifference = ((x - currentPrice) / currentPrice) * 100;

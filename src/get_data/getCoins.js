@@ -13,14 +13,11 @@ const getCoins = async (client, pairs, intervalToMonitor, period) => {
     pairs.map(async (pair) => {
       const candles = await getCandles(client, pair, intervalToMonitor, period);
       const prices = getPrices(candles);
-      const volatility = getVolatility(prices);
-
-      if (volatility < 5) return undefined;
 
       return {
         pair,
         currentPrice: Number(prices.currentPrice.toFixed(2)),
-        volatility,
+        volatility: getVolatility(prices),
         SMA: getSMA(prices),
         EMA: getEMA(prices),
         MACD: getMACD(prices),
@@ -28,8 +25,14 @@ const getCoins = async (client, pairs, intervalToMonitor, period) => {
       };
     })
   );
-  const filteredCoins = coins.filter((coin) => coin !== undefined);
-  return filteredCoins;
+
+  const filteredCoins = coins.filter(
+    (coin) => coin.volatility >= 5 && coin.SMA.at(-1) < coin.currentPrice
+  );
+
+  const sortCoins = filteredCoins.sort((a, b) => b.volatility - a.volatility);
+
+  return sortCoins;
 };
 
 module.exports = getCoins;

@@ -3,8 +3,8 @@ const templateMessageIndicator = (MA, arr) => {
   if (len < 2) {
     throw new Error('Массив меньше двух элементов');
   }
-  const y = arr[len - 2];
-  const x = arr[len - 1];
+  const y = arr.at(-2);
+  const x = arr.at(-1);
 
   const percentDifference = ((Math.abs(x) - Math.abs(y)) / Math.abs(y)) * 100;
 
