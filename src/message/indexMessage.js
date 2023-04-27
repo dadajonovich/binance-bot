@@ -1,9 +1,11 @@
 const templateMessageMA = require('./templateMessageMA');
 const templateMessageIndicator = require('./templateMessageIndicator');
-const getMessage = require('./getMessage');
+const getMessageInfoTemplate = require('./getMessageInfoTemplate');
+const getBalanceMessage = require('./getBalanceMessage');
 
 module.exports = {
   templateMessageIndicator,
   templateMessageMA,
-  getMessage,
+  getMessageInfoTemplate,
+  getBalanceMessage,
 };

@@ -17,14 +17,16 @@ const client = Binance({
 const bot = new TelegramBot(telegramBotToken, { polling: true });
 
 // Parameters
-const intervalToMonitor = '1d';
+const intervalToMonitor = '4h';
 const period = 28;
 const quantityPairs = 50;
 
 // Functions
 const getTopPairs = require('./get_data/getTopPairs');
 const getCoins = require('./get_data/getCoins');
-const getStrCoinsInfo = require('./get_data/getStrCoinsInfo');
+const getStrCoinsInfo = require('./message/getStrCoinsInfo');
+const getBalance = require('./get_data/getBalance');
+const getBalanceMessage = require('./message/getBalanceMessage');
 
 // Compose
 async function sendPriceChanges(chatId, message) {
@@ -40,6 +42,10 @@ bot.on('message', async (msg) => {
     const topPairs = await getTopPairs(client, quantityPairs);
     const coins = await getCoins(client, topPairs, intervalToMonitor, period);
     const message = getStrCoinsInfo(coins);
+    await sendPriceChanges(telegramChatId, message);
+  } else if (msg.text === '/balance') {
+    const balance = await getBalance(client);
+    const message = getBalanceMessage(balance);
     await sendPriceChanges(telegramChatId, message);
   }
 });

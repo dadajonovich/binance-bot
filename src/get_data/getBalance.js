@@ -1,18 +1,15 @@
-async function getBalance(asset, client) {
+const getBalance = async (client, asset = 'USDT') => {
   try {
     const accountInfo = await client.accountInfo();
-    console.log(accountInfo);
     const balance = accountInfo.balances.find((b) => b.asset === asset);
-    return parseFloat(balance.free) + parseFloat(balance.locked);
+    const balanceFree = parseFloat(balance.free);
+    // const balanceLocked = parseFloat(balance.locked);
+    console.log(balanceFree);
+    return balanceFree;
   } catch (err) {
     console.error('Error in balance request:', err);
+    return '';
   }
-}
-
-// Пример использования функции для получения баланса BTC
-// (async () => {
-//   const balance = await getBalance('BTC');
-//   console.log(`Your BTC balance is: ${balance}`);
-// })();
+};
 
 module.exports = getBalance;

@@ -1,8 +1,8 @@
 const {
   templateMessageIndicator,
   templateMessageMA,
-  getMessage,
-} = require('../message/indexMessage');
+  getMessageInfoTemplate,
+} = require('./indexMessage');
 
 const getStrCoinsInfo = (coins) => {
   let message = '';
@@ -11,10 +11,10 @@ const getStrCoinsInfo = (coins) => {
       (coin) => `\n${coin.pair}
 - Current Price: ${coin.currentPrice.toFixed(2)}
 - Volatility: ${coin.volatility.toFixed(2)}%
-${getMessage('SMA', coin.SMA, templateMessageMA, coin)}
-${getMessage('EMA', coin.EMA, templateMessageMA, coin)}
-${getMessage('MACD', coin.MACD, templateMessageIndicator)}
-${getMessage('RSI', coin.RSI, templateMessageIndicator)}
+${getMessageInfoTemplate('SMA', coin.SMA, templateMessageMA, coin)}
+${getMessageInfoTemplate('EMA', coin.EMA, templateMessageMA, coin)}
+${getMessageInfoTemplate('MACD', coin.MACD, templateMessageIndicator)}
+${getMessageInfoTemplate('RSI', coin.RSI, templateMessageIndicator)}
         `
     )
     .join('');
