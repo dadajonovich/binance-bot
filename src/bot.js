@@ -1,32 +1,18 @@
-const TelegramBot = require('node-telegram-bot-api');
-const Binance = require('binance-api-node').default;
+const { client, bot, telegramChatId, parameters } = require('./config');
 
-// Keys and objects
-const {
-  binanceApiKey,
-  binanceApiSecret,
-  telegramBotToken,
-  telegramChatId,
-} = require('./config');
-
-const client = Binance({
-  apiKey: binanceApiKey,
-  apiSecret: binanceApiSecret,
-});
-
-const bot = new TelegramBot(telegramBotToken, { polling: true });
-
-// Parameters
-const intervalToMonitor = '4h';
-const period = 28;
-const quantityPairs = 50;
+// Message
+const getStrCoinsInfo = require('./message/getStrCoinsInfo');
+const getBalanceMessage = require('./message/getBalanceMessage');
 
 // Functions
-const getTopPairs = require('./get_data/getTopPairs');
-const getCoins = require('./get_data/getCoins');
-const getStrCoinsInfo = require('./message/getStrCoinsInfo');
-const getBalance = require('./get_data/getBalance');
-const getBalanceMessage = require('./message/getBalanceMessage');
+const {
+  getTopPairs,
+  getCoins,
+  getBalance,
+  getOpenOrders,
+} = require('./get_data/indexGetData');
+
+const { getTrackedCoins, monitorPrice } = require('./algo/algo');
 
 // Compose
 async function sendPriceChanges(chatId, message) {
@@ -47,5 +33,12 @@ bot.on('message', async (msg) => {
     const balance = await getBalance(client);
     const message = getBalanceMessage(balance);
     await sendPriceChanges(telegramChatId, message);
+  } else if (msg.text === '/orders') {
+    const orders = await getOpenOrders(client);
+  } else if (msg.text === '/start') {
+    const topPairs = await getTopPairs(client, quantityPairs);
+    const coins = await getCoins(client, topPairs, intervalToMonitor, period);
+    const trackedCoins = getTrackedCoins(coins);
+    await monitorPrice(trackedCoins);
   }
 });
