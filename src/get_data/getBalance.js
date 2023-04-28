@@ -3,12 +3,11 @@ const getBalance = async (client, asset = 'USDT') => {
     const accountInfo = await client.accountInfo();
     const balance = accountInfo.balances.find((b) => b.asset === asset);
     const balanceFree = parseFloat(balance.free);
-    // const balanceLocked = parseFloat(balance.locked);
-    console.log(accountInfo);
-    return balanceFree;
+    const balanceLocked = parseFloat(balance.locked);
+    return { balanceFree, balanceLocked };
   } catch (err) {
     console.error('Error in balance request:', err);
-    return '';
+    return {};
   }
 };
 

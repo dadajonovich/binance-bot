@@ -1,4 +1,4 @@
-const getTopPairs = async (client, quantityPairs = 1) => {
+const getTopPairs = async (client, { quantityPairs = 50 } = {}) => {
   try {
     const exchangeInfo = await client.exchangeInfo();
     const { symbols } = exchangeInfo;
