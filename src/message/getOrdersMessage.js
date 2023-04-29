@@ -4,8 +4,8 @@ const getOrdersMessage = (orders) => {
     .map(
       (order) => `\nCoin: ${order.symbol}
 - orderId: ${order.orderId}
-- price: ${parseFloat(order.price).toFixed(4)}
-- quantity: ${parseFloat(order.origQty).toFixed(2)}$
+- price: ${parseFloat(order.price).toFixed(4)}$
+- quantity: ${parseFloat(order.origQty).toFixed(2)}
 - status: ${order.status},
 - type: ${order.type},
 - side: ${order.side}

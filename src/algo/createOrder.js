@@ -7,10 +7,9 @@ const createOrder = async (client, symbol, side, type, quantity, price) => {
       quantity,
       price,
     });
-    console.log(order);
     return order;
   } catch (err) {
-    console.error('Error creating limit order:', err);
+    console.error(`Error creating limit order ${symbol}:`, err);
     return [];
   }
 };

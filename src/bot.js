@@ -18,6 +18,8 @@ const {
   getOpenOrders,
   getPrices,
   getTopPairs,
+  getLotSizeParams,
+  getValueForOrder,
 } = require('./get_data/indexGetData');
 
 // TA
@@ -74,7 +76,9 @@ const curryMonitorPrice = monitorPrice(
   {},
   createOrder,
   getBalance,
-  getOpenOrders
+  getLotSizeParams,
+  currySendMessage,
+  getValueForOrder
 );
 
 bot.on('message', async (msg) => {
@@ -101,14 +105,14 @@ bot.on('message', async (msg) => {
     let trackedCoins = getTrackedCoins(coins);
     curryMonitorPrice(trackedCoins);
 
-    setInterval(async () => {
-      topPairs = await getTopPairs(client, parameters);
-      coins = await curryGetCoins(topPairs);
-      trackedCoins = getTrackedCoins(coins);
-    }, 24 * 60 * 60 * 1000);
+    // setInterval(async () => {
+    //   topPairs = await getTopPairs(client, parameters);
+    //   coins = await curryGetCoins(topPairs);
+    //   trackedCoins = getTrackedCoins(coins);
+    // }, 24 * 60 * 60 * 1000);
 
-    setInterval(async () => {
-      curryMonitorPrice(trackedCoins);
-    }, 5 * 60 * 1000); // every 5 min
+    // setInterval(async () => {
+    //   curryMonitorPrice(trackedCoins);
+    // }, 5 * 60 * 1000); // every 5 min
   }
 });
