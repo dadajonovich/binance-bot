@@ -1,8 +1,7 @@
-const getOpenOrders = async (client, symbol = null) => {
+const getOpenOrders = async (client) => {
   try {
-    const openOrders = symbol
-      ? await client.openOrders({ symbol })
-      : await client.openOrders();
+    const openOrders = await client.openOrders();
+    console.log(openOrders);
     return openOrders;
   } catch (err) {
     console.error('Error in open orders request:', err);

@@ -7,6 +7,7 @@ const {
   templateMessageMA,
   getMessageInfoTemplate,
   getStrCoinsInfo,
+  getOrdersMessage,
 } = require('./message/indexMessage');
 
 // Get functions
@@ -28,19 +29,26 @@ const {
   getRSI,
 } = require('./ta/indexTA');
 
-const { getTrackedCoins, monitorPrice } = require('./algo/algo');
-
-const createOrder = require('./algo/createOrder');
+// Algo
+const {
+  getTrackedCoins,
+  monitorPrice,
+  createOrder,
+  cancelOrders,
+} = require('./algo/indexAlgo');
 
 // Compose
-async function sendPriceChanges(chatId, message) {
+const sendMessage = (chatId) => async (message) => {
   await bot.sendMessage(
     chatId,
     message !== '' ? message : 'В Багдаде все спокойно...'
   );
-}
+};
 
 // Currying
+
+const currySendMessage = sendMessage(telegramChatId);
+
 const curryGetCoins = getCoins(
   client,
   parameters,
@@ -63,28 +71,36 @@ const curryMonitorPrice = monitorPrice(
   client,
   getCandles,
   getPrices,
+  {},
   createOrder,
-  getBalance
+  getBalance,
+  getOpenOrders
 );
 
 bot.on('message', async (msg) => {
-  await bot.sendMessage(telegramChatId, 'Ща все будет...');
+  await currySendMessage('Ща все будет...');
   if (msg.text === '/tellme') {
     const topPairs = await getTopPairs(client, parameters);
     const coins = await curryGetCoins(topPairs);
     const message = curryGetStrCoinsInfo(coins);
-    await sendPriceChanges(telegramChatId, message);
+    await currySendMessage(message);
   } else if (msg.text === '/balance') {
     const balance = await getBalance(client);
     const message = getBalanceMessage(balance);
-    await sendPriceChanges(telegramChatId, message);
+    await currySendMessage(message);
   } else if (msg.text === '/orders') {
     const orders = await getOpenOrders(client);
+    const message = getOrdersMessage(orders);
+    await currySendMessage(message);
+  } else if (msg.text === '/cancel') {
+    const orders = await getOpenOrders(client);
+    await cancelOrders(client, orders);
   } else if (msg.text === '/start') {
     let topPairs = await getTopPairs(client, parameters);
     let coins = await curryGetCoins(topPairs);
     let trackedCoins = getTrackedCoins(coins);
     curryMonitorPrice(trackedCoins);
+
     setInterval(async () => {
       topPairs = await getTopPairs(client, parameters);
       coins = await curryGetCoins(topPairs);
