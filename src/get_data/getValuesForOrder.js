@@ -15,11 +15,15 @@ const getValuesForOrder = (
     const decimalPlacesPrice =
       parseFloat(tickSize) === 1 ? 0 : tickSize.indexOf('1') - 1;
 
-    const roundedPriceBuy = (targetPrice - targetPrice * 0.0025).toFixed(
+    const roundedPriceBuy = toFixedHard(
+      targetPrice - targetPrice * 0.025,
       decimalPlacesPrice
     );
 
-    const roundedPriceSell = (targetPrice * 1.0025).toFixed(decimalPlacesPrice);
+    const roundedPriceSell = toFixedHard(
+      targetPrice * 1.0025,
+      decimalPlacesPrice
+    );
 
     const quantityBuy = toFixedHard(
       balanceFree / roundedPriceBuy,

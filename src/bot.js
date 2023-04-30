@@ -18,12 +18,7 @@ const {
 } = require('./get_data/indexGetData');
 
 // Algo
-const {
-  getTrackedCoin,
-  monitorPrice,
-  createOrder,
-  cancelOrders,
-} = require('./algo/indexAlgo');
+const { monitorPrice, createOrder, cancelOrders } = require('./algo/indexAlgo');
 
 // Compose
 const sendMessage = (chatId) => async (message) => {
@@ -37,7 +32,13 @@ const sendMessage = (chatId) => async (message) => {
 
 const currySendMessage = sendMessage(telegramChatId);
 
-const curryGetCoin = getCoin(client, parameters, getCandles, getPrice);
+const curryGetCoin = getCoin(
+  client,
+  parameters,
+  getCandles,
+  getPrice,
+  getLotParams
+);
 
 const curryMonitorPrice = monitorPrice(
   client,
@@ -47,42 +48,44 @@ const curryMonitorPrice = monitorPrice(
   createOrder,
   getBalance,
   getValuesForOrder,
-  getOpenOrders
+  getOpenOrders,
+  cancelOrders
 );
-
-const curryGetTrackedCoin = getTrackedCoin(client, getLotParams);
 
 bot.on('message', async (msg) => {
   await currySendMessage('Ща все будет...');
-  if (msg.text === '/balance') {
-    const balance = await getBalance(client);
-    const message = getBalanceMessage(balance);
-    await currySendMessage(message);
-  } else if (msg.text === '/orders') {
-    const orders = await getOpenOrders(client);
-    const message = getOrdersMessage(orders);
-    await currySendMessage(message);
-  } else if (msg.text === '/cancel') {
-    const orders = await getOpenOrders(client);
-    await cancelOrders(client, orders);
-  } else if (msg.text === '/start') {
-    let coin = await curryGetCoin('ETHUSDT');
-    let trackedCoins = await curryGetTrackedCoin(coin);
-    curryMonitorPrice(trackedCoins);
 
-    setInterval(async () => {
-      console.log('Get new pair...');
-      coin = await curryGetCoin('ETHUSDT');
-      trackedCoins = await curryGetTrackedCoin(coin);
-    }, 24 * 60 * 60 * 1000);
+  let orders;
+  let balance;
+  let coin;
 
-    setInterval(async () => {
-      console.log('U mirin brah?');
-      if (trackedCoins === {}) {
-        coin = await curryGetCoin('ETHUSDT');
-        trackedCoins = await curryGetTrackedCoin(coin);
-      }
-      curryMonitorPrice(trackedCoins);
-    }, 1 * 60 * 1000);
+  switch (msg.text) {
+    case '/balance':
+      balance = await getBalance(client);
+      await currySendMessage(getBalanceMessage(balance));
+      break;
+
+    case '/orders':
+      orders = await getOpenOrders(client);
+      await currySendMessage(getOrdersMessage(orders));
+      break;
+
+    case '/cancel':
+      orders = await getOpenOrders(client);
+      await cancelOrders(client, orders);
+      break;
+
+    case '/start':
+      coin = await curryGetCoin('RLCUSDT');
+      curryMonitorPrice(coin);
+
+      setInterval(async () => {
+        console.log('U mirin brah?');
+        curryMonitorPrice(coin);
+      }, 1 * 60 * 1000);
+      break;
+
+    default:
+      break;
   }
 });
