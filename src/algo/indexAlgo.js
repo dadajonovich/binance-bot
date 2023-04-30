@@ -1,11 +1,11 @@
 const createOrder = require('./createOrder');
-const getTrackedCoins = require('./getTrackedCoins');
+const getTrackedCoin = require('./getTrackedCoin');
 const monitorPrice = require('./monitorPrice');
 const cancelOrders = require('./cancelOrders');
 
 module.exports = {
   createOrder,
-  getTrackedCoins,
+  getTrackedCoin,
   monitorPrice,
   cancelOrders,
 };

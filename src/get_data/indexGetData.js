@@ -1,19 +1,17 @@
 const getBalance = require('./getBalance');
 const getCandles = require('./getCandles');
-const getCoins = require('./getCoins');
+const getCoin = require('./getCoin');
 const getOpenOrders = require('./getOpenOrders');
-const getPrices = require('./getPrices');
-const getTopPairs = require('./getTopPairs');
+const getPrice = require('./getPrice');
 const getLotParams = require('./getLotParams');
 const getValuesForOrder = require('./getValuesForOrder');
 
 module.exports = {
   getBalance,
   getCandles,
-  getCoins,
+  getCoin,
   getOpenOrders,
-  getPrices,
-  getTopPairs,
+  getPrice,
   getLotParams,
   getValuesForOrder,
 };

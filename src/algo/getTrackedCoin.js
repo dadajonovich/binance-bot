@@ -1,4 +1,4 @@
-const getTrackedCoins =
+const getTrackedCoin =
   (client, getLotParams = (f) => f) =>
   async (coin) => {
     try {
@@ -17,4 +17,4 @@ const getTrackedCoins =
     }
   };
 
-module.exports = getTrackedCoins;
+module.exports = getTrackedCoin;

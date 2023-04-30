@@ -3,10 +3,6 @@ const { client, bot, telegramChatId, parameters } = require('./config');
 // Message
 const {
   getBalanceMessage,
-  templateMessageIndicator,
-  templateMessageMA,
-  getMessageInfoTemplate,
-  getStrCoinsInfo,
   getOrdersMessage,
 } = require('./message/indexMessage');
 
@@ -14,26 +10,16 @@ const {
 const {
   getBalance,
   getCandles,
-  getCoins,
+  getCoin,
   getOpenOrders,
-  getPrices,
-  getTopPairs,
+  getPrice,
   getLotParams,
   getValuesForOrder,
 } = require('./get_data/indexGetData');
 
-// TA
-const {
-  getVolatility,
-  getSMA,
-  getEMA,
-  getMACD,
-  getRSI,
-} = require('./ta/indexTA');
-
 // Algo
 const {
-  getTrackedCoins,
+  getTrackedCoin,
   monitorPrice,
   createOrder,
   cancelOrders,
@@ -51,28 +37,12 @@ const sendMessage = (chatId) => async (message) => {
 
 const currySendMessage = sendMessage(telegramChatId);
 
-const curryGetCoins = getCoins(
-  client,
-  parameters,
-  getCandles,
-  getPrices,
-  getSMA,
-  getEMA,
-  getMACD,
-  getRSI,
-  getVolatility
-);
-
-const curryGetStrCoinsInfo = getStrCoinsInfo(
-  templateMessageIndicator,
-  templateMessageMA,
-  getMessageInfoTemplate
-);
+const curryGetCoin = getCoin(client, parameters, getCandles, getPrice);
 
 const curryMonitorPrice = monitorPrice(
   client,
   getCandles,
-  getPrices,
+  getPrice,
   {},
   createOrder,
   getBalance,
@@ -80,16 +50,11 @@ const curryMonitorPrice = monitorPrice(
   getOpenOrders
 );
 
-const curryGetTrackedCoins = getTrackedCoins(client, getLotParams);
+const curryGetTrackedCoin = getTrackedCoin(client, getLotParams);
 
 bot.on('message', async (msg) => {
   await currySendMessage('Ща все будет...');
-  if (msg.text === '/tellme') {
-    const topPairs = await getTopPairs(client, parameters);
-    const coins = await curryGetCoins(topPairs);
-    const message = curryGetStrCoinsInfo(coins);
-    await currySendMessage(message);
-  } else if (msg.text === '/balance') {
+  if (msg.text === '/balance') {
     const balance = await getBalance(client);
     const message = getBalanceMessage(balance);
     await currySendMessage(message);
@@ -101,24 +66,21 @@ bot.on('message', async (msg) => {
     const orders = await getOpenOrders(client);
     await cancelOrders(client, orders);
   } else if (msg.text === '/start') {
-    let topPairs = await getTopPairs(client, parameters);
-    let coins = await curryGetCoins(['RLCUSDT']);
-    let trackedCoins = await curryGetTrackedCoins(coins[0]);
+    let coin = await curryGetCoin('ETHUSDT');
+    let trackedCoins = await curryGetTrackedCoin(coin);
     curryMonitorPrice(trackedCoins);
 
     setInterval(async () => {
       console.log('Get new pair...');
-      topPairs = await getTopPairs(client, parameters);
-      coins = await curryGetCoins(['RLCUSDT']);
-      trackedCoins = await curryGetTrackedCoins(coins[0]);
+      coin = await curryGetCoin('ETHUSDT');
+      trackedCoins = await curryGetTrackedCoin(coin);
     }, 24 * 60 * 60 * 1000);
 
     setInterval(async () => {
       console.log('U mirin brah?');
       if (trackedCoins === {}) {
-        topPairs = await getTopPairs(client, parameters);
-        coins = await curryGetCoins(['RLCUSDT']);
-        trackedCoins = await curryGetTrackedCoins(coins[0]);
+        coin = await curryGetCoin('ETHUSDT');
+        trackedCoins = await curryGetTrackedCoin(coin);
       }
       curryMonitorPrice(trackedCoins);
     }, 1 * 60 * 1000);

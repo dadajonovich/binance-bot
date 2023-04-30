@@ -30,7 +30,11 @@ const monitorPrice =
         (order) => order.side === 'SELL' && order.status === 'NEW'
       );
 
-      if (!buyOrderExists && !sellOrderExists && balanceAsset === 0) {
+      if (
+        !buyOrderExists &&
+        !sellOrderExists &&
+        balanceAsset < balanceAsset * 0.05
+      ) {
         console.log('Buy order');
         const { roundedPriceBuy, quantityBuy } = getValuesForOrder(
           price.currentPrice,
