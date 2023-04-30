@@ -6,35 +6,66 @@ const monitorPrice =
     { intervalToMonitor = '5m', period = 1 } = {},
     createOrder = (f) => f,
     getBalance = (f) => f,
-    getValuesForOrder = (f) => f
+    getValuesForOrder = (f) => f,
+    getOpenOrders = (f) => f // функция для получения открытых ордеров
   ) =>
   (trackedCoins = []) => {
     trackedCoins.forEach(async (coin) => {
+      console.log('Monitoring...');
       const { pair, targetPrice, stepSize, tickSize } = coin;
       const candles = await getCandles(client, pair, intervalToMonitor, period);
       const price = getPrice(candles);
-      // if (price.currentPrice < targetPrice) {
-      if (true) {
-        const { balanceFree } = await getBalance(client);
-        const { roundedPriceBuy, roundedPriceSell, quantity } =
-          getValuesForOrder(targetPrice, stepSize, tickSize, balanceFree, pair);
-        await createOrder(
-          client,
-          pair,
-          'BUY',
-          'LIMIT',
-          quantity,
-          roundedPriceBuy
+      const match = pair.match(/^(.*)USDT$/);
+      const asset = match[1];
+      const { balanceFree: balanceAsset } = await getBalance(client, asset);
+      const { balanceFree: balanceUSDT } = await getBalance(client);
+
+      if (price.currentPrice < targetPrice) {
+        // if (true) {
+        const openOrders = await getOpenOrders(client, pair);
+
+        const buyOrderExists = openOrders.some(
+          (order) => order.side === 'BUY' && order.status === 'NEW'
         );
-        await createOrder(
-          client,
-          pair,
-          'SELL',
-          'LIMIT',
-          quantity,
-          roundedPriceSell
+        const sellOrderExists = openOrders.some(
+          (order) => order.side === 'SELL' && order.status === 'NEW'
         );
-      } else console.log('U mirin brah?');
+
+        if (!buyOrderExists && !sellOrderExists && balanceAsset === 0) {
+          const { roundedPriceBuy, quantity } = getValuesForOrder(
+            targetPrice,
+            stepSize,
+            tickSize,
+            balanceUSDT,
+            pair
+          );
+          await createOrder(
+            client,
+            pair,
+            'BUY',
+            'LIMIT',
+            quantity,
+            roundedPriceBuy
+          );
+        }
+        if (!buyOrderExists && !sellOrderExists && balanceAsset > 0) {
+          const { roundedPriceSell } = getValuesForOrder(
+            targetPrice,
+            stepSize,
+            tickSize,
+            balanceUSDT,
+            pair
+          );
+          await createOrder(
+            client,
+            pair,
+            'SELL',
+            'LIMIT',
+            balanceAsset,
+            roundedPriceSell
+          );
+        }
+      }
     });
   };
 

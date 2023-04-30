@@ -1,7 +1,14 @@
-const getOpenOrders = async (client) => {
+const getOpenOrders = async (client, pair = '') => {
   try {
-    const openOrders = await client.openOrders();
-    console.log(openOrders);
+    let openOrders;
+    if (!pair) {
+      openOrders = await client.openOrders();
+      console.log(openOrders);
+    } else {
+      openOrders = await client.openOrders({ symbol: pair });
+      console.log(openOrders);
+    }
+
     return openOrders;
   } catch (err) {
     console.error('Error in getOpenOrders:', err);

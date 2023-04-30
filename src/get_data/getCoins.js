@@ -34,7 +34,7 @@ const getCoins =
         })
       );
       const filteredCoins = coins.filter(
-        (coin) => coin.volatility >= 3 && coin.SMA.at(-1) < coin.currentPrice
+        (coin) => coin.volatility >= 5 && coin.SMA.at(-1) < coin.currentPrice
       );
 
       const sortCoins = filteredCoins.sort(

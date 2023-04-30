@@ -13,6 +13,7 @@ const getValuesForOrder = (
       parseFloat(tickSize) === 1 ? 0 : tickSize.indexOf('1') - 1;
 
     const roundedPriceBuy = targetPrice.toFixed(decimalPlacesPrice);
+
     const roundedPriceSell = (targetPrice * 1.03).toFixed(decimalPlacesPrice);
 
     const quantity = (Math.floor(balanceFree) / roundedPriceBuy).toFixed(
