@@ -8,7 +8,7 @@ const createOrder = async (client, symbol, side, type, quantity, price) => {
       price,
     });
   } catch (err) {
-    console.error(`Error creating limit order ${symbol}:`, err);
+    console.error(`Error in createOrder ${symbol}:`, err);
   }
 };
 

@@ -1,3 +1,6 @@
+const toFixedHard = (number, x) =>
+  parseFloat(number.toFixed(x + 1).slice(0, -1));
+
 const getValuesForOrder = (
   targetPrice,
   stepSize,
@@ -12,15 +15,30 @@ const getValuesForOrder = (
     const decimalPlacesPrice =
       parseFloat(tickSize) === 1 ? 0 : tickSize.indexOf('1') - 1;
 
-    const roundedPriceBuy = targetPrice.toFixed(decimalPlacesPrice);
+    const roundedPriceBuy = (targetPrice - targetPrice * 0.0025).toFixed(
+      decimalPlacesPrice
+    );
 
-    const roundedPriceSell = (targetPrice * 1.03).toFixed(decimalPlacesPrice);
+    const roundedPriceSell = (targetPrice * 1.0025).toFixed(decimalPlacesPrice);
 
-    const quantity = (Math.floor(balanceFree) / roundedPriceBuy).toFixed(
+    const quantityBuy = toFixedHard(
+      balanceFree / roundedPriceBuy,
       decimalPlacesQuantity
     );
-    console.log(pair, roundedPriceBuy, roundedPriceSell, quantity);
-    return { roundedPriceBuy, roundedPriceSell, quantity };
+    const quantitySell = toFixedHard(balanceFree, decimalPlacesQuantity);
+    console.log(
+      `pair: ${pair}, 
+      targetPrice: ${targetPrice}, 
+      tickSize: ${tickSize},
+      roundedPriceBuy: ${roundedPriceBuy}, 
+      roundedPriceSell: ${roundedPriceSell}, 
+      stepSize: ${stepSize}, 
+      quantityBuy: ${quantityBuy}, 
+      quantitySell: ${quantitySell}
+
+      `
+    );
+    return { roundedPriceBuy, roundedPriceSell, quantityBuy, quantitySell };
   } catch (err) {
     console.error(`Error in getValueForOrder:${pair}`, err);
     return {};

@@ -102,18 +102,25 @@ bot.on('message', async (msg) => {
     await cancelOrders(client, orders);
   } else if (msg.text === '/start') {
     let topPairs = await getTopPairs(client, parameters);
-    let coins = await curryGetCoins(topPairs);
-    let trackedCoins = await curryGetTrackedCoins(coins);
+    let coins = await curryGetCoins(['RLCUSDT']);
+    let trackedCoins = await curryGetTrackedCoins(coins[0]);
+    curryMonitorPrice(trackedCoins);
 
     setInterval(async () => {
+      console.log('Get new pair...');
       topPairs = await getTopPairs(client, parameters);
-      coins = await curryGetCoins(topPairs);
-      trackedCoins = await curryGetTrackedCoins(coins);
+      coins = await curryGetCoins(['RLCUSDT']);
+      trackedCoins = await curryGetTrackedCoins(coins[0]);
     }, 24 * 60 * 60 * 1000);
 
     setInterval(async () => {
-      console.log('trackedCoins');
+      console.log('U mirin brah?');
+      if (trackedCoins === {}) {
+        topPairs = await getTopPairs(client, parameters);
+        coins = await curryGetCoins(['RLCUSDT']);
+        trackedCoins = await curryGetTrackedCoins(coins[0]);
+      }
       curryMonitorPrice(trackedCoins);
-    }, 5 * 60 * 1000);
+    }, 1 * 60 * 1000);
   }
 });
