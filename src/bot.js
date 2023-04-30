@@ -76,7 +76,6 @@ const curryMonitorPrice = monitorPrice(
   {},
   createOrder,
   getBalance,
-  currySendMessage,
   getValuesForOrder
 );
 
@@ -106,11 +105,11 @@ bot.on('message', async (msg) => {
     let trackedCoins = await curryGetTrackedCoins(coins);
     curryMonitorPrice(trackedCoins);
 
-    setInterval(async () => {
-      topPairs = await getTopPairs(client, parameters);
-      coins = await curryGetCoins(topPairs);
-      trackedCoins = getTrackedCoins(coins);
-    }, 24 * 60 * 60 * 1000);
+    // setInterval(async () => {
+    //   topPairs = await getTopPairs(client, parameters);
+    //   coins = await curryGetCoins(topPairs);
+    //   trackedCoins = getTrackedCoins(coins);
+    // }, 24 * 60 * 60 * 1000);
 
     // setInterval(async () => {
     //   curryMonitorPrice(trackedCoins);

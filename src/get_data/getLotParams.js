@@ -1,23 +1,13 @@
 const getLotParams = async (client, symbol) => {
   try {
-    const exchangeInfo = await client.exchangeInfo();
-    const { symbols } = exchangeInfo;
-    const coinInfo = symbols.find((s) => s.symbol === symbol);
-
-    const lotSizeFilter = coinInfo.filters.find(
-      (f) => f.filterType === 'LOT_SIZE'
+    const { filters } = (await client.exchangeInfo()).symbols.find(
+      (s) => s.symbol === symbol
     );
-    const { stepSize } = lotSizeFilter;
-
-    const priceFilter = coinInfo.filters.find(
-      (f) => f.filterType === 'PRICE_FILTER'
-    );
-
-    const { tickSize } = priceFilter;
-
-    return { stepSize, tickSize };
+    const lotSizeFilter = filters.find((f) => f.filterType === 'LOT_SIZE');
+    const priceFilter = filters.find((f) => f.filterType === 'PRICE_FILTER');
+    return { stepSize: lotSizeFilter.stepSize, tickSize: priceFilter.tickSize };
   } catch (err) {
-    console.error(`Error in getLotSizeParams of ${symbol}`, err);
+    console.error(`Error in getLotSizeParams of ${symbol}:`, err);
     return {};
   }
 };
