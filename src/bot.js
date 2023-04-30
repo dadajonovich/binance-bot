@@ -112,7 +112,7 @@ bot.on('message', async (msg) => {
     }, 24 * 60 * 60 * 1000);
 
     setInterval(async () => {
-      console.log('Monitoring...');
+      console.log('trackedCoins');
       curryMonitorPrice(trackedCoins);
     }, 5 * 60 * 1000);
   }

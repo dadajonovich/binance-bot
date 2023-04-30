@@ -18,6 +18,7 @@ const monitorPrice =
       const asset = match[1];
       const { balanceFree: balanceAsset } = await getBalance(client, asset);
       const { balanceFree: balanceUSDT } = await getBalance(client);
+      console.log(`${pair}-${price.currentPrice} | target:${targetPrice}`);
 
       if (price.currentPrice < targetPrice) {
         // if (true) {
