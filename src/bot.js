@@ -104,7 +104,6 @@ bot.on('message', async (msg) => {
     let topPairs = await getTopPairs(client, parameters);
     let coins = await curryGetCoins(topPairs);
     let trackedCoins = await curryGetTrackedCoins(coins);
-    curryMonitorPrice(trackedCoins);
 
     setInterval(async () => {
       topPairs = await getTopPairs(client, parameters);
@@ -113,6 +112,7 @@ bot.on('message', async (msg) => {
     }, 24 * 60 * 60 * 1000);
 
     setInterval(async () => {
+      console.log('Monitoring...');
       curryMonitorPrice(trackedCoins);
     }, 5 * 60 * 1000);
   }

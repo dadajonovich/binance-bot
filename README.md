@@ -10,4 +10,4 @@ Further development is seen in the direction of abandoning technical indicators 
 
 ---
 
-<img src="./src/assets/zog.JPG" alt="image" width="500" />
+<img src="./src/assets/zog.jpg" alt="image" width="500" />

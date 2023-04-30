@@ -7,11 +7,10 @@ const monitorPrice =
     createOrder = (f) => f,
     getBalance = (f) => f,
     getValuesForOrder = (f) => f,
-    getOpenOrders = (f) => f // функция для получения открытых ордеров
+    getOpenOrders = (f) => f
   ) =>
   (trackedCoins = []) => {
     trackedCoins.forEach(async (coin) => {
-      console.log('Monitoring...');
       const { pair, targetPrice, stepSize, tickSize } = coin;
       const candles = await getCandles(client, pair, intervalToMonitor, period);
       const price = getPrice(candles);
