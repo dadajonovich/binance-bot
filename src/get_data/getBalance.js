@@ -6,7 +6,7 @@ const getBalance = async (client, asset = 'USDT') => {
     const balanceLocked = parseFloat(balance.locked);
     return { balanceFree, balanceLocked };
   } catch (err) {
-    console.error('Error in balance request:', err);
+    console.error('Error in getBalance:', err);
     return {};
   }
 };

@@ -18,8 +18,8 @@ const {
   getOpenOrders,
   getPrices,
   getTopPairs,
-  getLotSizeParams,
-  getValueForOrder,
+  getLotParams,
+  getValuesForOrder,
 } = require('./get_data/indexGetData');
 
 // TA
@@ -76,10 +76,11 @@ const curryMonitorPrice = monitorPrice(
   {},
   createOrder,
   getBalance,
-  getLotSizeParams,
   currySendMessage,
-  getValueForOrder
+  getValuesForOrder
 );
+
+const curryGetTrackedCoins = getTrackedCoins(client, getLotParams);
 
 bot.on('message', async (msg) => {
   await currySendMessage('Ща все будет...');
@@ -102,14 +103,14 @@ bot.on('message', async (msg) => {
   } else if (msg.text === '/start') {
     let topPairs = await getTopPairs(client, parameters);
     let coins = await curryGetCoins(topPairs);
-    let trackedCoins = getTrackedCoins(coins);
+    let trackedCoins = await curryGetTrackedCoins(coins);
     curryMonitorPrice(trackedCoins);
 
-    // setInterval(async () => {
-    //   topPairs = await getTopPairs(client, parameters);
-    //   coins = await curryGetCoins(topPairs);
-    //   trackedCoins = getTrackedCoins(coins);
-    // }, 24 * 60 * 60 * 1000);
+    setInterval(async () => {
+      topPairs = await getTopPairs(client, parameters);
+      coins = await curryGetCoins(topPairs);
+      trackedCoins = getTrackedCoins(coins);
+    }, 24 * 60 * 60 * 1000);
 
     // setInterval(async () => {
     //   curryMonitorPrice(trackedCoins);

@@ -4,7 +4,7 @@ const getOpenOrders = async (client) => {
     console.log(openOrders);
     return openOrders;
   } catch (err) {
-    console.error('Error in open orders request:', err);
+    console.error('Error in getOpenOrders:', err);
     return [];
   }
 };

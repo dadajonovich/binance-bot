@@ -1,6 +1,6 @@
 const cancelOrders = async (client, coins) => {
   try {
-    const cancelOrdersPromises = await Promise.all(
+    await Promise.all(
       coins.map(async (coin) => {
         const { symbol, orderId } = coin;
         await client.cancelOrder({
@@ -9,11 +9,8 @@ const cancelOrders = async (client, coins) => {
         });
       })
     );
-
-    return cancelOrdersPromises;
   } catch (err) {
-    console.error('Error creating limit order:', err);
-    return [];
+    console.error('Error cancel limit order:', err);
   }
 };
 
