@@ -8,8 +8,7 @@ const getCoins =
     getEMA = (f) => f,
     getMACD = (f) => f,
     getRSI = (f) => f,
-    getVolatility = (f) => f,
-    getLotParams = (f) => f
+    getVolatility = (f) => f
   ) =>
   async (pairs = []) => {
     try {
@@ -22,7 +21,6 @@ const getCoins =
             period
           );
           const prices = getPrices(candles);
-          const { stepSize, tickSize } = await getLotParams(client, pair);
 
           return {
             pair,
@@ -32,8 +30,6 @@ const getCoins =
             EMA: getEMA(prices),
             MACD: getMACD(prices),
             RSI: getRSI(prices),
-            stepSize,
-            tickSize,
           };
         })
       );
@@ -46,7 +42,7 @@ const getCoins =
       // );
 
       const filteredCoins = coins.filter(
-        (coin) => coin.RSI.at(-1) < 0 && coin.RSI.at(-2)
+        (coin) => coin.MACD.at(-1) > 0 && coin.MACD.at(-2) < 0
       );
       return filteredCoins;
     } catch (err) {

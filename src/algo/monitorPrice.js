@@ -12,6 +12,7 @@ const monitorPrice =
     client,
     createOrder = (f) => f,
     getBalance = (f) => f,
+    getLotParams = (f) => f,
     getValuesForOrder = (f) => f,
     getOpenOrders = (f) => f,
     cancelOrders = (f) => f
@@ -20,22 +21,13 @@ const monitorPrice =
     try {
       await Promise.all(
         coins.map(async (coin) => {
-          const {
-            pair,
-            currentPrice,
-            volatility,
-            SMA,
-            EMA,
-            MACD,
-            RSI,
-            stepSize,
-            tickSize,
-          } = coin;
+          const { pair, currentPrice, volatility, SMA, EMA, MACD, RSI } = coin;
 
           const match = pair.match(/^(.*)USDT$/);
           const asset = match[1];
           const { balanceFree: balanceAsset } = await getBalance(client, asset);
-          console.log(balanceUSDT);
+          const { stepSize, tickSize } = await getLotParams(client, pair);
+          console.log(stepSize, tickSize);
 
           const lastSMA = SMA.at(-1);
           const lastEMA = EMA.at(-1);

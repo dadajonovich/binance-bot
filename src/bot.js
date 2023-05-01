@@ -64,14 +64,14 @@ const curryGetCoins = getCoins(
   getEMA,
   getMACD,
   getRSI,
-  getVolatility,
-  getLotParams
+  getVolatility
 );
 
 const curryMonitorPrice = monitorPrice(
   client,
   createOrder,
   getBalance,
+  getLotParams,
   getValuesForOrder,
   getOpenOrders,
   cancelOrders
@@ -109,11 +109,13 @@ bot.on('message', async (msg) => {
       break;
 
     case '/start':
+      topPairs = await getTopPairs(client, parameters);
       orders = await getOpenOrders(client);
       if (orders.length > 0) return;
-      balanceUSDT = await getBalance(client, 'USDT');
-      topPairs = await getTopPairs(client, parameters);
       coins = await curryGetCoins(topPairs);
+      await currySendMessage(curryGetStrCoinsInfo(coins));
+      if (coins.length === []) return;
+      balanceUSDT = await getBalance(client, 'USDT');
       await curryMonitorPrice(coins, balanceUSDT);
 
       setInterval(async () => {
@@ -121,8 +123,10 @@ bot.on('message', async (msg) => {
         orders = await getOpenOrders(client);
         // if (orders.some((order) => order.side === 'BUY')) return;
         if (orders.length > 0) return;
-        balanceUSDT = await getBalance(client, 'USDT');
         coins = await curryGetCoins(topPairs);
+        await currySendMessage(curryGetStrCoinsInfo(coins));
+        if (coins.length === []) return;
+        balanceUSDT = await getBalance(client, 'USDT');
         await curryMonitorPrice(coins, balanceUSDT);
       }, 4 * 60 * 60 * 1000);
       break;
