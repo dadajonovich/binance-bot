@@ -37,14 +37,18 @@ const getCoins =
           };
         })
       );
-      const filteredCoins = coins.filter(
-        (coin) => coin.SMA.at(-1) < coin.currentPrice
-      );
+      // const filteredCoins = coins.filter(
+      //   (coin) => coin.volatility >= 3 && coin.SMA.at(-1) < coin.currentPrice
+      // );
 
-      const sortCoins = filteredCoins.sort(
-        (a, b) => b.volatility - a.volatility
+      // const sortCoins = filteredCoins.sort(
+      //   (a, b) => b.volatility - a.volatility
+      // );
+
+      const filteredCoins = coins.filter(
+        (coin) => coin.RSI.at(-1) < 0 && coin.RSI.at(-2)
       );
-      return sortCoins;
+      return filteredCoins;
     } catch (err) {
       console.error('Error in getting coins', err);
       return [];

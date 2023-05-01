@@ -35,10 +35,14 @@ const { monitorPrice, createOrder, cancelOrders } = require('./algo/indexAlgo');
 
 // Compose
 const sendMessage = (chatId) => async (message) => {
-  await bot.sendMessage(
-    chatId,
-    message !== '' ? message : 'В Багдаде все спокойно...'
-  );
+  try {
+    await bot.sendMessage(
+      chatId,
+      message !== '' ? message : 'В Багдаде все спокойно...'
+    );
+  } catch (err) {
+    console.error('Error in sendMessage', err);
+  }
 };
 
 // Currying
@@ -78,6 +82,7 @@ bot.on('message', async (msg) => {
 
   let orders;
   let balanceUSDT;
+  let balance;
   let coins;
   let topPairs;
 
@@ -89,8 +94,8 @@ bot.on('message', async (msg) => {
       break;
 
     case '/balance':
-      balanceUSDT = await getBalance(client);
-      await currySendMessage(getBalanceMessage(balanceUSDT));
+      balance = await getBalance(client);
+      await currySendMessage(getBalanceMessage(balance));
       break;
 
     case '/orders':
@@ -105,8 +110,8 @@ bot.on('message', async (msg) => {
 
     case '/start':
       orders = await getOpenOrders(client);
-      if (orders.length === []) return;
-      balanceUSDT = await getBalance(client);
+      if (orders.length > 0) return;
+      balanceUSDT = await getBalance(client, 'USDT');
       topPairs = await getTopPairs(client, parameters);
       coins = await curryGetCoins(topPairs);
       await curryMonitorPrice(coins, balanceUSDT);
@@ -114,11 +119,12 @@ bot.on('message', async (msg) => {
       setInterval(async () => {
         console.log('U mirin brah?');
         orders = await getOpenOrders(client);
-        if (orders.length === []) return;
-        balanceUSDT = await getBalance(client);
+        // if (orders.some((order) => order.side === 'BUY')) return;
+        if (orders.length > 0) return;
+        balanceUSDT = await getBalance(client, 'USDT');
         coins = await curryGetCoins(topPairs);
         await curryMonitorPrice(coins, balanceUSDT);
-      }, 5 * 60 * 1000);
+      }, 4 * 60 * 60 * 1000);
       break;
 
     default:

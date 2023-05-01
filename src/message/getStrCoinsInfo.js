@@ -11,7 +11,7 @@ const getStrCoinsInfo =
         .map(
           (coin) => `\n${coin.pair}
   - Current Price: ${coin.currentPrice.toFixed(2)}
-  - Volatility: ${coin.volatility.toFixed(0)}%
+  - Volatility: ${coin.volatility.toFixed(2)}%
   ${getMessageInfoTemplate('SMA', coin.SMA, templateMessageMA, coin)}
   ${getMessageInfoTemplate('EMA', coin.EMA, templateMessageMA, coin)}
   ${getMessageInfoTemplate('MACD', coin.MACD, templateMessageIndicator)}

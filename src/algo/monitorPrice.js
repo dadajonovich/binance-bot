@@ -16,7 +16,7 @@ const monitorPrice =
     getOpenOrders = (f) => f,
     cancelOrders = (f) => f
   ) =>
-  async (coins, balanceUSDT) => {
+  async (coins, { balanceFree: balanceUSDT }) => {
     try {
       await Promise.all(
         coins.map(async (coin) => {
@@ -35,6 +35,7 @@ const monitorPrice =
           const match = pair.match(/^(.*)USDT$/);
           const asset = match[1];
           const { balanceFree: balanceAsset } = await getBalance(client, asset);
+          console.log(balanceUSDT);
 
           const lastSMA = SMA.at(-1);
           const lastEMA = EMA.at(-1);
@@ -44,7 +45,7 @@ const monitorPrice =
           const lastRSI = RSI.at(-1);
 
           console.log(
-            `${pair} \nprice: ${currentPrice} \n Volatility: ${volatility.toFixed(
+            `${pair} \nprice: ${currentPrice} \nVolatility: ${volatility.toFixed(
               2
             )}\nSMA: ${lastSMA.toFixed(2)} \nEMA: ${lastEMA.toFixed(
               2
@@ -111,6 +112,7 @@ const monitorPrice =
               roundedPriceBuy
             );
           }
+
           if (!buyOrderExists && !sellOrderExists && balanceAsset > stepSize) {
             console.log('Sell order!');
             console.log(balanceAsset);
