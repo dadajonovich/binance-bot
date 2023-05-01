@@ -128,7 +128,7 @@ bot.on('message', async (msg) => {
         if (coins.length === []) return;
         balanceUSDT = await getBalance(client, 'USDT');
         await curryMonitorPrice(coins, balanceUSDT);
-      }, 4 * 60 * 60 * 1000);
+      }, 5 * 60 * 1000);
       break;
 
     default:
