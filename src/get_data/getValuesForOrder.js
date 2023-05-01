@@ -2,7 +2,7 @@ const toFixedHard = (number, x) =>
   parseFloat(number.toFixed(x + 1).slice(0, -1));
 
 const getValuesForOrder = (
-  targetPrice,
+  currentPrice,
   stepSize,
   tickSize,
   balanceFree,
@@ -15,13 +15,10 @@ const getValuesForOrder = (
     const decimalPlacesPrice =
       parseFloat(tickSize) === 1 ? 0 : tickSize.indexOf('1') - 1;
 
-    const roundedPriceBuy = toFixedHard(
-      targetPrice - targetPrice * 0.025,
-      decimalPlacesPrice
-    );
+    const roundedPriceBuy = toFixedHard(currentPrice, decimalPlacesPrice);
 
     const roundedPriceSell = toFixedHard(
-      targetPrice * 1.0025,
+      currentPrice + currentPrice * 0.005,
       decimalPlacesPrice
     );
 
@@ -32,7 +29,7 @@ const getValuesForOrder = (
     const quantitySell = toFixedHard(balanceFree, decimalPlacesQuantity);
     console.log(
       `pair: ${pair}, 
-      targetPrice: ${targetPrice}, 
+      currentPrice: ${currentPrice}, 
       tickSize: ${tickSize},
       roundedPriceBuy: ${roundedPriceBuy}, 
       roundedPriceSell: ${roundedPriceSell}, 

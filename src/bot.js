@@ -1,8 +1,20 @@
 const { client, bot, telegramChatId, parameters } = require('./config');
 
+const {
+  getSMA,
+  getEMA,
+  getMACD,
+  getRSI,
+  getVolatility,
+} = require('./ta.js/indexTA');
+
 // Message
 const {
   getBalanceMessage,
+  templateMessageIndicator,
+  templateMessageMA,
+  getMessageInfoTemplate,
+  getStrCoinsInfo,
   getOrdersMessage,
 } = require('./message/indexMessage');
 
@@ -10,11 +22,12 @@ const {
 const {
   getBalance,
   getCandles,
-  getCoin,
+  getCoins,
   getOpenOrders,
   getPrice,
   getLotParams,
   getValuesForOrder,
+  getTopPairs,
 } = require('./get_data/indexGetData');
 
 // Algo
@@ -32,19 +45,27 @@ const sendMessage = (chatId) => async (message) => {
 
 const currySendMessage = sendMessage(telegramChatId);
 
-const curryGetCoin = getCoin(
+const curryGetStrCoinsInfo = getStrCoinsInfo(
+  templateMessageIndicator,
+  templateMessageMA,
+  getMessageInfoTemplate
+);
+
+const curryGetCoins = getCoins(
   client,
   parameters,
   getCandles,
   getPrice,
+  getSMA,
+  getEMA,
+  getMACD,
+  getRSI,
+  getVolatility,
   getLotParams
 );
 
 const curryMonitorPrice = monitorPrice(
   client,
-  getCandles,
-  getPrice,
-  {},
   createOrder,
   getBalance,
   getValuesForOrder,
@@ -56,13 +77,20 @@ bot.on('message', async (msg) => {
   await currySendMessage('Ща все будет...');
 
   let orders;
-  let balance;
-  let coin;
+  let balanceUSDT;
+  let coins;
+  let topPairs;
 
   switch (msg.text) {
+    case '/tellme':
+      topPairs = await getTopPairs(client, parameters);
+      coins = await curryGetCoins(topPairs);
+      await currySendMessage(curryGetStrCoinsInfo(coins));
+      break;
+
     case '/balance':
-      balance = await getBalance(client);
-      await currySendMessage(getBalanceMessage(balance));
+      balanceUSDT = await getBalance(client);
+      await currySendMessage(getBalanceMessage(balanceUSDT));
       break;
 
     case '/orders':
@@ -76,13 +104,21 @@ bot.on('message', async (msg) => {
       break;
 
     case '/start':
-      coin = await curryGetCoin('RLCUSDT');
-      curryMonitorPrice(coin);
+      orders = await getOpenOrders(client);
+      if (orders.length === []) return;
+      balanceUSDT = await getBalance(client);
+      topPairs = await getTopPairs(client, parameters);
+      coins = await curryGetCoins(topPairs);
+      await curryMonitorPrice(coins, balanceUSDT);
 
       setInterval(async () => {
         console.log('U mirin brah?');
-        curryMonitorPrice(coin);
-      }, 1 * 60 * 1000);
+        orders = await getOpenOrders(client);
+        if (orders.length === []) return;
+        balanceUSDT = await getBalance(client);
+        coins = await curryGetCoins(topPairs);
+        await curryMonitorPrice(coins, balanceUSDT);
+      }, 5 * 60 * 1000);
       break;
 
     default:
