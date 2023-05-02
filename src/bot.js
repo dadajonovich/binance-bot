@@ -114,14 +114,15 @@ bot.on('message', async (msg) => {
       await currySendMessage(curryGetStrCoinsInfo(coins));
       await curryMonitorPrice(coins);
 
-      setInterval(async () => {
-        coins = await curryGetCoins(topPairs);
-        await currySendMessage(curryGetStrCoinsInfo(coins));
-      }, 4 * 60 * 60 * 1000);
+      // setInterval(async () => {
+      //   coins = await curryGetCoins(topPairs);
+      //   await currySendMessage(curryGetStrCoinsInfo(coins));
+      // }, 4 * 60 * 60 * 1000);
 
       setInterval(async () => {
         console.log('U mirin brah?');
         await curryMonitorPrice(coins);
+        coins = await curryGetCoins(topPairs);
       }, 5 * 60 * 1000);
       break;
 

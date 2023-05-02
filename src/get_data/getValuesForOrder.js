@@ -9,6 +9,13 @@ const getValuesForOrder = (
   pair
 ) => {
   try {
+    console.log(
+      typeof currentPrice,
+      typeof stepSize,
+      typeof tickSize,
+      typeof balanceFree,
+      typeof pair
+    );
     const decimalPlacesQuantity =
       parseFloat(stepSize) === 1 ? 0 : stepSize.indexOf('1') - 1;
 
@@ -18,7 +25,7 @@ const getValuesForOrder = (
     const roundedPriceBuy = toFixedHard(currentPrice, decimalPlacesPrice);
 
     const roundedPriceSell = toFixedHard(
-      currentPrice + currentPrice * 0.01,
+      currentPrice * 1.005,
       decimalPlacesPrice
     );
 

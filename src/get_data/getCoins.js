@@ -37,14 +37,14 @@ const getCoins =
         })
       );
       const filteredCoins = coins.filter(
-        (coin) => coin.volatility >= 3 && coin.SMA.at(-1) < coin.currentPrice
+        (coin) => coin.MACD.at(-1) > 0 && coin.MACD.at(-2) < 0
       );
 
       const sortCoins = filteredCoins.sort(
-        (a, b) => b.volatility - a.volatility
+        (a, b) => b.MACD.at(-1) - a.MACD.at(-1)
       );
 
-      return sortCoins;
+      return filteredCoins.slice(0, 1);
     } catch (err) {
       console.error('Error in getting coins', err);
       return [];

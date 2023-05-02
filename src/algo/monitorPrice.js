@@ -37,7 +37,7 @@ const monitorPrice =
         console.log(
           `${pair} - ${goalPercent}%\nprice: ${price}, targetPrice: ${targetPrice}`
         );
-        if (price > targetPrice) return;
+        // if (price > targetPrice) return;
 
         const match = pair.match(/^(.*)USDT$/);
         const asset = match[1];
@@ -99,7 +99,7 @@ const monitorPrice =
         ) {
           console.log('Buy order');
           const { roundedPriceBuy, quantityBuy } = getValuesForOrder(
-            price,
+            Number(price),
             stepSize,
             tickSize,
             quantityUSDT,
@@ -120,7 +120,7 @@ const monitorPrice =
         if (quantityAsset > stepSize) {
           console.log('Sell order!');
           const { roundedPriceSell, quantitySell } = getValuesForOrder(
-            price,
+            Number(price),
             stepSize,
             tickSize,
             quantityAsset,
@@ -137,9 +137,9 @@ const monitorPrice =
           );
         }
 
-        if (signalCancelBuyOrder > 0.5) {
-          await cancelOrders(client, openOrders);
-        }
+        // if (signalCancelBuyOrder > 0.5) {
+        //   await cancelOrders(client, openOrders);
+        // }
       });
     } catch (err) {
       console.error(`Error in monitorPrice`, err);

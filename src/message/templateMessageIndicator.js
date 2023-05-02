@@ -13,8 +13,8 @@ const templateMessageIndicator = (MA, arr) => {
     statusIndicators = '📈';
   } else statusIndicators = '📉';
 
-  return `${statusIndicators}${MA} ${y.toFixed(2)} to ${x.toFixed(
-    2
+  return `${statusIndicators}${MA} ${y.toFixed(4)} to ${x.toFixed(
+    4
   )} / ${percentDifference.toFixed(2)}%`;
 };
 
