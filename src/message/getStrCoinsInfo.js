@@ -12,6 +12,7 @@ const getStrCoinsInfo =
           (coin) => `\n${coin.pair}
   - Current Price: ${coin.currentPrice.toFixed(2)}
   - Volatility: ${coin.volatility.toFixed(2)}%
+  - Standart deviation: ${coin.standartDeviation.toFixed(4)}
   ${getMessageInfoTemplate('SMA', coin.SMA, templateMessageMA, coin)}
   ${getMessageInfoTemplate('EMA', coin.EMA, templateMessageMA, coin)}
   ${getMessageInfoTemplate('MACD', coin.MACD, templateMessageIndicator)}

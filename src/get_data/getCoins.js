@@ -12,6 +12,7 @@ const getCoins =
   ) =>
   async (pairs = []) => {
     try {
+      console.log(`${intervalToMonitor}, ${period}`);
       const coins = await Promise.all(
         pairs.map(async (pair) => {
           const candles = await getCandles(
@@ -21,11 +22,13 @@ const getCoins =
             period
           );
           const prices = getPrices(candles);
+          const { volatility, standartDeviation } = getVolatility(prices);
 
           return {
             pair,
             currentPrice: Number(prices.currentPrice),
-            volatility: getVolatility(prices),
+            volatility,
+            standartDeviation,
             SMA: getSMA(prices),
             EMA: getEMA(prices),
             MACD: getMACD(prices),
@@ -33,18 +36,15 @@ const getCoins =
           };
         })
       );
-      // const filteredCoins = coins.filter(
-      //   (coin) => coin.volatility >= 3 && coin.SMA.at(-1) < coin.currentPrice
-      // );
-
-      // const sortCoins = filteredCoins.sort(
-      //   (a, b) => b.volatility - a.volatility
-      // );
-
       const filteredCoins = coins.filter(
-        (coin) => coin.MACD.at(-1) > 0 && coin.MACD.at(-2) < 0
+        (coin) => coin.volatility >= 3 && coin.SMA.at(-1) < coin.currentPrice
       );
-      return filteredCoins;
+
+      const sortCoins = filteredCoins.sort(
+        (a, b) => b.volatility - a.volatility
+      );
+
+      return sortCoins;
     } catch (err) {
       console.error('Error in getting coins', err);
       return [];

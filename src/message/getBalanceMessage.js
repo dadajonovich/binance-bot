@@ -3,8 +3,8 @@ const getBalanceMessage = (coins = []) => {
   message += coins
     .map(
       (coin) => `\nCoin: ${coin.asset}
-  - Free balance: ${coin.balanceFree}
-  - Locked balance: ${coin.balanceLocked}
+- Free balance: ${coin.balanceFree}
+- Locked balance: ${coin.balanceLocked}
   `
     )
     .join('');

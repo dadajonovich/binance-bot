@@ -17,16 +17,33 @@ const monitorPrice =
     getOpenOrders = (f) => f,
     cancelOrders = (f) => f
   ) =>
-  async (coins, { balanceFree: balanceUSDT }) => {
+  async (coins) => {
     try {
       coins.forEach(async (coin) => {
-        const { pair, currentPrice, volatility, SMA, EMA, MACD, RSI } = coin;
+        const {
+          pair,
+          currentPrice,
+          volatility,
+          standartDeviation,
+          SMA,
+          EMA,
+          MACD,
+          RSI,
+        } = coin;
+
+        const targetPrice = currentPrice - standartDeviation;
+        const { [pair]: price } = await client.prices({ symbol: pair });
+        const goalPercent = calculatePercentageDifference(targetPrice, price);
+        console.log(
+          `${pair} - ${goalPercent}%\nprice: ${price}, targetPrice: ${targetPrice}`
+        );
+        if (price > targetPrice) return;
 
         const match = pair.match(/^(.*)USDT$/);
         const asset = match[1];
-        const { balanceFree: balanceAsset } = await getBalance(client, asset);
+        const { balanceFree: quantityAsset } = await getBalance(client, asset);
+        const { balanceFree: quantityUSDT } = await getBalance(client, 'USDT');
         const { stepSize, tickSize } = await getLotParams(client, pair);
-        console.log(stepSize, tickSize);
 
         const lastSMA = SMA.at(-1);
         const lastEMA = EMA.at(-1);
@@ -58,18 +75,6 @@ const monitorPrice =
           }
         });
 
-        const signalCancelForBuy = calculatePercentageDifference(
-          priceBuyStore,
-          currentPrice
-        );
-        const signalCancelForSell = calculatePercentageDifference(
-          priceSellStore,
-          currentPrice
-        );
-
-        console.log(signalCancelForBuy);
-        console.log(signalCancelForSell);
-
         const buyOrderExists = openOrders.some(
           (order) => order.side === 'BUY' && order.status === 'NEW'
         );
@@ -77,19 +82,27 @@ const monitorPrice =
           (order) => order.side === 'SELL' && order.status === 'NEW'
         );
 
+        const signalCancelBuyOrder = calculatePercentageDifference(
+          priceBuyStore,
+          price
+        );
+        const signalCancelSellOrder = calculatePercentageDifference(
+          priceSellStore,
+          price
+        );
+
         if (
+          quantityUSDT > 10 &&
           !buyOrderExists &&
           !sellOrderExists &&
-          balanceAsset < stepSize &&
-          penultimateMACD < 0 &&
-          lastMACD > 0
+          quantityAsset < stepSize
         ) {
           console.log('Buy order');
           const { roundedPriceBuy, quantityBuy } = getValuesForOrder(
-            currentPrice,
+            price,
             stepSize,
             tickSize,
-            balanceUSDT,
+            quantityUSDT,
             pair
           );
 
@@ -104,14 +117,13 @@ const monitorPrice =
           );
         }
 
-        if (!buyOrderExists && !sellOrderExists && balanceAsset > stepSize) {
+        if (quantityAsset > stepSize) {
           console.log('Sell order!');
-          console.log(balanceAsset);
           const { roundedPriceSell, quantitySell } = getValuesForOrder(
-            currentPrice,
+            price,
             stepSize,
             tickSize,
-            balanceAsset,
+            quantityAsset,
             pair
           );
           priceSellStore = roundedPriceSell;
@@ -125,8 +137,8 @@ const monitorPrice =
           );
         }
 
-        if (signalCancelForBuy > 0.5) {
-          cancelOrders(client, openOrders);
+        if (signalCancelBuyOrder > 0.5) {
+          await cancelOrders(client, openOrders);
         }
       });
     } catch (err) {

@@ -110,24 +110,18 @@ bot.on('message', async (msg) => {
 
     case '/start':
       topPairs = await getTopPairs(client, parameters);
-      orders = await getOpenOrders(client);
-      if (orders.length > 0) return;
       coins = await curryGetCoins(topPairs);
       await currySendMessage(curryGetStrCoinsInfo(coins));
-      if (coins.length === []) return;
-      balanceUSDT = await getBalance(client, 'USDT');
-      await curryMonitorPrice(coins, balanceUSDT);
+      await curryMonitorPrice(coins);
+
+      setInterval(async () => {
+        coins = await curryGetCoins(topPairs);
+        await currySendMessage(curryGetStrCoinsInfo(coins));
+      }, 4 * 60 * 60 * 1000);
 
       setInterval(async () => {
         console.log('U mirin brah?');
-        orders = await getOpenOrders(client);
-        // if (orders.some((order) => order.side === 'BUY')) return;
-        if (orders.length > 0) return;
-        coins = await curryGetCoins(topPairs);
-        await currySendMessage(curryGetStrCoinsInfo(coins));
-        if (coins.length === []) return;
-        balanceUSDT = await getBalance(client, 'USDT');
-        await curryMonitorPrice(coins, balanceUSDT);
+        await curryMonitorPrice(coins);
       }, 5 * 60 * 1000);
       break;
 

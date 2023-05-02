@@ -1,6 +1,6 @@
 const getBalance = async (client, asset = '') => {
   try {
-    const accountInfo = await client.accountInfo();
+    const accountInfo = await client.accountInfo({ recvWindow: 30000 });
     if (asset === '') {
       const balances = accountInfo.balances
         .filter((b) => {
