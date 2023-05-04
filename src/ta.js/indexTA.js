@@ -4,6 +4,7 @@ const getMACD = require('./macd');
 const getRSI = require('./rsi');
 const getVolatility = require('./volatility');
 const getOBV = require('./obv');
+const percentageDiffernce = require('./percentageDiffernce');
 
 module.exports = {
   getSMA,
@@ -12,4 +13,5 @@ module.exports = {
   getRSI,
   getOBV,
   getVolatility,
+  percentageDiffernce,
 };

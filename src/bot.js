@@ -7,6 +7,7 @@ const {
   getRSI,
   getOBV,
   getVolatility,
+  percentageDiffernce,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -66,7 +67,8 @@ const curryGetCoins = getCoins(
   getMACD,
   getRSI,
   getOBV,
-  getVolatility
+  getVolatility,
+  percentageDiffernce
 );
 
 const curryMonitorPrice = monitorPrice(
