@@ -5,6 +5,7 @@ const {
   getEMA,
   getMACD,
   getRSI,
+  getOBV,
   getVolatility,
 } = require('./ta.js/indexTA');
 
@@ -64,6 +65,7 @@ const curryGetCoins = getCoins(
   getEMA,
   getMACD,
   getRSI,
+  getOBV,
   getVolatility
 );
 
@@ -122,6 +124,10 @@ bot.on('message', async (msg) => {
       setInterval(async () => {
         console.log('U mirin brah?');
         await curryMonitorPrice(coins);
+      }, 1 * 60 * 1000);
+
+      setInterval(async () => {
+        console.log('Get new coins...');
         coins = await curryGetCoins(topPairs);
       }, 5 * 60 * 1000);
       break;

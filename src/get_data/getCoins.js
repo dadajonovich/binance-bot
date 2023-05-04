@@ -8,6 +8,7 @@ const getCoins =
     getEMA = (f) => f,
     getMACD = (f) => f,
     getRSI = (f) => f,
+    getOBV = (f) => f,
     getVolatility = (f) => f
   ) =>
   async (pairs = []) => {
@@ -33,18 +34,26 @@ const getCoins =
             EMA: getEMA(prices),
             MACD: getMACD(prices),
             RSI: getRSI(prices),
+            OBV: getOBV(prices),
           };
         })
       );
       const filteredCoins = coins.filter(
-        (coin) => coin.MACD.at(-1) > 0 && coin.MACD.at(-2) < 0
+        (coin) =>
+          coin.MACD.at(-1) > coin.MACD.at(-2) &&
+          coin.MACD.at(-2) > 0 &&
+          coin.MACD.at(-3) < 0 &&
+          coin.SMA.at(-1) < coin.currentPrice &&
+          coin.volatility > 2 &&
+          coin.OBV.at(-1) > coin.OBV.at(-2) &&
+          coin.OBV.at(-2) > coin.OBV.at(-3)
       );
 
       const sortCoins = filteredCoins.sort(
-        (a, b) => b.MACD.at(-1) - a.MACD.at(-1)
+        (a, b) => b.volatility - a.volatility
       );
 
-      return filteredCoins.slice(0, 1);
+      return sortCoins;
     } catch (err) {
       console.error('Error in getting coins', err);
       return [];
