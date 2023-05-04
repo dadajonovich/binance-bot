@@ -33,7 +33,8 @@ const getCoins =
             standartDeviation,
             SMA: getSMA(prices),
             EMA: getEMA(prices),
-            MACD: getMACD(prices),
+            MACD: getMACD(prices.closePrices),
+            volMACD: getMACD(prices.volumes),
             RSI: getRSI(prices),
             OBV: getOBV(prices),
           };
@@ -44,7 +45,9 @@ const getCoins =
           coin.MACD.at(-1) > 0 &&
           coin.MACD.at(-2) < 0 &&
           coin.OBV.at(-1) > coin.OBV.at(-2) &&
-          percentageDiffernce(coin.OBV.at(-1), coin.OBV.at(-2)) > 1
+          percentageDiffernce(coin.OBV.at(-1), coin.OBV.at(-2)) > 0.5
+        // coin.volMACD.at(-1) > 0 &&
+        // coin.volMACD.at(-2) < 0
       );
 
       return filteredCoins;
