@@ -22,6 +22,7 @@ const getStrCoinsInfo =
     coin.volMACD,
     templateMessageIndicator
   )}
+  ${getMessageInfoTemplate('OBV MACD', coin.obvMACD, templateMessageIndicator)}
   ${getMessageInfoTemplate('RSI', coin.RSI, templateMessageIndicator)}
   ${getMessageInfoTemplate('OBV', coin.OBV, templateMessageIndicator)}
           `
