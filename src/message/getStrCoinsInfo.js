@@ -16,13 +16,8 @@ const getStrCoinsInfo =
   - OBV: ${coin.OBV.at(-1).toFixed(2)}
   ${getMessageInfoTemplate('SMA', coin.SMA, templateMessageMA, coin)}
   ${getMessageInfoTemplate('EMA', coin.EMA, templateMessageMA, coin)}
+  ${getMessageInfoTemplate('VWMA', coin.VWMA, templateMessageMA, coin)}
   ${getMessageInfoTemplate('MACD', coin.MACD, templateMessageIndicator)}
-  ${getMessageInfoTemplate(
-    'Volume MACD',
-    coin.volMACD,
-    templateMessageIndicator
-  )}
-  ${getMessageInfoTemplate('OBV MACD', coin.obvMACD, templateMessageIndicator)}
   ${getMessageInfoTemplate('RSI', coin.RSI, templateMessageIndicator)}
   ${getMessageInfoTemplate('OBV', coin.OBV, templateMessageIndicator)}
           `

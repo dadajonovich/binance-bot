@@ -1,5 +1,5 @@
 const ta = require('ta.js');
 
-const getMACD = (array) => ta.macd(array);
+const getMACD = ({ closePrices }) => ta.macd(closePrices);
 
 module.exports = getMACD;

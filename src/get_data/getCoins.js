@@ -6,6 +6,7 @@ const getCoins =
     getPrices = (f) => f,
     getSMA = (f) => f,
     getEMA = (f) => f,
+    getVWMA = (f) => f,
     getMACD = (f) => f,
     getRSI = (f) => f,
     getOBV = (f) => f,
@@ -33,20 +34,20 @@ const getCoins =
             standartDeviation,
             SMA: getSMA(prices),
             EMA: getEMA(prices),
-            MACD: getMACD(prices.closePrices),
-            volMACD: getMACD(prices.volumes),
-            obvMACD: getMACD(getOBV(prices)),
+            VWMA: getVWMA(prices),
+            MACD: getMACD(prices),
             RSI: getRSI(prices),
             OBV: getOBV(prices),
           };
         })
       );
       const filteredCoins = coins.filter(
-        (coin) =>
-          coin.MACD.at(-1) > 0 &&
-          coin.MACD.at(-2) < 0 &&
-          coin.obvMACD.at(-1) > 0 &&
-          coin.obvMACD.at(-2) < 0
+        (coin) => coin.MACD.at(-1) > 0 && coin.MACD.at(-2) < 0
+        // coin.obvMACD.at(-1) > 0 &&
+        // coin.obvMACD.at(-2) < 0 &&
+        // coin.volatility > 1
+        // percentageDiffernce(coin.currentPrice, coin.VWMA.at(-1)) > 0.03 &&
+        // coin.OBV.at(-1) > coin.OBV.at(-2)
       );
 
       return filteredCoins;
