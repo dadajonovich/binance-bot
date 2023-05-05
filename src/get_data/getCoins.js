@@ -43,9 +43,10 @@ const getCoins =
       );
       const filteredCoins = coins.filter(
         (coin) =>
-          // coin.MACD.at(-1) > 0 &&
-          // coin.MACD.at(-2) < 0 &&
-          coin.obvMACD.at(-1) > 0 && coin.obvMACD.at(-2) < 0
+          coin.MACD.at(-1) > 0 &&
+          coin.MACD.at(-2) < 0 &&
+          coin.obvMACD.at(-1) > 0 &&
+          coin.obvMACD.at(-2) < 0
       );
 
       return filteredCoins;
