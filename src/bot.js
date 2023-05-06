@@ -99,6 +99,28 @@ bot.on('message', async (msg) => {
   let filteredCoins;
   let topPairs;
 
+  const tradeAlgo = async () => {
+    topPairs = await getTopPairs(client, parameters);
+    setTimeout(async () => {
+      console.log('Start tradeAlgo');
+      await new Promise((resole) => {
+        const searchCoins = setInterval(async () => {
+          console.log('Start searchCoins');
+          coins = await curryGetCoins(topPairs, parameters);
+          filteredCoins = filterCoins(coins, percentageDiffernce);
+          if (filteredCoins.length > 0) {
+            clearInterval(searchCoins);
+            resole();
+          }
+        }, 5 * 60 * 1000);
+      });
+      await currySendMessage(curryGetStrCoinsInfo(filteredCoins));
+      await curryMonitorPrice(filteredCoins);
+      console.log('Restart tradeAlgo');
+      tradeAlgo();
+    }, 5 * 1000);
+  };
+
   switch (msg.text) {
     case '/tellme':
       topPairs = await getTopPairs(client, parameters);
@@ -123,16 +145,7 @@ bot.on('message', async (msg) => {
       break;
 
     case '/start':
-      topPairs = await getTopPairs(client, parameters);
-      coins = await curryGetCoins(topPairs, parameters);
-      filteredCoins = filterCoins(coins, percentageDiffernce);
-      await currySendMessage(curryGetStrCoinsInfo(filteredCoins));
-      await curryMonitorPrice(filteredCoins);
-
-      // setInterval(async () => {
-      //   coins = await curryGetCoins(topPairs);
-      //   await currySendMessage(curryGetStrCoinsInfo(coins));
-      // }, 4 * 60 * 60 * 1000);
+      tradeAlgo();
 
       break;
 

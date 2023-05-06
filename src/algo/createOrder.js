@@ -1,13 +1,23 @@
-const createOrder = async (client, symbol, side, type, quantity, price) => {
+const createOrder = async (
+  client,
+  symbol,
+  side,
+  type,
+  quantity,
+  price = null
+) => {
   try {
-    await client.order({
+    const orderParams = {
       symbol,
       side,
       type,
       quantity,
-      price,
       recvWindow: 30000,
-    });
+    };
+    if (price !== null) {
+      orderParams.price = price;
+    }
+    await client.order(orderParams);
   } catch (err) {
     console.error(`Error in createOrder ${symbol}:`, err);
   }

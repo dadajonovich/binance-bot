@@ -29,7 +29,7 @@ const createSellOrder = async (
       }, 15 * 1000);
     });
 
-    if (!isSellOrder) return;
+    if (!isSellOrder) throw new Error(`isSellOrder - ${isSellOrder}`);
 
     const { [pair]: price } = await client.prices({ symbol: pair });
     console.log(
@@ -47,11 +47,14 @@ const createSellOrder = async (
       pair,
       'SELL',
       'MARKET',
-      quantitySell,
-      roundedPriceSell
+      quantitySell
+      // roundedPriceSell
     );
+
+    return isSellOrder;
   } catch (err) {
     console.error(`Error in createSellOrder`, err);
+    return false;
   }
 };
 

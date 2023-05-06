@@ -24,7 +24,7 @@ const monitorPrice =
         );
 
         let { balanceFree: quantityAsset } = await getBalance(client, asset);
-        let { balanceFree: quantityUSDT } = await getBalance(client, 'USDT');
+        const { balanceFree: quantityUSDT } = await getBalance(client, 'USDT');
         const { stepSize, tickSize } = await getLotParams(client, pair);
 
         let isBuyOrder = false;
@@ -48,13 +48,13 @@ const monitorPrice =
             getOpenOrders
           );
 
-          if (!isBuyOrder) return;
+          if (!isBuyOrder) throw new Error(`isBuyOrder - ${isBuyOrder}`);
           ({ balanceFree: quantityAsset } = await getBalance(client, asset));
           console.log(quantityAsset);
         }
 
         if (quantityAsset > stepSize) {
-          createSellOrder(
+          isSellOrder = createSellOrder(
             client,
             pair,
             stepSize,
@@ -64,10 +64,11 @@ const monitorPrice =
             getValuesForOrder,
             createOrder
           );
+          if (!isSellOrder) throw new Error(`isSellOrder - ${isSellOrder}`);
         }
       });
     } catch (err) {
-      console.error(`Error in monitorPrice`, err);
+      console.error(`Error in monitorPrice:`, err);
     }
   };
 module.exports = monitorPrice;

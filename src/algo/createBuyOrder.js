@@ -28,8 +28,8 @@ const createBuyOrder = async (
       pair,
       'BUY',
       'MARKET',
-      quantityBuy,
-      roundedPriceBuy
+      quantityBuy
+      // roundedPriceBuy
     );
 
     await new Promise((resolve) => {
