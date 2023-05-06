@@ -117,7 +117,7 @@ bot.on('message', async (msg) => {
       await currySendMessage(curryGetStrCoinsInfo(filteredCoins));
       await curryMonitorPrice(filteredCoins);
       console.log('Restart tradeAlgo');
-      tradeAlgo();
+      await tradeAlgo();
     }, 5 * 1000);
   };
 
@@ -145,7 +145,7 @@ bot.on('message', async (msg) => {
       break;
 
     case '/start':
-      tradeAlgo();
+      await tradeAlgo();
 
       break;
 
