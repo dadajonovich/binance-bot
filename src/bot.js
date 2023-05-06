@@ -6,7 +6,6 @@ const {
   getMACD,
   getRSI,
   getOBV,
-  getVolatility,
   percentageDiffernce,
   getVWMA,
 } = require('./ta.js/indexTA');
@@ -34,7 +33,15 @@ const {
 } = require('./get_data/indexGetData');
 
 // Algo
-const { monitorPrice, createOrder, cancelOrders } = require('./algo/indexAlgo');
+const {
+  createOrder,
+  monitorPrice,
+  cancelOrders,
+  filterCoins,
+  orderExist,
+  createBuyOrder,
+  createSellOrder,
+} = require('./algo/indexAlgo');
 
 // Compose
 const sendMessage = (chatId) => async (message) => {
@@ -60,7 +67,6 @@ const curryGetStrCoinsInfo = getStrCoinsInfo(
 
 const curryGetCoins = getCoins(
   client,
-  parameters,
   getCandles,
   getPrice,
   getSMA,
@@ -68,9 +74,7 @@ const curryGetCoins = getCoins(
   getVWMA,
   getMACD,
   getRSI,
-  getOBV,
-  getVolatility,
-  percentageDiffernce
+  getOBV
 );
 
 const curryMonitorPrice = monitorPrice(
@@ -80,23 +84,27 @@ const curryMonitorPrice = monitorPrice(
   getLotParams,
   getValuesForOrder,
   getOpenOrders,
-  cancelOrders
+  orderExist,
+  curryGetCoins,
+  createBuyOrder,
+  createSellOrder
 );
 
 bot.on('message', async (msg) => {
   await currySendMessage('Ща все будет...');
 
   let orders;
-  let balanceUSDT;
   let balance;
   let coins;
+  let filteredCoins;
   let topPairs;
 
   switch (msg.text) {
     case '/tellme':
       topPairs = await getTopPairs(client, parameters);
-      coins = await curryGetCoins(topPairs);
-      await currySendMessage(curryGetStrCoinsInfo(coins));
+      coins = await curryGetCoins(topPairs, parameters);
+      filteredCoins = filterCoins(coins, percentageDiffernce);
+      await currySendMessage(curryGetStrCoinsInfo(filteredCoins));
       break;
 
     case '/balance':
@@ -116,20 +124,16 @@ bot.on('message', async (msg) => {
 
     case '/start':
       topPairs = await getTopPairs(client, parameters);
-      coins = await curryGetCoins(topPairs);
-      await currySendMessage(curryGetStrCoinsInfo(coins));
-      await curryMonitorPrice(coins);
+      coins = await curryGetCoins(topPairs, parameters);
+      filteredCoins = filterCoins(coins, percentageDiffernce);
+      await currySendMessage(curryGetStrCoinsInfo(filteredCoins));
+      await curryMonitorPrice(filteredCoins);
 
       // setInterval(async () => {
       //   coins = await curryGetCoins(topPairs);
       //   await currySendMessage(curryGetStrCoinsInfo(coins));
       // }, 4 * 60 * 60 * 1000);
 
-      setInterval(async () => {
-        console.log('Get new coins...');
-        coins = await curryGetCoins(topPairs);
-        await curryMonitorPrice(coins);
-      }, 5 * 60 * 1000);
       break;
 
     default:
