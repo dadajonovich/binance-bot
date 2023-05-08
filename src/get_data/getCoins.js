@@ -8,9 +8,10 @@ const getCoins =
     getVWMA = (f) => f,
     getMACD = (f) => f,
     getRSI = (f) => f,
-    getOBV = (f) => f
+    getOBV = (f) => f,
+    getVolatility = (f) => f
   ) =>
-  async (pairs = [], { intervalToMonitor = '5m', period = 28 } = {}) => {
+  async (pairs = [], { intervalToMonitor = '15m', period = 27 } = {}) => {
     try {
       console.log(`${intervalToMonitor}, ${period}`);
       const coins = await Promise.all(
@@ -22,10 +23,12 @@ const getCoins =
             period
           );
           const prices = getPrices(candles);
+          const volatility = getVolatility(prices);
 
           return {
             pair,
             currentPrice: Number(prices.currentPrice),
+            volatility,
             SMA: getSMA(prices),
             EMA: getEMA(prices),
             VWMA: getVWMA(prices),
@@ -35,7 +38,6 @@ const getCoins =
           };
         })
       );
-
       return coins;
     } catch (err) {
       console.error('Error in getting coins', err);

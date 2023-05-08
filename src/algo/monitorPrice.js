@@ -9,66 +9,77 @@ const monitorPrice =
     orderExist = (f) => f,
     curryGetCoins = (f) => f,
     createBuyOrder = (f) => f,
-    createSellOrder = (f) => f
+    createSellOrder = (f) => f,
+    cancelOrders = (f) => f
   ) =>
   async (coins) => {
     try {
-      coins.forEach(async (coin) => {
-        const { pair } = coin;
-        const match = pair.match(/^(.*)USDT$/);
-        const asset = match[1];
-        const { buyOrderExists, sellOrderExists } = await orderExist(
-          client,
-          pair,
-          getOpenOrders
-        );
+      const { balanceFree: fullQuantityUSDT } = await getBalance(
+        client,
+        'USDT'
+      );
+      const quantityUSDT = fullQuantityUSDT / coins.length;
 
-        let { balanceFree: quantityAsset } = await getBalance(client, asset);
-        const { balanceFree: quantityUSDT } = await getBalance(client, 'USDT');
-        const { stepSize, tickSize } = await getLotParams(client, pair);
-
-        let isBuyOrder = false;
-        let isSellOrder = false;
-
-        if (
-          quantityUSDT > 10 &&
-          !buyOrderExists &&
-          !sellOrderExists &&
-          quantityAsset < stepSize
-        ) {
-          isBuyOrder = await createBuyOrder(
+      const resultMonitor = Promise.all(
+        coins.map(async (coin) => {
+          const { pair } = coin;
+          const match = pair.match(/^(.*)USDT$/);
+          const asset = match[1];
+          const { buyOrderExists, sellOrderExists } = await orderExist(
             client,
             pair,
-            stepSize,
-            tickSize,
-            quantityUSDT,
-            getValuesForOrder,
-            createOrder,
-            orderExist,
             getOpenOrders
           );
+          let isBuyOrder;
+          let isSellOrder;
 
-          if (!isBuyOrder) throw new Error(`isBuyOrder - ${isBuyOrder}`);
-          ({ balanceFree: quantityAsset } = await getBalance(client, asset));
-          console.log(quantityAsset);
-        }
+          let { balanceFree: quantityAsset } = await getBalance(client, asset);
 
-        if (quantityAsset > stepSize) {
-          isSellOrder = createSellOrder(
-            client,
-            pair,
-            stepSize,
-            tickSize,
-            quantityAsset,
-            curryGetCoins,
-            getValuesForOrder,
-            createOrder
-          );
-          if (!isSellOrder) throw new Error(`isSellOrder - ${isSellOrder}`);
-        }
-      });
+          const { stepSize, tickSize } = await getLotParams(client, pair);
+
+          if (
+            quantityUSDT > 10 &&
+            !buyOrderExists &&
+            !sellOrderExists &&
+            quantityAsset < stepSize
+          ) {
+            isBuyOrder = await createBuyOrder(
+              client,
+              pair,
+              stepSize,
+              tickSize,
+              quantityUSDT,
+              getValuesForOrder,
+              createOrder,
+              orderExist,
+              getOpenOrders,
+              cancelOrders
+            );
+
+            if (!isBuyOrder) throw new Error(`isBuyOrder - ${isBuyOrder}`);
+            ({ balanceFree: quantityAsset } = await getBalance(client, asset));
+          }
+
+          if (quantityAsset > stepSize) {
+            isSellOrder = createSellOrder(
+              client,
+              pair,
+              stepSize,
+              tickSize,
+              quantityAsset,
+              curryGetCoins,
+              getValuesForOrder,
+              createOrder
+            );
+            if (!isSellOrder) throw new Error(`isSellOrder - ${isSellOrder}`);
+          }
+          return isSellOrder;
+        })
+      );
+      return resultMonitor;
     } catch (err) {
       console.error(`Error in monitorPrice:`, err);
+      return [];
     }
   };
 module.exports = monitorPrice;

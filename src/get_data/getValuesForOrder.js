@@ -27,7 +27,7 @@ const getValuesForOrder = (
     const roundedPriceSell = toFixedHard(currentPrice, decimalPlacesPrice);
 
     const quantityBuy = toFixedHard(
-      balanceFree / roundedPriceBuy,
+      (balanceFree - balanceFree * 0.001) / roundedPriceBuy,
       decimalPlacesQuantity
     );
     const quantitySell = toFixedHard(balanceFree, decimalPlacesQuantity);

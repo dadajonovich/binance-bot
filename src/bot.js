@@ -8,6 +8,7 @@ const {
   getOBV,
   percentageDiffernce,
   getVWMA,
+  getVolatility,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -74,7 +75,8 @@ const curryGetCoins = getCoins(
   getVWMA,
   getMACD,
   getRSI,
-  getOBV
+  getOBV,
+  getVolatility
 );
 
 const curryMonitorPrice = monitorPrice(
@@ -87,7 +89,8 @@ const curryMonitorPrice = monitorPrice(
   orderExist,
   curryGetCoins,
   createBuyOrder,
-  createSellOrder
+  createSellOrder,
+  cancelOrders
 );
 
 bot.on('message', async (msg) => {
@@ -98,27 +101,28 @@ bot.on('message', async (msg) => {
   let coins;
   let filteredCoins;
   let topPairs;
+  let resultMonitor;
 
   const tradeAlgo = async () => {
-    topPairs = await getTopPairs(client, parameters);
-    setTimeout(async () => {
-      console.log('Start tradeAlgo');
-      await new Promise((resole) => {
-        const searchCoins = setInterval(async () => {
-          console.log('Start searchCoins');
-          coins = await curryGetCoins(topPairs, parameters);
-          filteredCoins = filterCoins(coins, percentageDiffernce);
-          if (filteredCoins.length > 0) {
-            clearInterval(searchCoins);
-            resole();
-          }
-        }, 5 * 60 * 1000);
-      });
-      await currySendMessage(curryGetStrCoinsInfo(filteredCoins));
-      await curryMonitorPrice(filteredCoins);
-      console.log('Restart tradeAlgo');
-      await tradeAlgo();
-    }, 5 * 1000);
+    filteredCoins = [];
+    console.log('start tradeAlgo');
+    await new Promise((resole) => {
+      const searchCoins = setInterval(async () => {
+        console.log('tick searchCoins');
+        coins = await curryGetCoins(topPairs, parameters);
+        filteredCoins = filterCoins(coins, percentageDiffernce);
+        if (filteredCoins.length > 0) {
+          clearInterval(searchCoins);
+          resole();
+        }
+      }, 3 * 60 * 1000);
+    });
+    await currySendMessage(curryGetStrCoinsInfo(filteredCoins));
+    resultMonitor = await curryMonitorPrice(filteredCoins);
+    if (resultMonitor.every((elem) => elem === true) || resultMonitor === []) {
+      console.log('restart tradeAlgo');
+      tradeAlgo();
+    }
   };
 
   switch (msg.text) {
@@ -145,8 +149,13 @@ bot.on('message', async (msg) => {
       break;
 
     case '/start':
-      await tradeAlgo();
+      topPairs = await getTopPairs(client, parameters);
+      tradeAlgo();
 
+      break;
+
+    case '/stop':
+      await currySendMessage('Стоп-кран!');
       break;
 
     default:

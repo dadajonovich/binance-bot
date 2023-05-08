@@ -7,12 +7,15 @@ const createBuyOrder = async (
   getValuesForOrder = (f) => f,
   createOrder = (f) => f,
   orderExist = (f) => f,
-  getOpenOrders = (f) => f
+  getOpenOrders = (f) => f,
+  cancelOrders = (f) => f
 ) => {
   try {
     console.log('Buy order');
 
     let isBuyOrder = false;
+    let count = 0;
+    console.log(`count from createBuyOrder ${count}`);
 
     const { [pair]: price } = await client.prices({ symbol: pair });
     const { roundedPriceBuy, quantityBuy } = getValuesForOrder(
@@ -27,9 +30,9 @@ const createBuyOrder = async (
       client,
       pair,
       'BUY',
-      'MARKET',
-      quantityBuy
-      // roundedPriceBuy
+      'LIMIT',
+      quantityBuy,
+      roundedPriceBuy
     );
 
     await new Promise((resolve) => {
@@ -40,12 +43,18 @@ const createBuyOrder = async (
           pair,
           getOpenOrders
         );
+        count += 1;
         if (!buyMark) {
           isBuyOrder = true;
           clearInterval(checkBuyInterval);
           resolve();
         }
-      }, 15 * 1000);
+        if (count > 5) {
+          const orders = await getOpenOrders(client);
+          await cancelOrders(client, orders);
+          isBuyOrder = false;
+        }
+      }, 5 * 1000);
     });
 
     return isBuyOrder;

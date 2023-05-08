@@ -5,6 +5,7 @@ const getRSI = require('./rsi');
 const getOBV = require('./obv');
 const percentageDiffernce = require('./percentageDiffernce');
 const getVWMA = require('./vwma');
+const getVolatility = require('./volatility');
 
 module.exports = {
   getSMA,
@@ -14,4 +15,5 @@ module.exports = {
   getOBV,
   percentageDiffernce,
   getVWMA,
+  getVolatility,
 };

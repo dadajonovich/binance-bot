@@ -18,23 +18,21 @@ const createSellOrder = async (
         console.log('tick checkSellInterval...');
         const [{ MACD, OBV }] = await curryGetCoins([pair]);
         console.log(MACD, OBV);
-        const criterionSell =
-          MACD.at(-1) < MACD.at(-2) && OBV.at(-1) < OBV.at(-2);
+        const criterionSell = OBV.at(-1) < OBV.at(-2);
+        // MACD.at(-1) < MACD.at(-2) && OBV.at(-1) < OBV.at(-2);
 
         if (criterionSell) {
           isSellOrder = true;
           clearInterval(checkSellInterval);
           resolve();
         }
-      }, 15 * 1000);
+      }, 5 * 1000);
     });
 
     if (!isSellOrder) throw new Error(`isSellOrder - ${isSellOrder}`);
 
     const { [pair]: price } = await client.prices({ symbol: pair });
-    console.log(
-      `${Number(price)}, ${stepSize}, ${tickSize}, ${quantityAsset}, ${pair}`
-    );
+
     const { roundedPriceSell, quantitySell } = getValuesForOrder(
       Number(price),
       stepSize,
