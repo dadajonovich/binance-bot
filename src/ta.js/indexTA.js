@@ -6,6 +6,7 @@ const getOBV = require('./obv');
 const percentageDiffernce = require('./percentageDiffernce');
 const getVWMA = require('./vwma');
 const getVolatility = require('./volatility');
+const getWilliams = require('./williams');
 
 module.exports = {
   getSMA,
@@ -16,4 +17,5 @@ module.exports = {
   percentageDiffernce,
   getVWMA,
   getVolatility,
+  getWilliams,
 };

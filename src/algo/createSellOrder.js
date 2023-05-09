@@ -16,9 +16,11 @@ const createSellOrder = async (
     await new Promise((resolve) => {
       const checkSellInterval = setInterval(async () => {
         console.log('tick checkSellInterval...');
-        const [{ MACD, OBV, RSI, MACDOBV }] = await curryGetCoins([pair]);
-        console.log(MACDOBV);
-        const criterionSell = MACD.at(-1) < MACD.at(-2);
+        const [{ MACD, OBV, RSI, MACDOBV, williams }] = await curryGetCoins([
+          pair,
+        ]);
+        console.log(williams);
+        const criterionSell = williams.at(-1) > -20;
         console.log(criterionSell);
         if (criterionSell) {
           isSellOrder = true;

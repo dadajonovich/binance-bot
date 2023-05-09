@@ -19,6 +19,11 @@ const getStrCoinsInfo =
   ${getMessageInfoTemplate('MACD OBV', coin.MACDOBV, templateMessageIndicator)}
   ${getMessageInfoTemplate('RSI', coin.RSI, templateMessageIndicator)}
   ${getMessageInfoTemplate('OBV', coin.OBV, templateMessageIndicator)}
+  ${getMessageInfoTemplate(
+    'Williams %R',
+    coin.williams,
+    templateMessageIndicator
+  )}
           `
         )
         .join('');

@@ -9,7 +9,8 @@ const getCoins =
     getMACD = (f) => f,
     getRSI = (f) => f,
     getOBV = (f) => f,
-    getVolatility = (f) => f
+    getVolatility = (f) => f,
+    getWilliams = (f) => f
   ) =>
   async (pairs = [], { intervalToMonitor = '5m', period = 27 } = {}) => {
     try {
@@ -30,6 +31,7 @@ const getCoins =
             pair,
             currentPrice: Number(prices.currentPrice),
             volatility,
+            williams: getWilliams(prices),
             SMA: getSMA(prices),
             EMA: getEMA(prices),
             VWMA: getVWMA(prices),
