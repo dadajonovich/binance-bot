@@ -20,7 +20,7 @@ const monitorPrice =
       );
       const quantityUSDT = fullQuantityUSDT / coins.length;
 
-      const resultMonitor = Promise.all(
+      const resultMonitor = await Promise.all(
         coins.map(async (coin) => {
           const { pair } = coin;
           const match = pair.match(/^(.*)USDT$/);
@@ -30,8 +30,8 @@ const monitorPrice =
             pair,
             getOpenOrders
           );
-          let isBuyOrder;
-          let isSellOrder;
+          let isBuyOrder = false;
+          let isSellOrder = false;
 
           let { balanceFree: quantityAsset } = await getBalance(client, asset);
 

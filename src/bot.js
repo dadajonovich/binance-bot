@@ -90,7 +90,8 @@ const curryMonitorPrice = monitorPrice(
   curryGetCoins,
   createBuyOrder,
   createSellOrder,
-  cancelOrders
+  cancelOrders,
+  percentageDiffernce
 );
 
 bot.on('message', async (msg) => {
@@ -115,10 +116,11 @@ bot.on('message', async (msg) => {
           clearInterval(searchCoins);
           resole();
         }
-      }, 3 * 60 * 1000);
+      }, 1 * 60 * 1000);
     });
     await currySendMessage(curryGetStrCoinsInfo(filteredCoins));
     resultMonitor = await curryMonitorPrice(filteredCoins);
+    console.log(`resultMonitor - ${resultMonitor}`);
     if (resultMonitor.every((elem) => elem === true) || resultMonitor === []) {
       console.log('restart tradeAlgo');
       tradeAlgo();

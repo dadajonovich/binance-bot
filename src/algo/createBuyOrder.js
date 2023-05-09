@@ -52,7 +52,26 @@ const createBuyOrder = async (
         if (count > 5) {
           const orders = await getOpenOrders(client);
           await cancelOrders(client, orders);
-          isBuyOrder = false;
+          const { [pair]: currentPrice } = await client.prices({
+            symbol: pair,
+          });
+          const { roundedPriceBuy: newPrice, quantityBuy: newQuantity } =
+            getValuesForOrder(
+              Number(currentPrice),
+              stepSize,
+              tickSize,
+              quantityUSDT,
+              pair
+            );
+          await createOrder(
+            client,
+            pair,
+            'BUY',
+            'LIMIT',
+            newQuantity,
+            newPrice
+          );
+          count = 0;
         }
       }, 5 * 1000);
     });

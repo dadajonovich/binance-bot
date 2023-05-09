@@ -11,7 +11,7 @@ const getCoins =
     getOBV = (f) => f,
     getVolatility = (f) => f
   ) =>
-  async (pairs = [], { intervalToMonitor = '15m', period = 27 } = {}) => {
+  async (pairs = [], { intervalToMonitor = '30m', period = 27 } = {}) => {
     try {
       console.log(`${intervalToMonitor}, ${period}`);
       const coins = await Promise.all(
@@ -24,6 +24,7 @@ const getCoins =
           );
           const prices = getPrices(candles);
           const volatility = getVolatility(prices);
+          const OBV = getOBV(prices);
 
           return {
             pair,
@@ -32,9 +33,10 @@ const getCoins =
             SMA: getSMA(prices),
             EMA: getEMA(prices),
             VWMA: getVWMA(prices),
-            MACD: getMACD(prices),
+            MACD: getMACD(prices.closePrices),
+            MACDOBV: getMACD(OBV),
             RSI: getRSI(prices),
-            OBV: getOBV(prices),
+            OBV,
           };
         })
       );
