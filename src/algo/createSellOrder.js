@@ -20,7 +20,8 @@ const createSellOrder = async (
           pair,
         ]);
         console.log(williams);
-        const criterionSell = williams.at(-1) > -20;
+        const criterionSell =
+          williams.at(-1) > -20 || MACD.at(-1) < MACD.at(-2);
         console.log(criterionSell);
         if (criterionSell) {
           isSellOrder = true;

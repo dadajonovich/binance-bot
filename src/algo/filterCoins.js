@@ -4,7 +4,7 @@ const filterCoins = (coins, percentageDiffernce) => {
       coin.MACD.at(-1) > 0 &&
       coin.MACD.at(-2) < 0 &&
       // coin.SMA.at(-1) < coin.currentPrice &&
-      coin.volatility > 0.25 &&
+      coin.volatility > 0.5 &&
       coin.williams < -50
     // coin.williams.at(-1) > -80 &&
     // coin.williams.at(-2) < -80
