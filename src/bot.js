@@ -10,6 +10,7 @@ const {
   getVWMA,
   getVolatility,
   getWilliams,
+  getBollinger,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -20,6 +21,7 @@ const {
   getMessageInfoTemplate,
   getStrCoinsInfo,
   getOrdersMessage,
+  templateMessageBollinger,
 } = require('./message/indexMessage');
 
 // Get functions
@@ -64,7 +66,8 @@ const currySendMessage = sendMessage(telegramChatId);
 const curryGetStrCoinsInfo = getStrCoinsInfo(
   templateMessageIndicator,
   templateMessageMA,
-  getMessageInfoTemplate
+  getMessageInfoTemplate,
+  templateMessageBollinger
 );
 
 const curryGetCoins = getCoins(
@@ -78,7 +81,8 @@ const curryGetCoins = getCoins(
   getRSI,
   getOBV,
   getVolatility,
-  getWilliams
+  getWilliams,
+  getBollinger
 );
 
 const curryMonitorPrice = monitorPrice(

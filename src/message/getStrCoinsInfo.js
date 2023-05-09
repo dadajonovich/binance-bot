@@ -2,7 +2,8 @@ const getStrCoinsInfo =
   (
     templateMessageIndicator = (f) => f,
     templateMessageMA = (f) => f,
-    getMessageInfoTemplate = (f) => f
+    getMessageInfoTemplate = (f) => f,
+    templateMessageBollinger = (f) => f
   ) =>
   (coins = []) => {
     try {
@@ -24,6 +25,7 @@ const getStrCoinsInfo =
     coin.williams,
     templateMessageIndicator
   )}
+  ${getMessageInfoTemplate('Bellinger', coin.BOLL, templateMessageBollinger)}
           `
         )
         .join('');

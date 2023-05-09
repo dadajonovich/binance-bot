@@ -4,6 +4,7 @@ const getMessageInfoTemplate = require('./getMessageInfoTemplate');
 const getStrCoinsInfo = require('./getStrCoinsInfo');
 const getBalanceMessage = require('./getBalanceMessage');
 const getOrdersMessage = require('./getOrdersMessage');
+const templateMessageBollinger = require('./templateMessageBollinger');
 
 module.exports = {
   getBalanceMessage,
@@ -12,4 +13,5 @@ module.exports = {
   getMessageInfoTemplate,
   getStrCoinsInfo,
   getOrdersMessage,
+  templateMessageBollinger,
 };

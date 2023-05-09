@@ -10,9 +10,10 @@ const getCoins =
     getRSI = (f) => f,
     getOBV = (f) => f,
     getVolatility = (f) => f,
-    getWilliams = (f) => f
+    getWilliams = (f) => f,
+    getBollinger = (f) => f
   ) =>
-  async (pairs = [], { intervalToMonitor = '15m', period = 27 } = {}) => {
+  async (pairs = [], { intervalToMonitor = '5m', period = 27 } = {}) => {
     try {
       console.log(`${intervalToMonitor}, ${period}`);
       const coins = await Promise.all(
@@ -39,6 +40,7 @@ const getCoins =
             MACDOBV: getMACD(OBV),
             RSI: getRSI(prices),
             OBV,
+            BOLL: getBollinger(prices),
           };
         })
       );
