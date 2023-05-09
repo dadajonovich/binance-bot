@@ -11,7 +11,7 @@ const getCoins =
     getOBV = (f) => f,
     getVolatility = (f) => f
   ) =>
-  async (pairs = [], { intervalToMonitor = '30m', period = 27 } = {}) => {
+  async (pairs = [], { intervalToMonitor = '5m', period = 27 } = {}) => {
     try {
       console.log(`${intervalToMonitor}, ${period}`);
       const coins = await Promise.all(

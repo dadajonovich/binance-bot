@@ -1,13 +1,14 @@
 const filterCoins = (coins, percentageDiffernce) => {
   const filteredCoins = coins.filter(
     (coin) =>
-      coin.MACDOBV.at(-1) > 0 &&
-      coin.MACDOBV.at(-2) < 0 &&
+      coin.MACD.at(-1) > 0 &&
+      coin.MACD.at(-2) < 0 &&
       // coin.SMA.at(-1) < coin.currentPrice &&
-      coin.volatility > 0.5
-    // coin.MACD.at(-1) > coin.MACD.at(-2) &&
-    // coin.currentPrice > coin.EMA.at(-1) &&
-    // coin.RSI.at(-1) > 50
+      coin.volatility > 0.5 &&
+      // coin.MACD.at(-1) > coin.MACD.at(-2) &&
+      // coin.currentPrice > coin.EMA.at(-1) &&
+      coin.RSI.at(-1) < 60 &&
+      coin.RSI.at(-1) > 50
     // percentageDiffernce(coin.currentPrice, coin.VWMA.at(-1)) > 0.015 &&
     // percentageDiffernce(coin.currentPrice, coin.EMA.at(-1)) > 0.02 &&
     // coin.OBV.at(-1) > coin.OBV.at(-2)
