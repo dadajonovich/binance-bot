@@ -27,10 +27,14 @@ const getCoins =
           const prices = getPrices(candles);
           const volatility = getVolatility(prices);
           const OBV = getOBV(prices);
+          const BOLL = getBollinger(prices);
+          const [upperLine, middleLine, lowerLine] = BOLL.at(-1);
+          const percentBandwidth = ((upperLine - lowerLine) / middleLine) * 100;
 
           return {
             pair,
             currentPrice: Number(prices.currentPrice),
+            penultimateCurrentPrice: Number(prices.penultimateCurrentPrice),
             volatility,
             williams: getWilliams(prices),
             SMA: getSMA(prices),
@@ -40,7 +44,11 @@ const getCoins =
             MACDOBV: getMACD(OBV),
             RSI: getRSI(prices),
             OBV,
-            BOLL: getBollinger(prices),
+            BOLL,
+            percentBandwidth,
+            upperLine,
+            middleLine,
+            lowerLine,
           };
         })
       );
