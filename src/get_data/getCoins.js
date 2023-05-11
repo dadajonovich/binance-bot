@@ -9,11 +9,11 @@ const getCoins =
     getMACD = (f) => f,
     getRSI = (f) => f,
     getOBV = (f) => f,
-    getVolatility = (f) => f,
+    getStandartDeviation = (f) => f,
     getWilliams = (f) => f,
     getBollinger = (f) => f
   ) =>
-  async (pairs = [], { intervalToMonitor = '5m', period = 27 } = {}) => {
+  async (pairs = [], { intervalToMonitor = '15m', period = 27 } = {}) => {
     try {
       console.log(`${intervalToMonitor}, ${period}`);
       const coins = await Promise.all(
@@ -25,7 +25,9 @@ const getCoins =
             period
           );
           const prices = getPrices(candles);
-          const volatility = getVolatility(prices);
+          const SMA = getSMA(prices);
+          const standartDeviation = getStandartDeviation(prices);
+          const volatility = (standartDeviation / SMA.at(-1)) * 100;
           const OBV = getOBV(prices);
           const BOLL = getBollinger(prices);
           const [upperLine, middleLine, lowerLine] = BOLL.at(-1);
@@ -37,7 +39,7 @@ const getCoins =
             penultimateCurrentPrice: Number(prices.penultimateCurrentPrice),
             volatility,
             williams: getWilliams(prices),
-            SMA: getSMA(prices),
+            SMA,
             EMA: getEMA(prices),
             VWMA: getVWMA(prices),
             MACD: getMACD(prices.closePrices),

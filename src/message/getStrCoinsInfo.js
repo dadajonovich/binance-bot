@@ -25,7 +25,7 @@ const getStrCoinsInfo =
     coin.williams,
     templateMessageIndicator
   )}
-  ${getMessageInfoTemplate('Bellinger', coin.BOLL, templateMessageBollinger)}
+  ${getMessageInfoTemplate('Bollinger', coin.BOLL, templateMessageBollinger)}
           `
         )
         .join('');

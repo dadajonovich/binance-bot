@@ -8,7 +8,7 @@ const {
   getOBV,
   percentageDiffernce,
   getVWMA,
-  getVolatility,
+  getStandartDeviation,
   getWilliams,
   getBollinger,
 } = require('./ta.js/indexTA');
@@ -80,7 +80,7 @@ const curryGetCoins = getCoins(
   getMACD,
   getRSI,
   getOBV,
-  getVolatility,
+  getStandartDeviation,
   getWilliams,
   getBollinger
 );

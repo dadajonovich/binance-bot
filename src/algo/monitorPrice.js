@@ -76,6 +76,7 @@ const monitorPrice =
           return isSellOrder;
         })
       );
+      console.log(typeof resultMonitor);
       return resultMonitor;
     } catch (err) {
       console.error(`Error in monitorPrice:`, err);

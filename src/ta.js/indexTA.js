@@ -5,7 +5,7 @@ const getRSI = require('./rsi');
 const getOBV = require('./obv');
 const percentageDiffernce = require('./percentageDiffernce');
 const getVWMA = require('./vwma');
-const getVolatility = require('./volatility');
+const getStandartDeviation = require('./standartDeviation');
 const getWilliams = require('./williams');
 const getBollinger = require('./bollinger');
 
@@ -17,7 +17,7 @@ module.exports = {
   getOBV,
   percentageDiffernce,
   getVWMA,
-  getVolatility,
+  getStandartDeviation,
   getWilliams,
   getBollinger,
 };
