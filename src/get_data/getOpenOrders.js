@@ -5,7 +5,7 @@ const getOpenOrders = async (client, pair = '') => {
       openOrders = await client.openOrders({ recvWindow: 30000 });
       console.log(openOrders);
     } else {
-      openOrders = await client.openOrders({ symbol: pair, recvWindow: 60000 });
+      openOrders = await client.openOrders({ symbol: pair, recvWindow: 30000 });
       console.log(openOrders);
     }
 

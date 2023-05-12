@@ -30,8 +30,8 @@ const monitorPrice =
             pair,
             getOpenOrders
           );
-          let isBuyOrder = false;
-          let isSellOrder = false;
+          let isBuyOrder;
+          let isSellOrder;
 
           let { balanceFree: quantityAsset } = await getBalance(client, asset);
 
@@ -76,7 +76,7 @@ const monitorPrice =
           return isSellOrder;
         })
       );
-      console.log(typeof resultMonitor);
+      console.log(resultMonitor);
       return resultMonitor;
     } catch (err) {
       console.error(`Error in monitorPrice:`, err);

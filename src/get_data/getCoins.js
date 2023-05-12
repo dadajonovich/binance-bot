@@ -13,7 +13,7 @@ const getCoins =
     getWilliams = (f) => f,
     getBollinger = (f) => f
   ) =>
-  async (pairs = [], { intervalToMonitor = '15m', period = 27 } = {}) => {
+  async (pairs = [], { intervalToMonitor = '4h', period = 40 } = {}) => {
     try {
       console.log(`${intervalToMonitor}, ${period}`);
       const coins = await Promise.all(
@@ -26,12 +26,15 @@ const getCoins =
           );
           const prices = getPrices(candles);
           const SMA = getSMA(prices);
+          const EMA = getEMA(prices.closePrices);
           const standartDeviation = getStandartDeviation(prices);
-          const volatility = (standartDeviation / SMA.at(-1)) * 100;
+          const volatility = (standartDeviation / EMA.at(-1)) * 100;
           const OBV = getOBV(prices);
           const BOLL = getBollinger(prices);
           const [upperLine, middleLine, lowerLine] = BOLL.at(-1);
           const percentBandwidth = ((upperLine - lowerLine) / middleLine) * 100;
+          const MACD = getMACD(prices.closePrices);
+          const signalMACD = getEMA(MACD, 9);
 
           return {
             pair,
@@ -40,9 +43,10 @@ const getCoins =
             volatility,
             williams: getWilliams(prices),
             SMA,
-            EMA: getEMA(prices),
+            EMA,
             VWMA: getVWMA(prices),
-            MACD: getMACD(prices.closePrices),
+            MACD,
+            signalMACD,
             MACDOBV: getMACD(OBV),
             RSI: getRSI(prices),
             OBV,
