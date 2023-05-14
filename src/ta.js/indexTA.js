@@ -8,6 +8,8 @@ const getVWMA = require('./vwma');
 const getStandartDeviation = require('./standartDeviation');
 const getWilliams = require('./williams');
 const getBollinger = require('./bollinger');
+const getMOM = require('./momentum');
+const getFIB = require('./fibonacci');
 
 module.exports = {
   getSMA,
@@ -20,4 +22,6 @@ module.exports = {
   getStandartDeviation,
   getWilliams,
   getBollinger,
+  getMOM,
+  getFIB,
 };

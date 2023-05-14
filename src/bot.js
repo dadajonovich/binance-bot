@@ -11,6 +11,8 @@ const {
   getStandartDeviation,
   getWilliams,
   getBollinger,
+  getMOM,
+  getFIB,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -82,7 +84,10 @@ const curryGetCoins = getCoins(
   getOBV,
   getStandartDeviation,
   getWilliams,
-  getBollinger
+  getBollinger,
+  getMOM,
+  getFIB,
+  percentageDiffernce
 );
 
 const curryMonitorPrice = monitorPrice(
