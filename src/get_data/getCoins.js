@@ -50,7 +50,7 @@ const getCoins =
           // const endPrice = prices.closePrices.at(-1);
           const FIB = getFIB(maxPrice, minPrice);
           const goalFIB = FIB.at(5);
-          const KAMA = getKaufman(prices.closePrices);
+          const { kama: KAMA, filterKama } = getKaufman(prices.closePrices);
           const percentDiffKAMA =
             percentageDiffernce(prices.currentPrice, KAMA.at(-1)) * 100;
           const HULL = getHull(prices.closePrices);
@@ -75,6 +75,7 @@ const getCoins =
             EMA,
             VWMA: getVWMA(prices),
             KAMA,
+            filterKama,
             HULL,
             MACD,
             signalMACD,
