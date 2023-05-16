@@ -171,10 +171,6 @@ bot.on('message', async (msg) => {
 
       break;
 
-    case '/stop':
-      await currySendMessage('Стоп-кран!');
-      break;
-
     default:
       break;
   }

@@ -18,7 +18,7 @@ const getCoins =
     getHull = (f) => f,
     getKaufman = (f) => f
   ) =>
-  async (pairs = [], { intervalToMonitor = '1d', period = 40 } = {}) => {
+  async (pairs = [], { intervalToMonitor = '4h', period = 40 } = {}) => {
     try {
       console.log(`${intervalToMonitor}, ${period}`);
       const coins = await Promise.all(
@@ -30,6 +30,7 @@ const getCoins =
             period
           );
           const prices = getPrices(candles);
+          const { closePrices } = prices;
           const SMA = getSMA(prices);
           const EMA = getEMA(prices.closePrices);
           const standartDeviation = getStandartDeviation(prices);
@@ -59,6 +60,7 @@ const getCoins =
 
           return {
             pair,
+            closePrices,
             currentPrice: Number(prices.currentPrice),
             percentDiffEMA,
             percentDiffKAMA,

@@ -33,11 +33,11 @@ const createSellOrder = async (
         ] = await curryGetCoins([pair]);
 
         const { [pair]: price } = await client.prices({ symbol: pair });
-        const firstCriterionSell = HULL.at(-1) > price;
+        const firstCriterionSell = KAMA.at(-1) > price;
         const secondCriterionSell = currentPrice < EMA.at(-1);
 
         console.log(firstCriterionSell);
-        console.log(HULL.at(-1), price);
+        console.log(KAMA.at(-1), price);
         if (firstCriterionSell) {
           isSellOrder = true;
           clearInterval(checkSellInterval);
