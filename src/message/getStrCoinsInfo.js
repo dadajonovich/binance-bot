@@ -16,6 +16,8 @@ const getStrCoinsInfo =
   ${getMessageInfoTemplate('SMA', coin.SMA, templateMessageMA, coin)}
   ${getMessageInfoTemplate('EMA', coin.EMA, templateMessageMA, coin)}
   ${getMessageInfoTemplate('VWMA', coin.VWMA, templateMessageMA, coin)}
+  ${getMessageInfoTemplate('Kaufman', coin.KAMA, templateMessageMA, coin)}
+  ${getMessageInfoTemplate('Hull', coin.HULL, templateMessageMA, coin)}
   ${getMessageInfoTemplate('MACD', coin.MACD, templateMessageIndicator)}
   ${getMessageInfoTemplate('MACD OBV', coin.MACDOBV, templateMessageIndicator)}
   ${getMessageInfoTemplate('RSI', coin.RSI, templateMessageIndicator)}

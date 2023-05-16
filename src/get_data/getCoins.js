@@ -14,9 +14,11 @@ const getCoins =
     getBollinger = (f) => f,
     getMOM = (f) => f,
     getFIB = (f) => f,
-    percentageDiffernce = (f) => f
+    percentageDiffernce = (f) => f,
+    getHull = (f) => f,
+    getKaufman = (f) => f
   ) =>
-  async (pairs = [], { intervalToMonitor = '1h', period = 40 } = {}) => {
+  async (pairs = [], { intervalToMonitor = '1d', period = 40 } = {}) => {
     try {
       console.log(`${intervalToMonitor}, ${period}`);
       const coins = await Promise.all(
@@ -48,11 +50,19 @@ const getCoins =
           // const endPrice = prices.closePrices.at(-1);
           const FIB = getFIB(maxPrice, minPrice);
           const goalFIB = FIB.at(5);
+          const KAMA = getKaufman(prices.closePrices);
+          const percentDiffKAMA =
+            percentageDiffernce(prices.currentPrice, KAMA.at(-1)) * 100;
+          const HULL = getHull(prices.closePrices);
+          const percentDiffHULL =
+            percentageDiffernce(prices.currentPrice, HULL.at(-1)) * 100;
 
           return {
             pair,
             currentPrice: Number(prices.currentPrice),
             percentDiffEMA,
+            percentDiffKAMA,
+            percentDiffHULL,
             minPrice,
             maxPrice,
             penultimateCurrentPrice: Number(prices.penultimateCurrentPrice),
@@ -64,6 +74,8 @@ const getCoins =
             SMA,
             EMA,
             VWMA: getVWMA(prices),
+            KAMA,
+            HULL,
             MACD,
             signalMACD,
             MACDOBV: getMACD(OBV),
@@ -77,7 +89,6 @@ const getCoins =
           };
         })
       );
-      console.log(coins[0]);
       return coins;
     } catch (err) {
       console.error('Error in getting coins', err);

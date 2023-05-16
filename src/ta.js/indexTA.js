@@ -10,6 +10,8 @@ const getWilliams = require('./williams');
 const getBollinger = require('./bollinger');
 const getMOM = require('./momentum');
 const getFIB = require('./fibonacci');
+const getHull = require('./hull');
+const getKaufman = require('./kaufman');
 
 module.exports = {
   getSMA,
@@ -24,4 +26,6 @@ module.exports = {
   getBollinger,
   getMOM,
   getFIB,
+  getHull,
+  getKaufman,
 };

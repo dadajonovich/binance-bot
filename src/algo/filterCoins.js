@@ -11,9 +11,16 @@ const secondCriterion = (coin) =>
   coin.MACD.at(-1) > coin.signalMACD.at(-1) &&
   coin.currentPrice < coin.goalFIB;
 
+const thirdCriterion = (coin) =>
+  coin.percentDiffHULL > 0 &&
+  coin.percentDiffKAMA > 0 &&
+  coin.percentDiffEMA > 0;
+
 const filterCoins = (coins, percentageDiffernce) => {
-  // const filteredCoins = coins.filter((coin) => secondCriterion(coin));
-  const sortCoins = coins.sort((a, b) => b.percentDiffEMA - a.percentDiffEMA);
+  const filteredCoins = coins.filter((coin) => thirdCriterion(coin));
+  const sortCoins = filteredCoins.sort(
+    (a, b) => b.percentDiffKAMA - a.percentDiffKAMA
+  );
   // return filteredCoins;
   return sortCoins.slice(0, 1);
 };

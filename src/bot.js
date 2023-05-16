@@ -13,6 +13,8 @@ const {
   getBollinger,
   getMOM,
   getFIB,
+  getHull,
+  getKaufman,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -87,7 +89,9 @@ const curryGetCoins = getCoins(
   getBollinger,
   getMOM,
   getFIB,
-  percentageDiffernce
+  percentageDiffernce,
+  getHull,
+  getKaufman
 );
 
 const curryMonitorPrice = monitorPrice(
