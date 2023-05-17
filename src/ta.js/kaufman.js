@@ -12,7 +12,7 @@ const calculateValueBetweenPeriods = (array) => {
 const getKaufman = (value) => {
   const kama = ta.kama(value);
   const stndDevKama = ta.std(calculateValueBetweenPeriods(kama), 10);
-  const filterKama = 0 * stndDevKama;
+  const filterKama = 1 * stndDevKama;
   return { kama, filterKama };
 };
 
