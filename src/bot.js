@@ -15,6 +15,7 @@ const {
   getFIB,
   getHull,
   getKaufman,
+  getATR,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -91,7 +92,8 @@ const curryGetCoins = getCoins(
   getFIB,
   percentageDiffernce,
   getHull,
-  getKaufman
+  getKaufman,
+  getATR
 );
 
 const curryMonitorPrice = monitorPrice(

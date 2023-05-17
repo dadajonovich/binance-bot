@@ -1,3 +1,25 @@
+const firstCriterion = (coin) => {
+  let crossingIndex = null;
+  for (let i = -1; i >= -4; i--) {
+    if (
+      crossingIndex === null &&
+      coin.signalMACD.at(i - 1) > coin.MACD.at(i - 1) &&
+      coin.signalMACD.at(i) < coin.MACD.at(i) &&
+      coin.MACD.at(i) < 0
+    ) {
+      crossingIndex = i;
+      console.log(`pair - ${coin.pair}, crossingIndex - ${crossingIndex}`);
+    }
+  }
+
+  if (crossingIndex !== null) {
+    if (coin.RSI.at(-1) > 50 && coin.MACD.at(-1) > 0) {
+      return true;
+    }
+  }
+  return false;
+};
+
 const thirdCriterion = (coin) =>
   coin.percentDiffHULL > 0 &&
   coin.percentDiffKAMA > 0 &&
@@ -41,10 +63,8 @@ const fourthCriterion = (coin) => {
 };
 
 const filterCoins = (coins, percentageDiffernce) => {
-  const filteredCoins = coins.filter((coin) => fourthCriterion(coin));
-  const sortCoins = filteredCoins.sort(
-    (a, b) => b.percentDiffKAMA - a.percentDiffKAMA
-  );
+  const filteredCoins = coins.filter((coin) => firstCriterion(coin));
+  const sortCoins = filteredCoins.sort((a, b) => b.volatility - a.volatility);
   // return filteredCoins;
   return sortCoins.slice(0, 1);
 };

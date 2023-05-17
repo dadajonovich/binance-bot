@@ -12,6 +12,7 @@ const getMOM = require('./momentum');
 const getFIB = require('./fibonacci');
 const getHull = require('./hull');
 const getKaufman = require('./kaufman');
+const getATR = require('./atr');
 
 module.exports = {
   getSMA,
@@ -28,4 +29,5 @@ module.exports = {
   getFIB,
   getHull,
   getKaufman,
+  getATR,
 };
