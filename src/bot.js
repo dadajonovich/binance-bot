@@ -3,19 +3,8 @@ const { client, bot, telegramChatId, parameters } = require('./config');
 const {
   getSMA,
   getEMA,
-  getMACD,
-  getRSI,
-  getOBV,
   percentageDiffernce,
-  getVWMA,
   getStandartDeviation,
-  getWilliams,
-  getBollinger,
-  getMOM,
-  getFIB,
-  getHull,
-  getKaufman,
-  getATR,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -69,10 +58,8 @@ const sendMessage = (chatId) => async (message) => {
 const currySendMessage = sendMessage(telegramChatId);
 
 const curryGetStrCoinsInfo = getStrCoinsInfo(
-  templateMessageIndicator,
   templateMessageMA,
-  getMessageInfoTemplate,
-  templateMessageBollinger
+  getMessageInfoTemplate
 );
 
 const curryGetCoins = getCoins(
@@ -81,19 +68,8 @@ const curryGetCoins = getCoins(
   getPrice,
   getSMA,
   getEMA,
-  getVWMA,
-  getMACD,
-  getRSI,
-  getOBV,
   getStandartDeviation,
-  getWilliams,
-  getBollinger,
-  getMOM,
-  getFIB,
-  percentageDiffernce,
-  getHull,
-  getKaufman,
-  getATR
+  percentageDiffernce
 );
 
 const curryMonitorPrice = monitorPrice(
@@ -128,7 +104,7 @@ bot.on('message', async (msg) => {
       const searchCoins = setInterval(async () => {
         console.log('tick searchCoins');
         coins = await curryGetCoins(topPairs, parameters);
-        filteredCoins = filterCoins(coins, percentageDiffernce);
+        filteredCoins = filterCoins(coins);
         if (filteredCoins.length > 0) {
           clearInterval(searchCoins);
           resole();
@@ -148,7 +124,7 @@ bot.on('message', async (msg) => {
     case '/tellme':
       topPairs = await getTopPairs(client, parameters);
       coins = await curryGetCoins(topPairs, parameters);
-      filteredCoins = filterCoins(coins, percentageDiffernce);
+      filteredCoins = filterCoins(coins);
       await currySendMessage(curryGetStrCoinsInfo(filteredCoins));
       break;
 

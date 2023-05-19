@@ -1,10 +1,5 @@
 const getStrCoinsInfo =
-  (
-    templateMessageIndicator = (f) => f,
-    templateMessageMA = (f) => f,
-    getMessageInfoTemplate = (f) => f,
-    templateMessageBollinger = (f) => f
-  ) =>
+  (templateMessageMA = (f) => f, getMessageInfoTemplate = (f) => f) =>
   (coins = []) => {
     try {
       let message = '';
@@ -13,21 +8,18 @@ const getStrCoinsInfo =
           (coin) => `\n${coin.pair}
   - Current Price: ${coin.currentPrice.toFixed(2)}
   - Volatility: ${coin.volatility.toFixed(2)}%
-  ${getMessageInfoTemplate('SMA', coin.SMA, templateMessageMA, coin)}
-  ${getMessageInfoTemplate('EMA', coin.EMA, templateMessageMA, coin)}
-  ${getMessageInfoTemplate('VWMA', coin.VWMA, templateMessageMA, coin)}
-  ${getMessageInfoTemplate('Kaufman', coin.KAMA, templateMessageMA, coin)}
-  ${getMessageInfoTemplate('Hull', coin.HULL, templateMessageMA, coin)}
-  ${getMessageInfoTemplate('MACD', coin.MACD, templateMessageIndicator)}
-  ${getMessageInfoTemplate('MACD OBV', coin.MACDOBV, templateMessageIndicator)}
-  ${getMessageInfoTemplate('RSI', coin.RSI, templateMessageIndicator)}
-  ${getMessageInfoTemplate('OBV', coin.OBV, templateMessageIndicator)}
   ${getMessageInfoTemplate(
-    'Williams %R',
-    coin.williams,
-    templateMessageIndicator
-  )}
-  ${getMessageInfoTemplate('Bollinger', coin.BOLL, templateMessageBollinger)}
+    'SMA',
+    coin.SMA,
+    templateMessageMA,
+    coin
+  )} / ${coin.percentDiffSMA.toFixed(2)}%
+  ${getMessageInfoTemplate(
+    'EMA',
+    coin.EMA,
+    templateMessageMA,
+    coin
+  )} / ${coin.percentDiffEMA.toFixed(2)}%
           `
         )
         .join('');

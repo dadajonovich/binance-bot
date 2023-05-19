@@ -1,7 +1,7 @@
 const ta = require('ta.js');
 
-const getStandartDeviation = ({ closePrices }) => {
-  const standartDeviation = ta.std(closePrices);
+const getStandartDeviation = (value) => {
+  const standartDeviation = ta.std(value);
 
   return standartDeviation;
 };

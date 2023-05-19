@@ -12,31 +12,22 @@ const createSellOrder = async (
     console.log('Sell order!');
 
     let isSellOrder = false;
+    let targetPrice = null;
 
     await new Promise((resolve) => {
       const checkSellInterval = setInterval(async () => {
         console.log('tick checkSellInterval...');
-        const [
-          {
-            MACD,
-            OBV,
-            EMA,
-            RSI,
-            MACDOBV,
-            williams,
-            upperLine,
-            currentPrice,
-            signalMACD,
-            KAMA,
-            HULL,
-          },
-        ] = await curryGetCoins([pair]);
-
+        const [{ SMA, EMA, percentDiffSMA, percentDiffEMA }] =
+          await curryGetCoins([pair]);
         const { [pair]: price } = await client.prices({ symbol: pair });
-        const firstCriterionSell =
-          signalMACD.at(-1) > MACD.at(-1) || RSI.at(-1) < 50;
-        const secondCriterionSell = currentPrice < EMA.at(-1);
 
+        if (targetPrice === null) {
+          targetPrice = price * (1 + (percentDiffEMA * 0.5) / 100);
+        }
+        const firstCriterionSell = EMA.at(-1) > price || targetPrice < price;
+        console.log(
+          `EMA - ${EMA.at(-1)}, price - ${price}, targetPrice - ${targetPrice}`
+        );
         console.log(firstCriterionSell);
         if (firstCriterionSell) {
           isSellOrder = true;
