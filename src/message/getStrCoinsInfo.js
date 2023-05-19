@@ -20,6 +20,12 @@ const getStrCoinsInfo =
     templateMessageMA,
     coin
   )} / ${coin.percentDiffEMA.toFixed(2)}%
+  ${getMessageInfoTemplate(
+    'HULL',
+    coin.HULL,
+    templateMessageMA,
+    coin
+  )} / ${coin.percentDiffHULL.toFixed(2)}%
           `
         )
         .join('');

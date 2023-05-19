@@ -17,16 +17,21 @@ const createSellOrder = async (
     await new Promise((resolve) => {
       const checkSellInterval = setInterval(async () => {
         console.log('tick checkSellInterval...');
-        const [{ SMA, EMA, percentDiffSMA, percentDiffEMA }] =
+        const [{ SMA, EMA, percentDiffSMA, percentDiffEMA, HULL }] =
           await curryGetCoins([pair]);
         const { [pair]: price } = await client.prices({ symbol: pair });
 
         if (targetPrice === null) {
           targetPrice = price * (1 + (percentDiffEMA * 0.5) / 100);
         }
-        const firstCriterionSell = EMA.at(-1) > price || targetPrice < price;
+        const firstCriterionSell = HULL.at(-1) > price;
+        // console.log(
+        //   `EMA - ${EMA.at(-1)}, price - ${price}, targetPrice - ${targetPrice}`
+        // );
         console.log(
-          `EMA - ${EMA.at(-1)}, price - ${price}, targetPrice - ${targetPrice}`
+          `HULL - ${HULL.at(
+            -1
+          )}, price - ${price}, targetPrice - ${targetPrice}`
         );
         console.log(firstCriterionSell);
         if (firstCriterionSell) {

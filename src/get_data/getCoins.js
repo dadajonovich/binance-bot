@@ -5,6 +5,7 @@ const getCoins =
     getPrices = (f) => f,
     getSMA = (f) => f,
     getEMA = (f) => f,
+    getHULL = (f) => f,
     getStandartDeviation = (f) => f,
     percentageDiffernce = (f) => f
   ) =>
@@ -26,10 +27,13 @@ const getCoins =
           const volatility = (standartDeviation / currentPrice) * 100;
           const SMA = getSMA(closePrices);
           const EMA = getEMA(closePrices);
+          const HULL = getHULL(closePrices);
           const percentDiffEMA =
             percentageDiffernce(prices.currentPrice, EMA.at(-1)) * 100;
           const percentDiffSMA =
             percentageDiffernce(prices.currentPrice, SMA.at(-1)) * 100;
+          const percentDiffHULL =
+            percentageDiffernce(prices.currentPrice, HULL.at(-1)) * 100;
 
           return {
             pair,
@@ -38,8 +42,10 @@ const getCoins =
             volatility,
             SMA,
             EMA,
+            HULL,
             percentDiffSMA,
             percentDiffEMA,
+            percentDiffHULL,
           };
         })
       );
