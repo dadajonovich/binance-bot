@@ -24,14 +24,10 @@ const createSellOrder = async (
         if (targetPrice === null) {
           targetPrice = price * (1 + (percentDiffEMA * 0.5) / 100);
         }
-        const firstCriterionSell = HULL.at(-1) > price;
-        // console.log(
-        //   `EMA - ${EMA.at(-1)}, price - ${price}, targetPrice - ${targetPrice}`
-        // );
+        const firstCriterionSell = EMA.at(-1) > price;
+
         console.log(
-          `HULL - ${HULL.at(
-            -1
-          )}, price - ${price}, targetPrice - ${targetPrice}`
+          `EMA - ${EMA.at(-1)}, price - ${price}, targetPrice - ${targetPrice}`
         );
         console.log(firstCriterionSell);
         if (firstCriterionSell) {
