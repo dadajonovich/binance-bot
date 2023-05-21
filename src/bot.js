@@ -4,6 +4,7 @@ const {
   getSMA,
   getEMA,
   getHULL,
+  getOBV,
   percentageDiffernce,
   getStandartDeviation,
 } = require('./ta.js/indexTA');
@@ -59,6 +60,7 @@ const sendMessage = (chatId) => async (message) => {
 const currySendMessage = sendMessage(telegramChatId);
 
 const curryGetStrCoinsInfo = getStrCoinsInfo(
+  templateMessageIndicator,
   templateMessageMA,
   getMessageInfoTemplate
 );
@@ -70,6 +72,7 @@ const curryGetCoins = getCoins(
   getSMA,
   getEMA,
   getHULL,
+  getOBV,
   getStandartDeviation,
   percentageDiffernce
 );

@@ -1,5 +1,9 @@
 const getStrCoinsInfo =
-  (templateMessageMA = (f) => f, getMessageInfoTemplate = (f) => f) =>
+  (
+    templateMessageIndicator = (f) => f,
+    templateMessageMA = (f) => f,
+    getMessageInfoTemplate = (f) => f
+  ) =>
   (coins = []) => {
     try {
       let message = '';
@@ -26,6 +30,7 @@ const getStrCoinsInfo =
     templateMessageMA,
     coin
   )} / ${coin.percentDiffHULL.toFixed(2)}%
+  ${getMessageInfoTemplate('OBV', coin.OBV, templateMessageIndicator)}
           `
         )
         .join('');
