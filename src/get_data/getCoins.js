@@ -39,7 +39,6 @@ const getCoins =
 
           return {
             pair,
-            closePrices,
             currentPrice,
             volatility,
             SMA,
@@ -52,7 +51,6 @@ const getCoins =
           };
         })
       );
-      console.log(coins[0]);
       return coins;
     } catch (err) {
       console.error('Error in getting coins', err);
