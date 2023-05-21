@@ -25,7 +25,7 @@ const createSellOrder = async (
           targetPrice = price * (1 + (percentDiffEMA * 0.5) / 100);
         }
         const firstCriterionSell =
-          EMA.at(-1) > price && OBV.at(-1) < OBV.at(-2);
+          EMA.at(-1) > price || OBV.at(-1) < OBV.at(-2);
 
         console.log(
           `EMA - ${EMA.at(-1)}, OBV - ${OBV.at(-1)}/${OBV.at(
