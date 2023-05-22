@@ -6,11 +6,13 @@ const getCoins =
     getSMA = (f) => f,
     getEMA = (f) => f,
     getHULL = (f) => f,
+    getMACD = (f) => f,
+    getRSI = (f) => f,
     getOBV = (f) => f,
     getStandartDeviation = (f) => f,
     percentageDiffernce = (f) => f
   ) =>
-  async (pairs = [], { intervalToMonitor = '1d', period = 40 } = {}) => {
+  async (pairs = [], { intervalToMonitor = '4h', period = 40 } = {}) => {
     try {
       console.log(`${intervalToMonitor}, ${period}`);
       const coins = await Promise.all(
@@ -22,13 +24,16 @@ const getCoins =
             period
           );
           const prices = getPrices(candles);
-          const { closePrices, volumes } = prices;
+          const { closePrices, openPrices, volumes } = prices;
           const currentPrice = Number(prices.currentPrice);
           const standartDeviation = getStandartDeviation(closePrices);
           const volatility = (standartDeviation / currentPrice) * 100;
           const SMA = getSMA(closePrices);
           const EMA = getEMA(closePrices);
           const HULL = getHULL(closePrices);
+          const MACD = getMACD(closePrices);
+          const signalMACD = getEMA(MACD, 9);
+          const RSI = getRSI(closePrices);
           const OBV = getOBV(closePrices, volumes);
           const percentDiffEMA =
             percentageDiffernce(prices.currentPrice, EMA.at(-1)) * 100;
@@ -39,11 +44,17 @@ const getCoins =
 
           return {
             pair,
+            candles,
+            closePrices,
+            openPrices,
             currentPrice,
             volatility,
             SMA,
             EMA,
             HULL,
+            MACD,
+            signalMACD,
+            RSI,
             OBV,
             percentDiffSMA,
             percentDiffEMA,

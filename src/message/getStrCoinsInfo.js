@@ -30,6 +30,8 @@ const getStrCoinsInfo =
     templateMessageMA,
     coin
   )} / ${coin.percentDiffHULL.toFixed(2)}%
+  ${getMessageInfoTemplate('MACD', coin.MACD, templateMessageIndicator)}
+  ${getMessageInfoTemplate('RSI', coin.RSI, templateMessageIndicator)}
   ${getMessageInfoTemplate('OBV', coin.OBV, templateMessageIndicator)}
           `
         )

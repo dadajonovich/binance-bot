@@ -4,6 +4,8 @@ const {
   getSMA,
   getEMA,
   getHULL,
+  getMACD,
+  getRSI,
   getOBV,
   percentageDiffernce,
   getStandartDeviation,
@@ -72,6 +74,8 @@ const curryGetCoins = getCoins(
   getSMA,
   getEMA,
   getHULL,
+  getMACD,
+  getRSI,
   getOBV,
   getStandartDeviation,
   percentageDiffernce

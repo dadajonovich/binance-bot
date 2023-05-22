@@ -1,5 +1,6 @@
 const getPrice = (candles) => {
   const closePrices = candles.map((candle) => parseFloat(candle.close));
+  const openPrices = candles.map((candle) => parseFloat(candle.open));
   const average = closePrices.reduce((a, b) => a + b, 0) / closePrices.length;
   const currentPrice = closePrices.at(-1);
   const penultimateCurrentPrice = closePrices.at(-2);
@@ -10,6 +11,7 @@ const getPrice = (candles) => {
   return {
     average,
     closePrices,
+    openPrices,
     currentPrice,
     penultimateCurrentPrice,
     volumes,
