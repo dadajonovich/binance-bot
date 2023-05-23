@@ -30,8 +30,8 @@ const getCoins =
           const standartDeviation = getStandartDeviation(closePrices);
           const volatility = (standartDeviation / currentPrice) * 100;
           const SMA = getSMA(closePrices);
-          const sma9 = getSMA(closePrices, 9);
-          const sma21 = getSMA(closePrices, 21);
+          const ema9 = getEMA(closePrices, 9);
+          const ema21 = getEMA(closePrices, 21);
           const EMA = getEMA(closePrices);
           const HULL = getHULL(closePrices);
           const MACD = getMACD(closePrices);
@@ -56,9 +56,9 @@ const getCoins =
             currentPrice,
             volatility,
             SMA,
-            sma9,
-            sma21,
             EMA,
+            ema9,
+            ema21,
             HULL,
             MACD,
             signalMACD,

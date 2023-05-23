@@ -21,7 +21,7 @@ const createSellOrder = async (
           {
             candles,
             SMA,
-            sma9,
+            ema9,
             EMA,
             percentDiffSMA,
             percentDiffEMA,
@@ -38,8 +38,8 @@ const createSellOrder = async (
         if (targetPrice === null) {
           targetPrice = price * (1 + (percentDiffEMA * 0.5) / 100);
         }
-        const firstCriterionSell = sma9.at(-1) > price;
-        console.log(sma9.at(-1), price);
+        const firstCriterionSell = ema9.at(-1) > price;
+        console.log(ema9.at(-1), price);
 
         console.log(firstCriterionSell);
         if (firstCriterionSell) {

@@ -107,29 +107,28 @@ const firstCriterion = (coin) =>
   coin.percentDiffEMA > 0 &&
   coin.OBV.at(-1) > coin.OBV.at(-2);
 
-const smaCross = (coin) => {
+const emaCross = (coin) => {
   const firstCandle = coin.candles.at(-1);
   const secondCandle = coin.candles.at(-2);
-  const thirdCandle = coin.candles.at(-3);
 
   const criterionCross =
-    coin.sma9.at(-2) < coin.sma21.at(-2) &&
-    coin.sma9.at(-1) > coin.sma21.at(-1);
+    coin.ema9.at(-2) < coin.ema21.at(-2) &&
+    coin.ema9.at(-1) > coin.ema21.at(-1);
 
-  const criterionUnderSMA9 =
-    coin.sma9.at(-1) < firstCandle.low && coin.sma9.at(-2) < secondCandle.low;
+  const criterionUnderEMA9 =
+    coin.ema9.at(-1) < firstCandle.low && coin.ema9.at(-2) < secondCandle.low;
 
-  const criterionUnderSMA21 =
-    coin.sma21.at(-1) < firstCandle.low && coin.sma21.at(-2) < secondCandle.low;
+  const criterionUnderEMA21 =
+    coin.ema21.at(-1) < firstCandle.low && coin.ema21.at(-2) < secondCandle.low;
 
-  if (criterionCross && criterionUnderSMA9 && criterionUnderSMA21) {
+  if (criterionCross && criterionUnderEMA9 && criterionUnderEMA21) {
     return true;
   }
   return false;
 };
 
 const filterCoins = (coins) => {
-  const filteredCoins = coins.filter((coin) => smaCross(coin));
+  const filteredCoins = coins.filter((coin) => emaCross(coin));
   console.log(filteredCoins);
   const sortCoins = filteredCoins.sort(
     (a, b) => b.percentDiffEMA - a.percentDiffEMA
