@@ -9,6 +9,7 @@ const getCoins =
     getMACD = (f) => f,
     getRSI = (f) => f,
     getOBV = (f) => f,
+    getMOM = (f) => f,
     getStandartDeviation = (f) => f,
     percentageDiffernce = (f) => f
   ) =>
@@ -29,12 +30,17 @@ const getCoins =
           const standartDeviation = getStandartDeviation(closePrices);
           const volatility = (standartDeviation / currentPrice) * 100;
           const SMA = getSMA(closePrices);
+          const sma9 = getSMA(closePrices, 9);
+          const sma21 = getSMA(closePrices, 21);
           const EMA = getEMA(closePrices);
           const HULL = getHULL(closePrices);
           const MACD = getMACD(closePrices);
           const signalMACD = getEMA(MACD, 9);
           const RSI = getRSI(closePrices);
+
           const OBV = getOBV(closePrices, volumes);
+
+          const MOM = getMOM(OBV);
           const percentDiffEMA =
             percentageDiffernce(prices.currentPrice, EMA.at(-1)) * 100;
           const percentDiffSMA =
@@ -50,18 +56,22 @@ const getCoins =
             currentPrice,
             volatility,
             SMA,
+            sma9,
+            sma21,
             EMA,
             HULL,
             MACD,
             signalMACD,
             RSI,
             OBV,
+            MOM,
             percentDiffSMA,
             percentDiffEMA,
             percentDiffHULL,
           };
         })
       );
+      console.log(coins[1]);
       return coins;
     } catch (err) {
       console.error('Error in getting coins', err);

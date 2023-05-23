@@ -21,6 +21,7 @@ const createSellOrder = async (
           {
             candles,
             SMA,
+            sma9,
             EMA,
             percentDiffSMA,
             percentDiffEMA,
@@ -29,6 +30,7 @@ const createSellOrder = async (
             MACD,
             signalMACD,
             RSI,
+            MOM,
           },
         ] = await curryGetCoins([pair]);
         const { [pair]: price } = await client.prices({ symbol: pair });
@@ -36,8 +38,8 @@ const createSellOrder = async (
         if (targetPrice === null) {
           targetPrice = price * (1 + (percentDiffEMA * 0.5) / 100);
         }
-        const firstCriterionSell = candles.at(-1).close < candles.at(-2).close;
-        console.log(candles.at(-1).close, candles.at(-2).close);
+        const firstCriterionSell = sma9.at(-1) > price;
+        console.log(sma9.at(-1), price);
 
         console.log(firstCriterionSell);
         if (firstCriterionSell) {

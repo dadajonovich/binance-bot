@@ -2,6 +2,28 @@ const ta = require('ta.js');
 
 const percentageDiffernce = (newval, oldval) => ta.dif(newval, oldval);
 
+// const firstCriterion = (coin) => {
+//   let crossingIndex = null;
+//   for (let i = -1; i >= -4; i--) {
+//     if (
+//       crossingIndex === null &&
+//       coin.signalMACD.at(i - 1) > coin.MACD.at(i - 1) &&
+//       coin.signalMACD.at(i) < coin.MACD.at(i) &&
+//       coin.MACD.at(i) < 0
+//     ) {
+//       crossingIndex = i;
+//       console.log(`pair - ${coin.pair}, crossingIndex - ${crossingIndex}`);
+//     }
+//   }
+
+//   if (crossingIndex !== null) {
+//     if (coin.RSI.at(-1) > 50 && coin.MACD.at(-1) > 0) {
+//       return true;
+//     }
+//   }
+//   return false;
+// };
+
 const crossMACD = (coin) => {
   const bullishCandle = coin.candles.at(-2);
   const criterionBullishCandle = bullishCandle.close > bullishCandle.open;
@@ -85,10 +107,30 @@ const firstCriterion = (coin) =>
   coin.percentDiffEMA > 0 &&
   coin.OBV.at(-1) > coin.OBV.at(-2);
 
+const smaCross = (coin) => {
+  const firstCandle = coin.candles.at(-1);
+  const secondCandle = coin.candles.at(-2);
+  const thirdCandle = coin.candles.at(-3);
+
+  const criterionCross =
+    coin.sma9.at(-2) < coin.sma21.at(-2) &&
+    coin.sma9.at(-1) > coin.sma21.at(-1);
+
+  const criterionUnderSMA9 =
+    coin.sma9.at(-1) < firstCandle.low && coin.sma9.at(-2) < secondCandle.low;
+
+  const criterionUnderSMA21 =
+    coin.sma21.at(-1) < firstCandle.low && coin.sma21.at(-2) < secondCandle.low;
+
+  if (criterionCross && criterionUnderSMA9 && criterionUnderSMA21) {
+    return true;
+  }
+  return false;
+};
+
 const filterCoins = (coins) => {
-  const filteredCoins = coins.filter(
-    (coin) => detectThreeSoldiersPattern(coin) && coin.volatility > 0.1
-  );
+  const filteredCoins = coins.filter((coin) => smaCross(coin));
+  console.log(filteredCoins);
   const sortCoins = filteredCoins.sort(
     (a, b) => b.percentDiffEMA - a.percentDiffEMA
   );
