@@ -112,16 +112,15 @@ const emaCross = (coin) => {
   const secondCandle = coin.candles.at(-2);
 
   const criterionCross =
-    coin.ema9.at(-2) < coin.ema21.at(-2) &&
-    coin.ema9.at(-1) > coin.ema21.at(-1);
+    coin.EMA8.at(-2) < coin.EMA21.at(-2) &&
+    coin.EMA8.at(-1) > coin.EMA21.at(-1);
 
-  const criterionUnderEMA9 =
-    coin.ema9.at(-1) < firstCandle.low && coin.ema9.at(-2) < secondCandle.low;
+  const criterionUnderEMA8 = coin.EMA8.at(-1) < firstCandle.low;
 
   const criterionUnderEMA21 =
-    coin.ema21.at(-1) < firstCandle.low && coin.ema21.at(-2) < secondCandle.low;
+    coin.EMA21.at(-1) < firstCandle.low && coin.EMA21.at(-2) < secondCandle.low;
 
-  if (criterionCross && criterionUnderEMA9 && criterionUnderEMA21) {
+  if (criterionCross && criterionUnderEMA8) {
     return true;
   }
   return false;
@@ -129,7 +128,6 @@ const emaCross = (coin) => {
 
 const filterCoins = (coins) => {
   const filteredCoins = coins.filter((coin) => emaCross(coin));
-  console.log(filteredCoins);
   const sortCoins = filteredCoins.sort(
     (a, b) => b.percentDiffEMA - a.percentDiffEMA
   );

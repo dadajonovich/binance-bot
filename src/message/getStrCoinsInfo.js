@@ -13,17 +13,11 @@ const getStrCoinsInfo =
   - Current Price: ${coin.currentPrice.toFixed(2)}
   - Volatility: ${coin.volatility.toFixed(2)}%
   ${getMessageInfoTemplate(
-    'SMA',
-    coin.SMA,
+    'EMA8',
+    coin.EMA8,
     templateMessageMA,
     coin
-  )} / ${coin.percentDiffSMA.toFixed(2)}%
-  ${getMessageInfoTemplate(
-    'EMA',
-    coin.EMA,
-    templateMessageMA,
-    coin
-  )} / ${coin.percentDiffEMA.toFixed(2)}%
+  )} / ${coin.percentDiffEMA8.toFixed(2)}%
   ${getMessageInfoTemplate(
     'HULL',
     coin.HULL,

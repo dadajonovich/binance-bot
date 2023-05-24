@@ -12,34 +12,33 @@ const createSellOrder = async (
     console.log('Sell order!');
 
     let isSellOrder = false;
-    let targetPrice = null;
+    let takeProfit = null;
+    let stopLoss = null;
 
     await new Promise((resolve) => {
       const checkSellInterval = setInterval(async () => {
         console.log('tick checkSellInterval...');
         const [
-          {
-            candles,
-            SMA,
-            ema9,
-            EMA,
-            percentDiffSMA,
-            percentDiffEMA,
-            HULL,
-            OBV,
-            MACD,
-            signalMACD,
-            RSI,
-            MOM,
-          },
+          { candles, EMA8, percentDiffEMA8, HULL, OBV, MACD, signalMACD, RSI },
         ] = await curryGetCoins([pair]);
         const { [pair]: price } = await client.prices({ symbol: pair });
 
-        if (targetPrice === null) {
-          targetPrice = price * (1 + (percentDiffEMA * 0.5) / 100);
+        if (takeProfit === null) {
+          takeProfit = price * (1 + percentDiffEMA8 / 100);
         }
-        const firstCriterionSell = ema9.at(-1) > price;
-        console.log(ema9.at(-1), price);
+
+        if (stopLoss === null) {
+          stopLoss = price * (1 - percentDiffEMA8 / 3 / 100);
+        }
+
+        const firstCriterionSell =
+          EMA8.at(-1) > price || takeProfit < price || stopLoss > price;
+
+        console.log(
+          `EMA8 - ${EMA8.at(
+            -1
+          )}, \nprice - ${price}, \ntakeProfit -${takeProfit}, \nstopLoss - ${stopLoss}}`
+        );
 
         console.log(firstCriterionSell);
         if (firstCriterionSell) {
