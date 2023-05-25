@@ -4,6 +4,7 @@ const getHULL = require('./hull');
 const getMACD = require('./macd');
 const getRSI = require('./rsi');
 const getOBV = require('./obv');
+const getVWAP = require('./vwap');
 const percentageDiffernce = require('./percentageDiffernce');
 const getStandartDeviation = require('./standartDeviation');
 
@@ -14,6 +15,7 @@ module.exports = {
   getMACD,
   getRSI,
   getOBV,
+  getVWAP,
   percentageDiffernce,
   getStandartDeviation,
 };

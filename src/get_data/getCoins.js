@@ -9,10 +9,11 @@ const getCoins =
     getMACD = (f) => f,
     getRSI = (f) => f,
     getOBV = (f) => f,
+    getVWAP = (f) => f,
     getStandartDeviation = (f) => f,
     percentageDiffernce = (f) => f
   ) =>
-  async (pairs = [], { intervalToMonitor = '1d', period = 40 } = {}) => {
+  async (pairs = [], { intervalToMonitor = '15m', period = 200 } = {}) => {
     try {
       console.log(`${intervalToMonitor}, ${period}`);
       const coins = await Promise.all(
@@ -24,23 +25,32 @@ const getCoins =
             period
           );
           const prices = getPrices(candles);
-          const { closePrices, openPrices, volumes } = prices;
+          const { closePrices, typicalPrices, volumes } = prices;
           const currentPrice = Number(prices.currentPrice);
           const standartDeviation = getStandartDeviation(closePrices);
           const volatility = (standartDeviation / currentPrice) * 100;
           const EMA8 = getEMA(closePrices, 8);
           const EMA21 = getEMA(closePrices, 21);
+          const EMA50 = getEMA(closePrices, 21);
+          const EMA200 = getEMA(closePrices, 200);
           const HULL = getHULL(closePrices);
           const MACD = getMACD(closePrices);
           const signalMACD = getEMA(MACD, 9);
           const RSI = getRSI(closePrices);
 
           const OBV = getOBV(closePrices, volumes);
+          const VWAP = getVWAP(typicalPrices, volumes);
+          const percentDiffVWAP =
+            percentageDiffernce(prices.currentPrice, VWAP.at(-1)) * 100;
 
           const percentDiffEMA8 =
             percentageDiffernce(prices.currentPrice, EMA8.at(-1)) * 100;
           const percentDiffEMA21 =
             percentageDiffernce(prices.currentPrice, EMA21.at(-1)) * 100;
+          const percentDiffEMA50 =
+            percentageDiffernce(prices.currentPrice, EMA50.at(-1)) * 100;
+          const percentDiffEMA200 =
+            percentageDiffernce(prices.currentPrice, EMA200.at(-1)) * 100;
           const percentDiffHULL =
             percentageDiffernce(prices.currentPrice, HULL.at(-1)) * 100;
 
@@ -48,19 +58,24 @@ const getCoins =
             pair,
             candles,
             closePrices,
-            openPrices,
             currentPrice,
             volatility,
             EMA8,
             EMA21,
+            EMA50,
+            EMA200,
             HULL,
             MACD,
             signalMACD,
             RSI,
             OBV,
+            VWAP,
             percentDiffEMA8,
             percentDiffEMA21,
+            percentDiffEMA50,
+            percentDiffEMA200,
             percentDiffHULL,
+            percentDiffVWAP,
           };
         })
       );

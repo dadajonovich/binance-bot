@@ -7,6 +7,7 @@ const {
   getMACD,
   getRSI,
   getOBV,
+  getVWAP,
   percentageDiffernce,
   getStandartDeviation,
 } = require('./ta.js/indexTA');
@@ -77,6 +78,7 @@ const curryGetCoins = getCoins(
   getMACD,
   getRSI,
   getOBV,
+  getVWAP,
   getStandartDeviation,
   percentageDiffernce
 );

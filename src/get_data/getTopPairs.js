@@ -4,7 +4,10 @@ const getTopPairs = async (client, { quantityPairs = 50 } = {}) => {
     const { symbols } = exchangeInfo;
     const pairsByVolume = symbols
       .filter(
-        (symbol) => symbol.status === 'TRADING' && symbol.quoteAsset === 'USDT'
+        (symbol) =>
+          symbol.status === 'TRADING' &&
+          symbol.quoteAsset === 'USDT' &&
+          !symbol.symbol.includes('DOWN')
       )
       .map((symbol) => ({
         pair: `${symbol.baseAsset}${symbol.quoteAsset}`,
