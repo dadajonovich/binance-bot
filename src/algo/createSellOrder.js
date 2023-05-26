@@ -22,10 +22,9 @@ const createSellOrder = async (
         const [
           {
             candles,
-            EMA8,
-            EMA21,
+            EMA9,
+            EMA20,
             percentDiffEMA8,
-            HULL,
             OBV,
             MACD,
             signalMACD,
@@ -36,7 +35,7 @@ const createSellOrder = async (
         const { [pair]: price } = await client.prices({ symbol: pair });
 
         if (takeProfit === null) {
-          takeProfit = price * (1 + 1.5 / 100);
+          takeProfit = price * (1 + 3 / 100);
         }
 
         if (stopLoss === null) {
@@ -44,9 +43,9 @@ const createSellOrder = async (
         }
 
         const firstCriterionSell =
-          takeProfit < price || EMA21.at(-2) > candles.at(-2).close;
+          takeProfit < price || EMA20.at(-2) > candles.at(-2).close;
         console.log(
-          `takeProfit - ${takeProfit}, EMA21 - ${EMA21.at(
+          `takeProfit - ${takeProfit}, EMA20 - ${EMA20.at(
             -2
           )}, candles close - ${candles.at(-2).close}`
         );

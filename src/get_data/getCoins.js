@@ -5,7 +5,6 @@ const getCoins =
     getPrices = (f) => f,
     getSMA = (f) => f,
     getEMA = (f) => f,
-    getHULL = (f) => f,
     getMACD = (f) => f,
     getRSI = (f) => f,
     getOBV = (f) => f,
@@ -29,11 +28,10 @@ const getCoins =
           const currentPrice = Number(prices.currentPrice);
           const standartDeviation = getStandartDeviation(closePrices);
           const volatility = (standartDeviation / currentPrice) * 100;
-          const EMA8 = getEMA(closePrices, 8);
-          const EMA21 = getEMA(closePrices, 21);
-          const EMA50 = getEMA(closePrices, 21);
+          const EMA9 = getEMA(closePrices, 9);
+          const EMA20 = getEMA(closePrices, 20);
+          const EMA50 = getEMA(closePrices, 50);
           const EMA200 = getEMA(closePrices, 200);
-          const HULL = getHULL(closePrices);
           const MACD = getMACD(closePrices);
           const signalMACD = getEMA(MACD, 9);
           const RSI = getRSI(closePrices);
@@ -43,16 +41,14 @@ const getCoins =
           const percentDiffVWAP =
             percentageDiffernce(prices.currentPrice, VWAP.at(-1)) * 100;
 
-          const percentDiffEMA8 =
-            percentageDiffernce(prices.currentPrice, EMA8.at(-1)) * 100;
-          const percentDiffEMA21 =
-            percentageDiffernce(prices.currentPrice, EMA21.at(-1)) * 100;
+          const percentDiffEMA9 =
+            percentageDiffernce(prices.currentPrice, EMA9.at(-1)) * 100;
+          const percentDiffEMA20 =
+            percentageDiffernce(prices.currentPrice, EMA20.at(-1)) * 100;
           const percentDiffEMA50 =
             percentageDiffernce(prices.currentPrice, EMA50.at(-1)) * 100;
           const percentDiffEMA200 =
             percentageDiffernce(prices.currentPrice, EMA200.at(-1)) * 100;
-          const percentDiffHULL =
-            percentageDiffernce(prices.currentPrice, HULL.at(-1)) * 100;
 
           return {
             pair,
@@ -60,21 +56,19 @@ const getCoins =
             closePrices,
             currentPrice,
             volatility,
-            EMA8,
-            EMA21,
+            EMA9,
+            EMA20,
             EMA50,
             EMA200,
-            HULL,
             MACD,
             signalMACD,
             RSI,
             OBV,
             VWAP,
-            percentDiffEMA8,
-            percentDiffEMA21,
+            percentDiffEMA9,
+            percentDiffEMA20,
             percentDiffEMA50,
             percentDiffEMA200,
-            percentDiffHULL,
             percentDiffVWAP,
           };
         })

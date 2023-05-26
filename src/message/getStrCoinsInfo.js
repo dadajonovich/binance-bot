@@ -13,21 +13,18 @@ const getStrCoinsInfo =
   - Current Price: ${coin.currentPrice.toFixed(2)}
   - Volatility: ${coin.volatility.toFixed(2)}%
   - VWAP: ${coin.VWAP.at(-1).toFixed(2)} / ${coin.percentDiffVWAP.toFixed(2)}%
-  - EMA200: ${coin.EMA200.at(-1).toFixed(2)} / ${coin.percentDiffEMA200.toFixed(
-            2
-          )}%
   ${getMessageInfoTemplate(
-    'EMA8',
-    coin.EMA8,
+    'EMA9',
+    coin.EMA9,
     templateMessageMA,
     coin
-  )} / ${coin.percentDiffEMA8.toFixed(2)}%
+  )} / ${coin.percentDiffEMA9.toFixed(2)}%
   ${getMessageInfoTemplate(
-    'EMA21',
-    coin.EMA21,
+    'EMA20',
+    coin.EMA20,
     templateMessageMA,
     coin
-  )} / ${coin.percentDiffEMA21.toFixed(2)}%
+  )} / ${coin.percentDiffEMA20.toFixed(2)}%
   ${getMessageInfoTemplate(
     'EMA50',
     coin.EMA50,
@@ -35,11 +32,11 @@ const getStrCoinsInfo =
     coin
   )} / ${coin.percentDiffEMA50.toFixed(2)}%
   ${getMessageInfoTemplate(
-    'HULL',
-    coin.HULL,
+    'EMA200',
+    coin.EMA200,
     templateMessageMA,
     coin
-  )} / ${coin.percentDiffHULL.toFixed(2)}%
+  )} / ${coin.percentDiffEMA200.toFixed(2)}%
   ${getMessageInfoTemplate('MACD', coin.MACD, templateMessageIndicator)}
   ${getMessageInfoTemplate('RSI', coin.RSI, templateMessageIndicator)}
   ${getMessageInfoTemplate('OBV', coin.OBV, templateMessageIndicator)}

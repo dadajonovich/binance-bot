@@ -3,7 +3,6 @@ const { client, bot, telegramChatId, parameters } = require('./config');
 const {
   getSMA,
   getEMA,
-  getHULL,
   getMACD,
   getRSI,
   getOBV,
@@ -74,7 +73,6 @@ const curryGetCoins = getCoins(
   getPrice,
   getSMA,
   getEMA,
-  getHULL,
   getMACD,
   getRSI,
   getOBV,
