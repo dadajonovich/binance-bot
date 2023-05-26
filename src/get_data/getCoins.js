@@ -9,6 +9,7 @@ const getCoins =
     getRSI = (f) => f,
     getOBV = (f) => f,
     getVWAP = (f) => f,
+    getEnvelope = (f) => f,
     getStandartDeviation = (f) => f,
     percentageDiffernce = (f) => f
   ) =>
@@ -35,12 +36,12 @@ const getCoins =
           const MACD = getMACD(closePrices);
           const signalMACD = getEMA(MACD, 9);
           const RSI = getRSI(closePrices);
-
           const OBV = getOBV(closePrices, volumes);
           const VWAP = getVWAP(typicalPrices, volumes);
+          const envelope = getEnvelope(closePrices);
+
           const percentDiffVWAP =
             percentageDiffernce(prices.currentPrice, VWAP.at(-1)) * 100;
-
           const percentDiffEMA9 =
             percentageDiffernce(prices.currentPrice, EMA9.at(-1)) * 100;
           const percentDiffEMA20 =
@@ -65,6 +66,7 @@ const getCoins =
             RSI,
             OBV,
             VWAP,
+            envelope,
             percentDiffEMA9,
             percentDiffEMA20,
             percentDiffEMA50,
@@ -73,6 +75,7 @@ const getCoins =
           };
         })
       );
+      console.log(coins[0]);
       return coins;
     } catch (err) {
       console.error('Error in getting coins', err);

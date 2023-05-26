@@ -24,12 +24,14 @@ const createSellOrder = async (
             candles,
             EMA9,
             EMA20,
+            EMA50,
             percentDiffEMA8,
             OBV,
             MACD,
             signalMACD,
             RSI,
             VWAP,
+            envelope,
           },
         ] = await curryGetCoins([pair]);
         const { [pair]: price } = await client.prices({ symbol: pair });
@@ -39,17 +41,29 @@ const createSellOrder = async (
         }
 
         if (stopLoss === null) {
-          stopLoss = price * (1 - percentDiffEMA8 / 3 / 100);
+          stopLoss = price - price * 0.015;
         }
+        const [secondUpperLine, secondMiddleLine, secondLowerLine] =
+          envelope.at(-2);
 
         const firstCriterionSell =
-          takeProfit < price || EMA20.at(-2) > candles.at(-2).close;
+          secondMiddleLine < candles.at(-2).close ||
+          stopLoss > candles.at(-2).close;
         console.log(
-          `takeProfit - ${takeProfit}, EMA20 - ${EMA20.at(
-            -2
-          )}, candles close - ${candles.at(-2).close}`
+          `takeProfit - ${takeProfit}, secondMiddleLine - ${secondMiddleLine}, candles close - ${
+            candles.at(-2).close
+          }`
         );
-        console.log(firstCriterionSell);
+
+        // const firstCriterionSell =
+        //   takeProfit < price || EMA20.at(-2) > candles.at(-2).close;
+        // console.log(
+        //   `takeProfit - ${takeProfit}, EMA20 - ${EMA20.at(
+        //     -2
+        //   )}, candles close - ${candles.at(-2).close}`
+        // );
+
+        // console.log(firstCriterionSell);
         if (firstCriterionSell) {
           isSellOrder = true;
           clearInterval(checkSellInterval);
