@@ -3,11 +3,13 @@ const { client, bot, telegramChatId, parameters } = require('./config');
 const {
   getSMA,
   getEMA,
+  getKAMA,
   getMACD,
   getRSI,
   getOBV,
   getVWAP,
   getEnvelope,
+  getKeltner,
   percentageDiffernce,
   getStandartDeviation,
 } = require('./ta.js/indexTA');
@@ -74,11 +76,13 @@ const curryGetCoins = getCoins(
   getPrice,
   getSMA,
   getEMA,
+  getKAMA,
   getMACD,
   getRSI,
   getOBV,
   getVWAP,
   getEnvelope,
+  getKeltner,
   getStandartDeviation,
   percentageDiffernce
 );

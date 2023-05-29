@@ -25,6 +25,7 @@ const createSellOrder = async (
             EMA9,
             EMA20,
             EMA50,
+            EMA200,
             percentDiffEMA8,
             OBV,
             MACD,
@@ -32,38 +33,60 @@ const createSellOrder = async (
             RSI,
             VWAP,
             envelope,
+            keltner,
+            obvEMA9,
+            obvEMA20,
+            kama,
+            filterKama,
           },
         ] = await curryGetCoins([pair]);
         const { [pair]: price } = await client.prices({ symbol: pair });
 
-        if (takeProfit === null) {
-          takeProfit = price * (1 + 3 / 100);
-        }
+        // if (takeProfit === null) {
+        //   takeProfit = price * (1 + 3 / 100);
+        // }
 
         if (stopLoss === null) {
           stopLoss = price - price * 0.015;
         }
+
+        // Envelope
+        // const [secondUpperLine, secondMiddleLine, secondLowerLine] =
+        //   envelope.at(-2);
+        // const [thirdUpperLine, thirdMiddleLine, thirdLowerLine] =
+        //   envelope.at(-3);
+        // const crossUpperLine = candles.at(-2).open > secondMiddleLine;
+        // const firstCriterionSell = crossUpperLine;
+
+        // Kelter;
         const [secondUpperLine, secondMiddleLine, secondLowerLine] =
-          envelope.at(-2);
+          keltner.at(-2);
+        const [thirdUpperLine, thirdMiddleLine, thirdLowerLine] =
+          keltner.at(-3);
+        const crossUpperLine = candles.at(-2).open > secondMiddleLine;
+        const firstCriterionSell = crossUpperLine;
 
-        const firstCriterionSell =
-          secondMiddleLine < candles.at(-2).close ||
-          stopLoss > candles.at(-2).close;
-        console.log(
-          `takeProfit - ${takeProfit}, secondMiddleLine - ${secondMiddleLine}, candles close - ${
-            candles.at(-2).close
-          }`
-        );
+        // cross OBV
+        // const firstCriterionSell = obvEMA9.at(-1) < obvEMA20.at(-1);
 
-        // const firstCriterionSell =
-        //   takeProfit < price || EMA20.at(-2) > candles.at(-2).close;
+        // cross Kaufman
+        // const firstCriterionSell = kama.at(-2) > candles.at(-2).close;
+
+        // Delta
+        // const firstCriterionSell = delta < 0;
+        // console.log(delta);
+
+        // EMA
+        // const firstCriterionSell = EMA20.at(-2) > candles.at(-2).close;
         // console.log(
         //   `takeProfit - ${takeProfit}, EMA20 - ${EMA20.at(
         //     -2
         //   )}, candles close - ${candles.at(-2).close}`
         // );
 
-        // console.log(firstCriterionSell);
+        // const firstCriterionSell = MACD.at(-1) < MACD.at(-2) < MACD.at(-3);
+
+        console.log(firstCriterionSell);
         if (firstCriterionSell) {
           isSellOrder = true;
           clearInterval(checkSellInterval);
