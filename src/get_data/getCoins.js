@@ -30,7 +30,6 @@ const getCoins =
           return {
             pair,
             candles,
-            closePrices,
             currentPrice,
             volatility,
             keltner,

@@ -17,8 +17,8 @@ const createBuyOrder = async (
     let count = 0;
     console.log(`count from createBuyOrder ${count}`);
 
-    const { [pair]: price } = await client.prices({ symbol: pair });
-    const { roundedPriceBuy, quantityBuy } = getValuesForOrder(
+    let { [pair]: price } = await client.prices({ symbol: pair });
+    let { roundedPriceBuy, quantityBuy } = getValuesForOrder(
       Number(price),
       stepSize,
       tickSize,
@@ -52,24 +52,23 @@ const createBuyOrder = async (
         if (count > 5) {
           const orders = await getOpenOrders(client);
           await cancelOrders(client, orders);
-          const { [pair]: currentPrice } = await client.prices({
+          ({ [pair]: price } = await client.prices({
             symbol: pair,
-          });
-          const { roundedPriceBuy: newPrice, quantityBuy: newQuantity } =
-            getValuesForOrder(
-              Number(currentPrice),
-              stepSize,
-              tickSize,
-              quantityUSDT,
-              pair
-            );
+          }));
+          ({ roundedPriceBuy, quantityBuy } = getValuesForOrder(
+            Number(price),
+            stepSize,
+            tickSize,
+            quantityUSDT,
+            pair
+          ));
           await createOrder(
             client,
             pair,
             'BUY',
             'LIMIT',
-            newQuantity,
-            newPrice
+            quantityBuy,
+            roundedPriceBuy
           );
           count = 0;
         }

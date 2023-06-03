@@ -6,7 +6,10 @@ const createSellOrder = async (
   quantityAsset,
   curryGetCoins = (f) => f,
   getValuesForOrder = (f) => f,
-  createOrder = (f) => f
+  createOrder = (f) => f,
+  orderExist = (f) => f,
+  getOpenOrders = (f) => f,
+  cancelOrders = (f) => f
 ) => {
   try {
     console.log('Sell order!');
@@ -14,20 +17,21 @@ const createSellOrder = async (
     let isSellOrder = false;
     const takeProfit = null;
     let stopLoss = null;
+    let count = 0;
+    let { [pair]: price } = await client.prices({ symbol: pair });
+
+    if (stopLoss === null) {
+      stopLoss = price - price * 0.015;
+    }
+
+    // if (takeProfit === null) {
+    //   takeProfit = price * (1 + 3 / 100);
+    // }
 
     await new Promise((resolve) => {
-      const checkSellInterval = setInterval(async () => {
-        console.log('tick checkSellInterval...');
+      const checkSellCriterionInterval = setInterval(async () => {
+        console.log('tick checkSellCriterionInterval...');
         const [{ candles, envelope, keltner }] = await curryGetCoins([pair]);
-        const { [pair]: price } = await client.prices({ symbol: pair });
-
-        // if (takeProfit === null) {
-        //   takeProfit = price * (1 + 3 / 100);
-        // }
-
-        if (stopLoss === null) {
-          stopLoss = price - price * 0.015;
-        }
 
         // Envelope
         // const [secondUpperLine, secondMiddleLine, secondLowerLine] =
@@ -47,32 +51,66 @@ const createSellOrder = async (
 
         console.log(firstCriterionSell);
         if (firstCriterionSell) {
-          isSellOrder = true;
-          clearInterval(checkSellInterval);
+          ({ [pair]: price } = await client.prices({ symbol: pair }));
+          const { roundedPriceSell, quantitySell } = getValuesForOrder(
+            Number(price),
+            stepSize,
+            tickSize,
+            quantityAsset,
+            pair
+          );
+          await createOrder(
+            client,
+            pair,
+            'SELL',
+            'LIMIT',
+            quantitySell,
+            roundedPriceSell
+          );
+
+          clearInterval(checkSellCriterionInterval);
           resolve();
         }
       }, 0.5 * 60 * 1000);
     });
 
-    if (!isSellOrder) throw new Error(`isSellOrder - ${isSellOrder}`);
-
-    const { [pair]: price } = await client.prices({ symbol: pair });
-
-    const { roundedPriceSell, quantitySell } = getValuesForOrder(
-      Number(price),
-      stepSize,
-      tickSize,
-      quantityAsset,
-      pair
-    );
-    await createOrder(
-      client,
-      pair,
-      'SELL',
-      'MARKET',
-      quantitySell
-      // roundedPriceSell
-    );
+    await new Promise((resolve) => {
+      const checkSellInterval = setInterval(async () => {
+        console.log('tick checkSellInterval...');
+        const { sellOrderExists: sellMark } = await orderExist(
+          client,
+          pair,
+          getOpenOrders
+        );
+        count += 1;
+        if (!sellMark) {
+          isSellOrder = true;
+          clearInterval(checkSellInterval);
+          resolve();
+        }
+        if (count > 5) {
+          const orders = await getOpenOrders(client);
+          await cancelOrders(client, orders);
+          ({ [pair]: price } = await client.prices({ symbol: pair }));
+          const { roundedPriceSell, quantitySell } = getValuesForOrder(
+            Number(price),
+            stepSize,
+            tickSize,
+            quantityAsset,
+            pair
+          );
+          await createOrder(
+            client,
+            pair,
+            'SELL',
+            'LIMIT',
+            quantitySell,
+            roundedPriceSell
+          );
+          count = 0;
+        }
+      }, 5 * 1000);
+    });
 
     return isSellOrder;
   } catch (err) {

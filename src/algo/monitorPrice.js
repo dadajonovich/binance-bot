@@ -65,7 +65,10 @@ const monitorPrice =
               quantityAsset,
               curryGetCoins,
               getValuesForOrder,
-              createOrder
+              createOrder,
+              orderExist,
+              getOpenOrders,
+              cancelOrders
             );
             if (!isSellOrder) throw new Error(`isSellOrder - ${isSellOrder}`);
           }

@@ -40,10 +40,8 @@ const filterCoins = (coins) => {
   const filteredCoins = coins.filter(
     (coin) => coin.volatility > 2 && crossKeltner(coin)
   );
-  const sortCoins = filteredCoins.sort(
-    (a, b) => b.percentDiffEMA - a.percentDiffEMA
-  );
-  return sortCoins.slice(0, 1);
+
+  return filteredCoins.slice(0, 1);
 };
 
 module.exports = filterCoins;
