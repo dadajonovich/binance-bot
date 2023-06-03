@@ -5,6 +5,7 @@ const filterCoins = require('./filterCoins');
 const orderExist = require('./ordersExist');
 const createBuyOrder = require('./createBuyOrder');
 const createSellOrder = require('./createSellOrder');
+const tradeAlgo = require('./tradeAlgo');
 
 module.exports = {
   createOrder,
@@ -14,4 +15,5 @@ module.exports = {
   orderExist,
   createBuyOrder,
   createSellOrder,
+  tradeAlgo,
 };

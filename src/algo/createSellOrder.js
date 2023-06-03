@@ -12,34 +12,13 @@ const createSellOrder = async (
     console.log('Sell order!');
 
     let isSellOrder = false;
-    let takeProfit = null;
+    const takeProfit = null;
     let stopLoss = null;
-    let takeProfitVWAP = null;
 
     await new Promise((resolve) => {
       const checkSellInterval = setInterval(async () => {
         console.log('tick checkSellInterval...');
-        const [
-          {
-            candles,
-            EMA9,
-            EMA20,
-            EMA50,
-            EMA200,
-            percentDiffEMA8,
-            OBV,
-            MACD,
-            signalMACD,
-            RSI,
-            VWAP,
-            envelope,
-            keltner,
-            obvEMA9,
-            obvEMA20,
-            kama,
-            filterKama,
-          },
-        ] = await curryGetCoins([pair]);
+        const [{ candles, envelope, keltner }] = await curryGetCoins([pair]);
         const { [pair]: price } = await client.prices({ symbol: pair });
 
         // if (takeProfit === null) {
@@ -65,26 +44,6 @@ const createSellOrder = async (
           keltner.at(-3);
         const crossUpperLine = candles.at(-2).open > secondMiddleLine;
         const firstCriterionSell = crossUpperLine;
-
-        // cross OBV
-        // const firstCriterionSell = obvEMA9.at(-1) < obvEMA20.at(-1);
-
-        // cross Kaufman
-        // const firstCriterionSell = kama.at(-2) > candles.at(-2).close;
-
-        // Delta
-        // const firstCriterionSell = delta < 0;
-        // console.log(delta);
-
-        // EMA
-        // const firstCriterionSell = EMA20.at(-2) > candles.at(-2).close;
-        // console.log(
-        //   `takeProfit - ${takeProfit}, EMA20 - ${EMA20.at(
-        //     -2
-        //   )}, candles close - ${candles.at(-2).close}`
-        // );
-
-        // const firstCriterionSell = MACD.at(-1) < MACD.at(-2) < MACD.at(-3);
 
         console.log(firstCriterionSell);
         if (firstCriterionSell) {

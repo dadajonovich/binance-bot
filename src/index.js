@@ -1,28 +1,16 @@
-const { client, bot, telegramChatId, parameters } = require('./config');
+const { client, bot, TELEGRAM_CHAT_ID, parameters } = require('./config');
 
 const {
-  getSMA,
-  getEMA,
-  getKAMA,
-  getMACD,
-  getRSI,
-  getOBV,
-  getVWAP,
   getEnvelope,
   getKeltner,
-  percentageDiffernce,
   getStandartDeviation,
 } = require('./ta.js/indexTA');
 
 // Message
 const {
   getBalanceMessage,
-  templateMessageIndicator,
-  templateMessageMA,
-  getMessageInfoTemplate,
   getStrCoinsInfo,
   getOrdersMessage,
-  templateMessageBollinger,
 } = require('./message/indexMessage');
 
 // Get functions
@@ -46,6 +34,7 @@ const {
   orderExist,
   createBuyOrder,
   createSellOrder,
+  tradeAlgo,
 } = require('./algo/indexAlgo');
 
 // Compose
@@ -62,29 +51,15 @@ const sendMessage = (chatId) => async (message) => {
 
 // Currying
 
-const currySendMessage = sendMessage(telegramChatId);
-
-const curryGetStrCoinsInfo = getStrCoinsInfo(
-  templateMessageIndicator,
-  templateMessageMA,
-  getMessageInfoTemplate
-);
+const currySendMessage = sendMessage(TELEGRAM_CHAT_ID);
 
 const curryGetCoins = getCoins(
   client,
   getCandles,
   getPrice,
-  getSMA,
-  getEMA,
-  getKAMA,
-  getMACD,
-  getRSI,
-  getOBV,
-  getVWAP,
   getEnvelope,
   getKeltner,
-  getStandartDeviation,
-  percentageDiffernce
+  getStandartDeviation
 );
 
 const curryMonitorPrice = monitorPrice(
@@ -98,8 +73,7 @@ const curryMonitorPrice = monitorPrice(
   curryGetCoins,
   createBuyOrder,
   createSellOrder,
-  cancelOrders,
-  percentageDiffernce
+  cancelOrders
 );
 
 bot.on('message', async (msg) => {
@@ -110,37 +84,13 @@ bot.on('message', async (msg) => {
   let coins;
   let filteredCoins;
   let topPairs;
-  let resultMonitor;
-
-  const tradeAlgo = async () => {
-    filteredCoins = [];
-    console.log('start tradeAlgo');
-    await new Promise((resole) => {
-      const searchCoins = setInterval(async () => {
-        console.log('tick searchCoins');
-        coins = await curryGetCoins(topPairs, parameters);
-        filteredCoins = filterCoins(coins);
-        if (filteredCoins.length > 0) {
-          clearInterval(searchCoins);
-          resole();
-        }
-      }, 1 * 60 * 1000);
-    });
-    await currySendMessage(curryGetStrCoinsInfo(filteredCoins));
-    resultMonitor = await curryMonitorPrice(filteredCoins);
-    console.log(`resultMonitor - ${resultMonitor}`);
-    if (resultMonitor.every((elem) => elem === true) || resultMonitor === []) {
-      console.log('restart tradeAlgo');
-      tradeAlgo();
-    }
-  };
 
   switch (msg.text) {
     case '/tellme':
       topPairs = await getTopPairs(client, parameters);
       coins = await curryGetCoins(topPairs, parameters);
       filteredCoins = filterCoins(coins);
-      await currySendMessage(curryGetStrCoinsInfo(filteredCoins));
+      await currySendMessage(getStrCoinsInfo(filteredCoins));
       break;
 
     case '/balance':
@@ -160,7 +110,15 @@ bot.on('message', async (msg) => {
 
     case '/start':
       topPairs = await getTopPairs(client, parameters);
-      tradeAlgo();
+      tradeAlgo(
+        curryGetCoins,
+        topPairs,
+        parameters,
+        filterCoins,
+        currySendMessage,
+        getStrCoinsInfo,
+        curryMonitorPrice
+      );
 
       break;
 
