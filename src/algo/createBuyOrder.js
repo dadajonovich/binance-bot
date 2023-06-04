@@ -17,23 +17,26 @@ const createBuyOrder = async (
     let count = 0;
     console.log(`count from createBuyOrder ${count}`);
 
-    let { [pair]: price } = await client.prices({ symbol: pair });
-    let { roundedPriceBuy, quantityBuy } = getValuesForOrder(
-      Number(price),
-      stepSize,
-      tickSize,
-      quantityUSDT,
-      pair
-    );
+    const composeCreateBuyOrder = async () => {
+      const { [pair]: price } = await client.prices({ symbol: pair });
+      const { roundedPrice, quantityBuy } = getValuesForOrder(
+        Number(price),
+        stepSize,
+        tickSize,
+        quantityUSDT,
+        pair
+      );
+      await createOrder(
+        client,
+        pair,
+        'BUY',
+        'LIMIT',
+        quantityBuy,
+        roundedPrice
+      );
+    };
 
-    await createOrder(
-      client,
-      pair,
-      'BUY',
-      'LIMIT',
-      quantityBuy,
-      roundedPriceBuy
-    );
+    await composeCreateBuyOrder();
 
     await new Promise((resolve) => {
       const checkBuyInterval = setInterval(async () => {
@@ -52,27 +55,10 @@ const createBuyOrder = async (
         if (count > 5) {
           const orders = await getOpenOrders(client);
           await cancelOrders(client, orders);
-          ({ [pair]: price } = await client.prices({
-            symbol: pair,
-          }));
-          ({ roundedPriceBuy, quantityBuy } = getValuesForOrder(
-            Number(price),
-            stepSize,
-            tickSize,
-            quantityUSDT,
-            pair
-          ));
-          await createOrder(
-            client,
-            pair,
-            'BUY',
-            'LIMIT',
-            quantityBuy,
-            roundedPriceBuy
-          );
+          await composeCreateBuyOrder();
           count = 0;
         }
-      }, 5 * 1000);
+      }, 0.5 * 60 * 1000);
     });
 
     return isBuyOrder;

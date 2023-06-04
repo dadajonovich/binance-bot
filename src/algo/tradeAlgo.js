@@ -19,7 +19,7 @@ const tradeAlgo = async (
           clearInterval(searchCoins);
           resole();
         }
-      }, 1 * 60 * 1000);
+      }, 5 * 60 * 1000);
     });
     await currySendMessage(getStrCoinsInfo(filteredCoins));
     const resultMonitor = await curryMonitorPrice(filteredCoins);

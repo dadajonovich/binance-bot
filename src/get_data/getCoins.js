@@ -3,6 +3,7 @@ const getCoins =
     client,
     getCandles = (f) => f,
     getPrices = (f) => f,
+    getSMA = (f) => f,
     getEnvelope = (f) => f,
     getKeltner = (f) => f,
     getStandartDeviation = (f) => f
@@ -24,6 +25,7 @@ const getCoins =
           const standartDeviation = getStandartDeviation(closePrices);
           const volatility = (standartDeviation / currentPrice) * 100;
 
+          const sma50 = getSMA(closePrices);
           const envelope = getEnvelope(closePrices);
           const keltner = getKeltner(closePrices, highPrice, lowPrice);
 
@@ -32,6 +34,7 @@ const getCoins =
             candles,
             currentPrice,
             volatility,
+            sma50,
             keltner,
             envelope,
           };
