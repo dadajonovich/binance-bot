@@ -4,11 +4,10 @@ const getCoins =
     getCandles = (f) => f,
     getPrices = (f) => f,
     getSMA = (f) => f,
-    getEnvelope = (f) => f,
     getKeltner = (f) => f,
     getStandartDeviation = (f) => f
   ) =>
-  async (pairs = [], { intervalToMonitor = '15m', period = 20 } = {}) => {
+  async (pairs = [], { intervalToMonitor = '15m', period = 25 } = {}) => {
     try {
       console.log(`${intervalToMonitor}, ${period}`);
       const coins = await Promise.all(
@@ -26,7 +25,6 @@ const getCoins =
           const volatility = (standartDeviation / currentPrice) * 100;
 
           const sma50 = getSMA(closePrices);
-          const envelope = getEnvelope(closePrices);
           const keltner = getKeltner(closePrices, highPrice, lowPrice);
 
           return {
@@ -36,7 +34,6 @@ const getCoins =
             volatility,
             sma50,
             keltner,
-            envelope,
           };
         })
       );

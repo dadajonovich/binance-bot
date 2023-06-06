@@ -1,11 +1,6 @@
 const { client, bot, TELEGRAM_CHAT_ID, parameters } = require('./config');
 
-const {
-  getSMA,
-  getEnvelope,
-  getKeltner,
-  getStandartDeviation,
-} = require('./ta.js/indexTA');
+const { getSMA, getKeltner, getStandartDeviation } = require('./ta.js/indexTA');
 
 // Message
 const {
@@ -59,7 +54,6 @@ const curryGetCoins = getCoins(
   getCandles,
   getPrice,
   getSMA,
-  getEnvelope,
   getKeltner,
   getStandartDeviation
 );

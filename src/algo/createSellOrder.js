@@ -15,18 +15,11 @@ const createSellOrder = async (
     console.log('Sell order!');
 
     let isSellOrder = false;
-    const takeProfit = null;
+    let takeProfit = null;
     let stopLoss = null;
     let count = 0;
     let { [pair]: price } = await client.prices({ symbol: pair });
 
-    if (stopLoss === null) {
-      stopLoss = price - price * 0.01;
-    }
-
-    // if (takeProfit === null) {
-    //   takeProfit = price * (1 + 3 / 100);
-    // }
     const composeCreateSellOrder = async () => {
       ({ [pair]: price } = await client.prices({ symbol: pair }));
       const { roundedPrice, quantitySell } = getValuesForOrder(
@@ -49,16 +42,17 @@ const createSellOrder = async (
     await new Promise((resolve) => {
       const checkSellCriterionInterval = setInterval(async () => {
         console.log('tick checkSellCriterionInterval...');
-        const [{ candles, envelope, keltner }] = await curryGetCoins([pair]);
+        const [{ candles, envelope, keltner, volatility }] =
+          await curryGetCoins([pair]);
         ({ [pair]: price } = await client.prices({ symbol: pair }));
-        // Envelope
-        // const [secondUpperLine, secondMiddleLine, secondLowerLine] =
-        //   envelope.at(-2);
-        // const [thirdUpperLine, thirdMiddleLine, thirdLowerLine] =
-        //   envelope.at(-3);
-        // const crossUpperLine = candles.at(-2).open > secondMiddleLine;
-        // const firstCriterionSell = crossUpperLine || stopLoss > price;
-        // const firstCriterionSell = crossUpperLine;
+
+        if (stopLoss === null) {
+          stopLoss = price - price * 0.01;
+        }
+
+        if (takeProfit === null) {
+          takeProfit = price * (1 + volatility / 100);
+        }
 
         // Kelter;
         const [secondUpperLine, secondMiddleLine, secondLowerLine] =
@@ -66,7 +60,7 @@ const createSellOrder = async (
         const [thirdUpperLine, thirdMiddleLine, thirdLowerLine] =
           keltner.at(-3);
         const crossUpperLine = candles.at(-2).open > secondMiddleLine;
-        const firstCriterionSell = crossUpperLine || stopLoss > price;
+        const firstCriterionSell = takeProfit < price;
         // const firstCriterionSell = crossUpperLine;
 
         console.log(firstCriterionSell);
