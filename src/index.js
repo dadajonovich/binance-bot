@@ -1,6 +1,13 @@
 const { client, bot, TELEGRAM_CHAT_ID, parameters } = require('./config');
 
-const { getSMA, getKeltner, getStandartDeviation } = require('./ta.js/indexTA');
+const {
+  getKeltner,
+  getEnvelope,
+  getStandartDeviation,
+  getSMA,
+  getFIB,
+  getRSI,
+} = require('./ta.js/indexTA');
 
 // Message
 const {
@@ -33,7 +40,6 @@ const {
   tradeAlgo,
 } = require('./algo/indexAlgo');
 
-// Compose
 const sendMessage = (chatId) => async (message) => {
   try {
     await bot.sendMessage(
@@ -46,16 +52,18 @@ const sendMessage = (chatId) => async (message) => {
 };
 
 // Currying
-
 const currySendMessage = sendMessage(TELEGRAM_CHAT_ID);
 
 const curryGetCoins = getCoins(
   client,
   getCandles,
   getPrice,
-  getSMA,
   getKeltner,
-  getStandartDeviation
+  getEnvelope,
+  getStandartDeviation,
+  getSMA,
+  getFIB,
+  getRSI
 );
 
 const curryMonitorPrice = monitorPrice(

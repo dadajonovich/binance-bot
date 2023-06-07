@@ -15,8 +15,6 @@ const createSellOrder = async (
     console.log('Sell order!');
 
     let isSellOrder = false;
-    let takeProfit = null;
-    let stopLoss = null;
     let count = 0;
     let { [pair]: price } = await client.prices({ symbol: pair });
 
@@ -38,30 +36,15 @@ const createSellOrder = async (
         roundedPrice
       );
     };
+    const [{ lineTop, minPrice }] = await curryGetCoins([pair]);
 
     await new Promise((resolve) => {
       const checkSellCriterionInterval = setInterval(async () => {
         console.log('tick checkSellCriterionInterval...');
-        const [{ candles, envelope, keltner, volatility }] =
-          await curryGetCoins([pair]);
+
         ({ [pair]: price } = await client.prices({ symbol: pair }));
 
-        if (stopLoss === null) {
-          stopLoss = price - price * 0.01;
-        }
-
-        if (takeProfit === null) {
-          takeProfit = price * (1 + volatility / 100);
-        }
-
-        // Kelter;
-        const [secondUpperLine, secondMiddleLine, secondLowerLine] =
-          keltner.at(-2);
-        const [thirdUpperLine, thirdMiddleLine, thirdLowerLine] =
-          keltner.at(-3);
-        const crossUpperLine = candles.at(-2).open > secondMiddleLine;
-        const firstCriterionSell = takeProfit < price;
-        // const firstCriterionSell = crossUpperLine;
+        const firstCriterionSell = lineTop < price;
 
         console.log(firstCriterionSell);
         if (firstCriterionSell) {
@@ -69,7 +52,7 @@ const createSellOrder = async (
           clearInterval(checkSellCriterionInterval);
           resolve();
         }
-      }, 1 * 60 * 1000);
+      }, 0.1 * 60 * 1000);
     });
 
     await new Promise((resolve) => {

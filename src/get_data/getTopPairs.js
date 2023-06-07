@@ -2,21 +2,15 @@ const getTopPairs = async (client, { quantityPairs = 50 } = {}) => {
   try {
     const exchangeInfo = await client.exchangeInfo();
     const { symbols } = exchangeInfo;
-    const pairsByVolume = symbols
+    const topPairs = symbols
       .filter(
         (symbol) =>
           symbol.status === 'TRADING' &&
           symbol.quoteAsset === 'USDT' &&
           !symbol.symbol.includes('DOWN')
       )
-      .map((symbol) => ({
-        pair: `${symbol.baseAsset}${symbol.quoteAsset}`,
-        volume: parseFloat(symbol.volume),
-      }))
-      .sort((a, b) => b.volume - a.volume);
-    const topPairs = pairsByVolume
-      .slice(0, quantityPairs)
-      .map((pair) => pair.pair);
+      .map((symbol) => `${symbol.baseAsset}${symbol.quoteAsset}`)
+      .slice(0, quantityPairs);
     return topPairs;
   } catch (err) {
     console.error('Error in getTopPairs', err);
