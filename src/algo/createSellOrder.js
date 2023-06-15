@@ -36,7 +36,7 @@ const createSellOrder = async (
         roundedPrice
       );
     };
-    const [{ lineTop, minPrice }] = await curryGetCoins([pair]);
+    const [{ lineTop }] = await curryGetCoins([pair]);
 
     await new Promise((resolve) => {
       const checkSellCriterionInterval = setInterval(async () => {
@@ -45,14 +45,14 @@ const createSellOrder = async (
         ({ [pair]: price } = await client.prices({ symbol: pair }));
 
         const firstCriterionSell = lineTop < price;
-
+        console.log(`lineTop - ${lineTop}, price - ${price}`);
         console.log(firstCriterionSell);
         if (firstCriterionSell) {
           await composeCreateSellOrder();
           clearInterval(checkSellCriterionInterval);
           resolve();
         }
-      }, 0.1 * 60 * 1000);
+      }, 0.5 * 60 * 1000);
     });
 
     await new Promise((resolve) => {
