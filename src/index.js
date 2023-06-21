@@ -5,6 +5,7 @@ const {
   getStandartDeviation,
   getFIB,
   getRSI,
+  checkMinimumsIncrease,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -59,7 +60,8 @@ const curryGetCoins = getCoins(
   getSMA,
   getStandartDeviation,
   getFIB,
-  getRSI
+  getRSI,
+  checkMinimumsIncrease
 );
 
 const curryMonitorPrice = monitorPrice(

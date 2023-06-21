@@ -1,5 +1,3 @@
-const ta = require('ta.js');
-
 const getCoins =
   (
     client,
@@ -8,7 +6,8 @@ const getCoins =
     getSMA = (f) => f,
     getStandartDeviation = (f) => f,
     getFIB = (f) => f,
-    getRSI = (f) => f
+    getRSI = (f) => f,
+    checkMinimumsIncrease = (f) => f
   ) =>
   async (pairs = [], { intervalToMonitor = '15m', period = 205 } = {}) => {
     try {
@@ -33,20 +32,21 @@ const getCoins =
           const lineTop = fibonacci[6];
           const rsi = getRSI(closePrices);
           const sma200 = getSMA(closePrices, 200);
+          const trend = checkMinimumsIncrease(closePrices, 5);
 
           return {
             pair,
             currentPrice,
             candles,
             volatility,
+            sma200,
             lineBottom,
             lineTop,
             rsi,
-            sma200,
+            trend,
           };
         })
       );
-      console.log(coins[0]);
       return coins;
     } catch (err) {
       console.error('Error in getting coins', err);

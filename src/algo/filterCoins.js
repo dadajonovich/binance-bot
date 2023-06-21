@@ -6,10 +6,12 @@ const crossUnderFibo = (coin) => {
     secondCandle.low > coin.sma200.at(-2) &&
     thirdCandle.low > coin.sma200.at(-3);
 
+  const trend = coin.trend;
+
   const criterionCross =
     secondCandle.close > coin.lineBottom && thirdCandle.close < coin.lineBottom;
 
-  if (criterionSMA && criterionCross) {
+  if (trend && criterionCross) {
     return true;
   }
   return false;
@@ -19,7 +21,7 @@ const filterCoins = (coins) => {
   const filteredCoins = coins.filter(
     (coin) => coin.volatility > 1 && crossUnderFibo(coin)
   );
-
+  console.log(filteredCoins);
   return filteredCoins.slice(0, 1);
 };
 
