@@ -1,17 +1,17 @@
 const crossUnderFibo = (coin) => {
-  const secondCandle = coin.candles.at(-2);
-  const thirdCandle = coin.candles.at(-3);
+  // const secondCandle = coin.candles.at(-2);
+  // const thirdCandle = coin.candles.at(-3);
 
   const criterionSMA =
-    secondCandle.low > coin.sma200.at(-2) &&
-    thirdCandle.low > coin.sma200.at(-3);
+    coin.sma50.at(-2) > coin.sma200.at(-2) &&
+    coin.sma50.at(-3) > coin.sma200.at(-3);
 
-  const trend = coin.trend;
+  // const criterionRSI = coin.rsi.at(-2) < 45;
 
   const criterionCross =
-    secondCandle.close > coin.lineBottom && thirdCandle.close < coin.lineBottom;
+    coin.sma3.at(-2) > coin.lineBottom && coin.sma3.at(-3) < coin.lineBottom;
 
-  if (trend && criterionCross) {
+  if (criterionSMA && criterionCross) {
     return true;
   }
   return false;

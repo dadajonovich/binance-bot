@@ -3,6 +3,7 @@ const getFIB = require('./fibonacci');
 const getRSI = require('./rsi');
 const getSMA = require('./sma');
 const checkMinimumsIncrease = require('./checkMinimumsIncrease');
+const getStoch = require('./stochastics');
 
 module.exports = {
   getSMA,
@@ -10,4 +11,5 @@ module.exports = {
   getFIB,
   getRSI,
   checkMinimumsIncrease,
+  getStoch,
 };
