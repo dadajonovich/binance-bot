@@ -4,6 +4,7 @@ const getRSI = require('./rsi');
 const getSMA = require('./sma');
 const checkMinimumsIncrease = require('./checkMinimumsIncrease');
 const getStoch = require('./stochastics');
+const getKeltner = require('./keltner');
 
 module.exports = {
   getSMA,
@@ -12,4 +13,5 @@ module.exports = {
   getRSI,
   checkMinimumsIncrease,
   getStoch,
+  getKeltner,
 };

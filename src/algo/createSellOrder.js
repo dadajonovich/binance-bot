@@ -1,3 +1,7 @@
+const ta = require('ta.js');
+
+const percentageDiffernce = (newval, oldval) => ta.dif(newval, oldval);
+
 const createSellOrder = async (
   client,
   pair,
@@ -16,7 +20,7 @@ const createSellOrder = async (
 
     let isSellOrder = false;
     let count = 0;
-    let { [pair]: price } = await client.prices({ symbol: pair });
+    let price;
 
     const composeCreateSellOrder = async () => {
       ({ [pair]: price } = await client.prices({ symbol: pair }));
@@ -36,16 +40,18 @@ const createSellOrder = async (
         roundedPrice
       );
     };
-    const [{ lineTop }] = await curryGetCoins([pair]);
 
     await new Promise((resolve) => {
       const checkSellCriterionInterval = setInterval(async () => {
         console.log('tick checkSellCriterionInterval...');
+        const [{ candles, keltner }] = await curryGetCoins([pair]);
 
-        ({ [pair]: price } = await client.prices({ symbol: pair }));
+        const [secondUpperLine, secondMiddleLine, secondLowerLine] =
+          keltner.at(-2);
 
-        const firstCriterionSell = lineTop < price;
-        console.log(`lineTop - ${lineTop}, price - ${price}`);
+        const crossUpperLine = candles.at(-2).close > secondUpperLine;
+        const firstCriterionSell = crossUpperLine;
+
         console.log(firstCriterionSell);
         if (firstCriterionSell) {
           await composeCreateSellOrder();
