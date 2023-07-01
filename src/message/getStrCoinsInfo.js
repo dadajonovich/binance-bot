@@ -6,10 +6,12 @@ const getStrCoinsInfo = (coins = []) => {
         (coin) => `\n${coin.pair}
   - Current Price: ${coin.currentPrice.toFixed(2)}
   - Volatility: ${coin.volatility.toFixed(2)}%
+  - SMA50: ${coin.sma50.toFixed(2)}
+  - SMA200: ${coin.sma200.toFixed(2)}
+  - OBV: ${coin.obv.toFixed(0)}
           `
       )
       .join('');
-
     return message;
   } catch (err) {
     console.error('Error in getStrCoinsInfo', err);

@@ -7,6 +7,9 @@ const getCandles = async (client, pair, intervalToMonitor, period) => {
     });
     return candles;
   } catch (err) {
+    if (err.message === 'fetch failed') {
+      getCandles(client, pair, intervalToMonitor, period);
+    }
     console.error('Error in getCandles', err);
     return [];
   }

@@ -3,11 +3,8 @@ const { client, bot, TELEGRAM_CHAT_ID, parameters } = require('./config');
 const {
   getSMA,
   getStandartDeviation,
-  getFIB,
-  getRSI,
-  checkMinimumsIncrease,
-  getStoch,
   getKeltner,
+  getOBV,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -61,11 +58,8 @@ const curryGetCoins = getCoins(
   getPrice,
   getSMA,
   getStandartDeviation,
-  getFIB,
-  getRSI,
-  checkMinimumsIncrease,
-  getStoch,
-  getKeltner
+  getKeltner,
+  getOBV
 );
 
 const curryMonitorPrice = monitorPrice(

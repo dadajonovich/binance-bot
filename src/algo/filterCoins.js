@@ -12,7 +12,6 @@ const crossKeltner = (coin) => {
     thirdMiddleLine > coin.sma50.at(-3);
 
   const crossLowLine =
-    // thirdCandle.open < thirdLowerLine && secondCandle.open > secondLowerLine;
     secondCandle.close > secondLowerLine && thirdCandle.close < thirdLowerLine;
   if (crossLowLine && criterionSMA) {
     return true;

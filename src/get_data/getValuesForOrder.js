@@ -1,5 +1,11 @@
-const toFixedHard = (number, x) =>
-  parseFloat(number.toFixed(x + 1).slice(0, -1));
+// const toFixedHard = (number, x) => {
+//   const s = String(number);
+//   const [a, b = ''] = s.split('.');
+//   return parseFloat(`${a}.${b.substring(0, x)}`);
+// };
+
+const toFixedHard = (number, x) => Math.floor(number * 10 ** x) / 10 ** x;
+const decimalPlace = (size) => size.toString().split('.')[1]?.length || 0;
 
 const getValuesForOrder = (
   currentPrice,
@@ -16,16 +22,14 @@ const getValuesForOrder = (
       typeof balanceFree,
       typeof pair
     );
-    const decimalPlacesQuantity =
-      parseFloat(stepSize) === 1 ? 0 : stepSize.indexOf('1') - 1;
+    const decimalPlacesQuantity = decimalPlace(stepSize);
 
-    const decimalPlacesPrice =
-      parseFloat(tickSize) === 1 ? 0 : tickSize.indexOf('1') - 1;
+    const decimalPlacesPrice = decimalPlace(tickSize);
 
     const roundedPrice = toFixedHard(currentPrice, decimalPlacesPrice);
 
     const quantityBuy = toFixedHard(
-      (balanceFree - balanceFree * 0.001) / roundedPrice,
+      balanceFree / roundedPrice,
       decimalPlacesQuantity
     );
     const quantitySell = toFixedHard(balanceFree, decimalPlacesQuantity);
