@@ -25,20 +25,15 @@ const searchSignal =
       });
 
       await currySendMessage(getStrCoinsInfo(filteredCoins));
-      const resultMonitor = await curryTradeAlgo(filteredCoins);
-      console.log(`resultMonitor - ${resultMonitor}`);
-      if (resultMonitor.every((elem) => elem === true)) {
-        console.log('restart tradeAlgo');
-        searchSignal(
-          curryGetCoins,
-          filterCoins,
-          currySendMessage,
-          getStrCoinsInfo,
-          curryTradeAlgo
-        )(topPairs);
+      const resultSearchSignal = await curryTradeAlgo(filteredCoins);
+      console.log(`resultSearchSignal - ${resultSearchSignal}`);
+      if (resultSearchSignal.every((elem) => elem === true)) {
+        return true;
       }
+      return false;
     } catch (err) {
-      console.error('Error in trading algorithm', err);
+      console.error('Error in searchSignal', err);
+      return false;
     }
   };
 

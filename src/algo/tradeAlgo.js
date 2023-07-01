@@ -14,7 +14,7 @@ const tradeAlgo =
   ) =>
   async (coins) => {
     try {
-      const resultMonitor = await Promise.all(
+      const resultTradeAlgo = await Promise.all(
         coins.map(async (coin) => {
           const { pair } = coin;
           const match = pair.match(/^(.*)USDT$/);
@@ -75,10 +75,10 @@ const tradeAlgo =
           return isSellOrder;
         })
       );
-      console.log(resultMonitor);
-      return resultMonitor;
+      console.log(resultTradeAlgo);
+      return resultTradeAlgo;
     } catch (err) {
-      console.error(`Error in monitorPrice:`, err);
+      console.error(`Error in tradeAlgo:`, err);
       return [];
     }
   };

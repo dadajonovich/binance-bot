@@ -93,6 +93,13 @@ bot.on('message', async (msg) => {
   let coins;
   let filteredCoins;
   let topPairs;
+  const cycle = async () => {
+    const result = await currySearchSignal(topPairs);
+    if (result) {
+      console.log('restart tradeAlgo');
+      setTimeout(cycle, 5000);
+    }
+  };
 
   switch (msg.text) {
     case '/tellme':
@@ -119,8 +126,7 @@ bot.on('message', async (msg) => {
 
     case '/start':
       topPairs = await getTopPairs(client, parameters);
-      currySearchSignal(topPairs);
-
+      cycle();
       break;
 
     default:

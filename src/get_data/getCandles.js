@@ -9,10 +9,6 @@ const getCandles =
       });
       return candles;
     } catch (err) {
-      if (err.message === 'fetch failed') {
-        console.log('Oh shit, get candles again...');
-        return getCandles(client, { intervalToMonitor, period })(pair);
-      }
       console.error('Error in getCandles', err);
       return [];
     }

@@ -11,7 +11,18 @@ const getCoins =
     try {
       const coins = await Promise.all(
         pairs.map(async (pair) => {
-          const candles = await curryGetCandles(pair);
+          let candles;
+          await new Promise((resolve) => {
+            const checkCandles = async () => {
+              candles = await curryGetCandles(pair);
+              if (candles.length > 0) {
+                resolve();
+              } else {
+                setTimeout(checkCandles, 0.1 * 60 * 1000);
+              }
+            };
+            checkCandles();
+          });
           const prices = getPrices(candles);
           const { currentPrice, closePrices, highPrice, lowPrice, volume } =
             prices;

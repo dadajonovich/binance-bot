@@ -42,7 +42,6 @@ const getValuesForOrder = (
       stepSize: ${stepSize}, 
       quantityBuy: ${quantityBuy}, 
       quantitySell: ${quantitySell}
-
       `
     );
     return { roundedPrice, quantityBuy, quantitySell };
