@@ -5,7 +5,8 @@
 // };
 
 const toFixedHard = (number, x) => Math.floor(number * 10 ** x) / 10 ** x;
-const decimalPlace = (size) => size.toString().split('.')[1]?.length || 0;
+const decimalPlace = (size) =>
+  parseFloat(size) === 1 ? 0 : size.indexOf('1') - 1;
 
 const getValuesForOrder = (
   currentPrice,

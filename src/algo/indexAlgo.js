@@ -1,15 +1,15 @@
 const createOrder = require('./createOrder');
-const monitorPrice = require('./monitorPrice');
+const tradeAlgo = require('./tradeAlgo');
 const cancelOrders = require('./cancelOrders');
 const filterCoins = require('./filterCoins');
 const orderExist = require('./ordersExist');
 const createBuyOrder = require('./createBuyOrder');
 const createSellOrder = require('./createSellOrder');
-const tradeAlgo = require('./tradeAlgo');
+const searchSignal = require('./searchSignal');
 
 module.exports = {
   createOrder,
-  monitorPrice,
+  searchSignal,
   cancelOrders,
   filterCoins,
   orderExist,

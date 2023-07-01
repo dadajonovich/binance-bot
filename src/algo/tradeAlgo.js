@@ -1,44 +1,85 @@
-const tradeAlgo = async (
-  curryGetCoins = (f) => f,
-  topPairs = [],
-  parameters = {},
-  filterCoins = (f) => f,
-  currySendMessage = (f) => f,
-  getStrCoinsInfo = (f) => f,
-  curryMonitorPrice = (f) => f
-) => {
-  try {
-    let filteredCoins = [];
-    console.log('start tradeAlgo');
-    await new Promise((resole) => {
-      const searchCoins = setInterval(async () => {
-        console.log('tick searchCoins');
-        const coins = await curryGetCoins(topPairs, parameters);
-        filteredCoins = filterCoins(coins);
-        if (filteredCoins.length > 0) {
-          clearInterval(searchCoins);
-          resole();
-        }
-      }, 5 * 60 * 1000);
-    });
-    await currySendMessage(getStrCoinsInfo(filteredCoins));
-    const resultMonitor = await curryMonitorPrice(filteredCoins);
-    console.log(`resultMonitor - ${resultMonitor}`);
-    if (resultMonitor.every((elem) => elem === true)) {
-      console.log('restart tradeAlgo');
-      tradeAlgo(
-        curryGetCoins,
-        topPairs,
-        parameters,
-        filterCoins,
-        currySendMessage,
-        getStrCoinsInfo,
-        curryMonitorPrice
-      );
-    }
-  } catch (err) {
-    console.error('Error in trading algorithm', err);
-  }
-};
+const tradeAlgo =
+  (
+    client,
+    createOrder = (f) => f,
+    getBalance = (f) => f,
+    getLotParams = (f) => f,
+    getValuesForOrder = (f) => f,
+    getOpenOrders = (f) => f,
+    orderExist = (f) => f,
+    curryGetCoins = (f) => f,
+    createBuyOrder = (f) => f,
+    createSellOrder = (f) => f,
+    cancelOrders = (f) => f
+  ) =>
+  async (coins) => {
+    try {
+      const resultMonitor = await Promise.all(
+        coins.map(async (coin) => {
+          const { pair } = coin;
+          const match = pair.match(/^(.*)USDT$/);
+          const asset = match[1];
+          const { buyOrderExists, sellOrderExists } = await orderExist(
+            client,
+            pair,
+            getOpenOrders
+          );
+          let isBuyOrder;
+          let isSellOrder;
+          const { balanceFree: quantityUSDT } = await getBalance(
+            client,
+            'USDT'
+          );
+          let { balanceFree: quantityAsset } = await getBalance(client, asset);
+          const { stepSize, tickSize } = await getLotParams(client, pair);
 
+          if (
+            quantityUSDT > 10 &&
+            !buyOrderExists &&
+            !sellOrderExists &&
+            quantityAsset < stepSize
+          ) {
+            isBuyOrder = await createBuyOrder(
+              client,
+              pair,
+              stepSize,
+              tickSize,
+              quantityUSDT,
+              getValuesForOrder,
+              createOrder,
+              orderExist,
+              getOpenOrders,
+              cancelOrders
+            );
+
+            if (!isBuyOrder) throw new Error(`isBuyOrder - ${isBuyOrder}`);
+            ({ balanceFree: quantityAsset } = await getBalance(client, asset));
+          }
+
+          if (quantityAsset > stepSize) {
+            isSellOrder = createSellOrder(
+              client,
+              pair,
+              stepSize,
+              tickSize,
+              quantityAsset,
+              curryGetCoins,
+              getValuesForOrder,
+              createOrder,
+              orderExist,
+              getOpenOrders,
+              cancelOrders
+            );
+            if (!isSellOrder) throw new Error(`isSellOrder - ${isSellOrder}`);
+          }
+          return isSellOrder;
+        })
+      );
+      console.log(resultMonitor);
+      return resultMonitor;
+    } catch (err) {
+      console.error(`Error in monitorPrice:`, err);
+      return [];
+    }
+  };
 module.exports = tradeAlgo;

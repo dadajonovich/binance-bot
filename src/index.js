@@ -29,7 +29,7 @@ const {
 // Algo
 const {
   createOrder,
-  monitorPrice,
+  searchSignal,
   cancelOrders,
   filterCoins,
   orderExist,
@@ -52,9 +52,10 @@ const sendMessage = (chatId) => async (message) => {
 // Currying
 const currySendMessage = sendMessage(TELEGRAM_CHAT_ID);
 
+const curryGetCandles = getCandles(client, parameters);
+
 const curryGetCoins = getCoins(
-  client,
-  getCandles,
+  curryGetCandles,
   getPrice,
   getSMA,
   getStandartDeviation,
@@ -62,7 +63,7 @@ const curryGetCoins = getCoins(
   getOBV
 );
 
-const curryMonitorPrice = monitorPrice(
+const curryTradeAlgo = tradeAlgo(
   client,
   createOrder,
   getBalance,
@@ -74,6 +75,14 @@ const curryMonitorPrice = monitorPrice(
   createBuyOrder,
   createSellOrder,
   cancelOrders
+);
+
+const currySearchSignal = searchSignal(
+  curryGetCoins,
+  filterCoins,
+  currySendMessage,
+  getStrCoinsInfo,
+  curryTradeAlgo
 );
 
 bot.on('message', async (msg) => {
@@ -110,15 +119,7 @@ bot.on('message', async (msg) => {
 
     case '/start':
       topPairs = await getTopPairs(client, parameters);
-      tradeAlgo(
-        curryGetCoins,
-        topPairs,
-        parameters,
-        filterCoins,
-        currySendMessage,
-        getStrCoinsInfo,
-        curryMonitorPrice
-      );
+      currySearchSignal(topPairs);
 
       break;
 

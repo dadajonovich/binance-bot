@@ -1,24 +1,17 @@
 const getCoins =
   (
-    client,
-    getCandles = (f) => f,
+    curryGetCandles = (f) => f,
     getPrices = (f) => f,
     getSMA = (f) => f,
     getStandartDeviation = (f) => f,
     getKeltner = (f) => f,
     getOBV = (f) => f
   ) =>
-  async (pairs = [], { intervalToMonitor = '15m', period = 25 } = {}) => {
+  async (pairs = []) => {
     try {
-      console.log(`${intervalToMonitor}, ${period}`);
       const coins = await Promise.all(
         pairs.map(async (pair) => {
-          const candles = await getCandles(
-            client,
-            pair,
-            intervalToMonitor,
-            period
-          );
+          const candles = await curryGetCandles(pair);
           const prices = getPrices(candles);
           const { currentPrice, closePrices, highPrice, lowPrice, volume } =
             prices;

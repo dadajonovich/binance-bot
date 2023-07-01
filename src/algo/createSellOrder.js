@@ -1,7 +1,3 @@
-const ta = require('ta.js');
-
-const percentageDiffernce = (newval, oldval) => ta.dif(newval, oldval);
-
 const createSellOrder = async (
   client,
   pair,
