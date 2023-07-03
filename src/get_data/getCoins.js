@@ -5,7 +5,8 @@ const getCoins =
     getSMA = (f) => f,
     getStandartDeviation = (f) => f,
     getKeltner = (f) => f,
-    getOBV = (f) => f
+    getOBV = (f) => f,
+    getATR = (f) => f
   ) =>
   async (pairs = []) => {
     try {
@@ -32,6 +33,7 @@ const getCoins =
           const sma200 = getSMA(closePrices, 200);
           const keltner = getKeltner(closePrices, highPrice, lowPrice);
           const obv = getOBV(closePrices, volume);
+          const atr = getATR(closePrices, highPrice, lowPrice);
 
           return {
             pair,
@@ -42,6 +44,7 @@ const getCoins =
             sma200,
             keltner,
             obv,
+            atr,
           };
         })
       );

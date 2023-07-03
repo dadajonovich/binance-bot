@@ -7,9 +7,7 @@ const crossKeltner = (coin) => {
 
   const criterionSMA =
     coin.sma50.at(-2) > coin.sma200.at(-2) &&
-    coin.sma50.at(-3) > coin.sma200.at(-3) &&
-    secondMiddleLine > coin.sma50.at(-2) &&
-    thirdMiddleLine > coin.sma50.at(-3);
+    coin.sma50.at(-3) > coin.sma200.at(-3);
 
   const crossLowLine =
     secondCandle.close > secondLowerLine && thirdCandle.close < thirdLowerLine;
@@ -23,7 +21,6 @@ const filterCoins = (coins) => {
   const filteredCoins = coins.filter(
     (coin) => coin.volatility > 1 && crossKeltner(coin)
   );
-  console.log(filteredCoins);
   return filteredCoins.slice(0, 1);
 };
 

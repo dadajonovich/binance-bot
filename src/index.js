@@ -5,6 +5,7 @@ const {
   getStandartDeviation,
   getKeltner,
   getOBV,
+  getATR,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -52,6 +53,8 @@ const sendMessage = (chatId) => async (message) => {
 // Currying
 const currySendMessage = sendMessage(TELEGRAM_CHAT_ID);
 
+const curryGetBalance = getBalance(client);
+
 const curryGetCandles = getCandles(client, parameters);
 
 const curryGetCoins = getCoins(
@@ -60,7 +63,8 @@ const curryGetCoins = getCoins(
   getSMA,
   getStandartDeviation,
   getKeltner,
-  getOBV
+  getOBV,
+  getATR
 );
 
 const curryTradeAlgo = tradeAlgo(
