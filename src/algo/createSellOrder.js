@@ -41,18 +41,23 @@ const createSellOrder = async (
     await new Promise((resolve) => {
       const checkSellCriterionInterval = setInterval(async () => {
         console.log('tick checkSellCriterionInterval...');
-        const [{ candles, keltner, atr }] = await curryGetCoins([pair]);
+        const [{ candles, keltner, sma8, envelope }] = await curryGetCoins([
+          pair,
+        ]);
+
+        // const [secondUpperLine, secondMiddleLine, secondLowerLine] =
+        //   keltner.at(-2);
 
         const [secondUpperLine, secondMiddleLine, secondLowerLine] =
-          keltner.at(-2);
+          envelope.at(-2);
 
         // if (stopLoss === null) {
         //   stopLoss = candles.at(-2).close - atr.at(-2) * 3;
         // }
-
-        const crossUpperLine = candles.at(-2).close > secondUpperLine;
+        const crossMiddleLine = sma8.at(-2) > secondMiddleLine;
+        // const crossUpperLine = candles.at(-2).close > secondUpperLine;
         // const triggerStopLoss = candles.at(-2).close < stopLoss;
-        const criterionSell = crossUpperLine;
+        const criterionSell = crossMiddleLine;
 
         console.log(criterionSell);
         if (criterionSell) {

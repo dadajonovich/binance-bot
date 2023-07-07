@@ -2,12 +2,12 @@ const getStandartDeviation = require('./standartDeviation');
 const getSMA = require('./sma');
 const getKeltner = require('./keltner');
 const getOBV = require('./obv');
-const getATR = require('./atr');
+const getEnvelope = require('./envelope');
 
 module.exports = {
   getSMA,
   getStandartDeviation,
   getKeltner,
   getOBV,
-  getATR,
+  getEnvelope,
 };

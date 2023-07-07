@@ -6,7 +6,7 @@ const getCoins =
     getStandartDeviation = (f) => f,
     getKeltner = (f) => f,
     getOBV = (f) => f,
-    getATR = (f) => f
+    getEnvelope = (f) => f
   ) =>
   async (pairs = []) => {
     try {
@@ -29,22 +29,24 @@ const getCoins =
             prices;
           const standartDeviation = getStandartDeviation(closePrices);
           const volatility = (standartDeviation / currentPrice) * 100;
+          const sma8 = getSMA(closePrices, 8);
           const sma50 = getSMA(closePrices, 50);
           const sma200 = getSMA(closePrices, 200);
           const keltner = getKeltner(closePrices, highPrice, lowPrice);
           const obv = getOBV(closePrices, volume);
-          const atr = getATR(closePrices, highPrice, lowPrice);
+          const envelope = getEnvelope(closePrices);
 
           return {
             pair,
             currentPrice,
             candles,
             volatility,
+            sma8,
             sma50,
             sma200,
             keltner,
             obv,
-            atr,
+            envelope,
           };
         })
       );
