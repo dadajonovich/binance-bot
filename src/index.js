@@ -6,6 +6,7 @@ const {
   getKeltner,
   getOBV,
   getEnvelope,
+  getParabolic,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -64,7 +65,8 @@ const curryGetCoins = getCoins(
   getStandartDeviation,
   getKeltner,
   getOBV,
-  getEnvelope
+  getEnvelope,
+  getParabolic
 );
 
 const curryTradeAlgo = tradeAlgo(

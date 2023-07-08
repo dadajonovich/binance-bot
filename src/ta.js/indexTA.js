@@ -3,6 +3,7 @@ const getSMA = require('./sma');
 const getKeltner = require('./keltner');
 const getOBV = require('./obv');
 const getEnvelope = require('./envelope');
+const getParabolic = require('./parabolic');
 
 module.exports = {
   getSMA,
@@ -10,4 +11,5 @@ module.exports = {
   getKeltner,
   getOBV,
   getEnvelope,
+  getParabolic,
 };

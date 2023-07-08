@@ -15,7 +15,8 @@ const breakdown = (coin) => {
   //   coin.sma50.at(-3) > coin.sma200.at(-3);
 
   const crossLowLine =
-    coin.sma8.at(-2) > secondLowerLine && coin.sma8.at(-3) < thirdLowerLine;
+    coin.parabolic.at(-2) < secondLowerLine &&
+    coin.parabolic.at(-3) > thirdLowerLine;
   if (crossLowLine) {
     return true;
   }

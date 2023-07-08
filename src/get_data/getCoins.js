@@ -6,7 +6,8 @@ const getCoins =
     getStandartDeviation = (f) => f,
     getKeltner = (f) => f,
     getOBV = (f) => f,
-    getEnvelope = (f) => f
+    getEnvelope = (f) => f,
+    getParabolic = (f) => f
   ) =>
   async (pairs = []) => {
     try {
@@ -35,6 +36,7 @@ const getCoins =
           const keltner = getKeltner(closePrices, highPrice, lowPrice);
           const obv = getOBV(closePrices, volume);
           const envelope = getEnvelope(closePrices);
+          const parabolic = getParabolic(highPrice, lowPrice);
 
           return {
             pair,
@@ -47,6 +49,7 @@ const getCoins =
             keltner,
             obv,
             envelope,
+            parabolic,
           };
         })
       );
