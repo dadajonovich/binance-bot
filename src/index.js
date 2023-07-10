@@ -10,6 +10,7 @@ const {
   getMACD,
   getEMA,
   getATR,
+  getStoch,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -72,7 +73,8 @@ const curryGetCoins = getCoins(
   getParabolic,
   getMACD,
   getEMA,
-  getATR
+  getATR,
+  getStoch
 );
 
 const curryTradeAlgo = tradeAlgo(

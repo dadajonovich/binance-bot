@@ -10,7 +10,8 @@ const getCoins =
     getParabolic = (f) => f,
     getMACD = (f) => f,
     getEMA = (f) => f,
-    getATR = (f) => f
+    getATR = (f) => f,
+    getStoch = (f) => f
   ) =>
   async (pairs = []) => {
     try {
@@ -43,6 +44,7 @@ const getCoins =
           const macd = getMACD(closePrices);
           const signalMacd = getEMA(macd, 9);
           const atr = getATR(closePrices, highPrice, lowPrice);
+          const stoch = getStoch(closePrices, highPrice, lowPrice);
 
           return {
             pair,
@@ -59,6 +61,7 @@ const getCoins =
             macd,
             signalMacd,
             atr,
+            stoch,
           };
         })
       );

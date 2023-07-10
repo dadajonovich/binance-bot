@@ -70,15 +70,15 @@ const createSellOrder = async (
 
         // const crossMacd =
         //   macd.at(-2) < signalMacd.at(-2) && macd.at(-3) > signalMacd.at(-3);
-        const crossSma = sma200.at(-2) > secondLowerLine;
+        // const crossSma = sma200.at(-2) > secondLowerLine;
         // const crossMiddleLine = candles.at(-2).close > secondUpperLine;
         const crossUpperLine = candles.at(-2).close > secondUpperLine;
-        const crossLowLine = candles.at(-2).close < secondLowerLine;
+        // const crossLowLine = candles.at(-2).close < secondLowerLine;
         // const triggerStopLoss = price < stopLoss;
         // const triggerShort = price > takeProfit;
-        const criterionSell = crossUpperLine || crossLowLine;
+        const criterionSell = crossUpperLine;
 
-        console.log(criterionSell, stopLoss, takeProfit);
+        console.log(criterionSell);
         if (criterionSell) {
           await composeCreateSellOrder();
           clearInterval(checkSellCriterionInterval);

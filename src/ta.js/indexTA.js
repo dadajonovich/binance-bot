@@ -7,6 +7,7 @@ const getParabolic = require('./parabolic');
 const getMACD = require('./macd');
 const getEMA = require('./ema');
 const getATR = require('./atr');
+const getStoch = require('./stochastic');
 
 module.exports = {
   getSMA,
@@ -18,4 +19,5 @@ module.exports = {
   getMACD,
   getEMA,
   getATR,
+  getStoch,
 };
