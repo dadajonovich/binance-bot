@@ -8,7 +8,6 @@ const getStrCoinsInfo = (coins = []) => {
   - Volatility: ${coin.volatility.toFixed(2)}%
   - SMA50: ${coin.sma50.at(-2).toFixed(2)}
   - SMA200: ${coin.sma200.at(-2).toFixed(2)}
-  - OBV: ${coin.obv.at(-2).toFixed(0)}
           `
       )
       .join('');

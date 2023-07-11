@@ -17,8 +17,8 @@ const createSellOrder = async (
     let isSellOrder = false;
     let count = 0;
     let price;
-    let stopLoss;
-    let takeProfit;
+    let stopLoss = null;
+    let takeProfit = null;
 
     const composeCreateSellOrder = async () => {
       ({ [pair]: price } = await client.prices({ symbol: pair }));
@@ -39,52 +39,39 @@ const createSellOrder = async (
       );
     };
 
+    const [{ candles, keltner, envelope, atr }] = await curryGetCoins([pair]);
+    const [secondUpperLine, secondMiddleLine, secondLowerLine] = keltner.at(-2);
+    // const [secondUpperLine, secondMiddleLine, secondLowerLine] =
+    //   envelope.at(-2);
+
     await new Promise((resolve) => {
       const checkSellCriterionInterval = setInterval(async () => {
         console.log('tick checkSellCriterionInterval...');
-        const [
-          {
-            candles,
-            keltner,
-            sma200,
-            envelope,
-            parabolic,
-            macd,
-            signalMacd,
-            atr,
-          },
-        ] = await curryGetCoins([pair]);
+        ({ [pair]: price } = await client.prices({ symbol: pair }));
 
-        // if (stopLoss === null) {
-        //   stopLoss = candles.at(-2).close - atr.at(-2) * 2;
-        // }
+        if (stopLoss === null) {
+          stopLoss = secondMiddleLine;
+        }
 
-        // if (takeProfit === null) {
-        //   takeProfit = candles.at(-2).close + atr.at(-2) * 3;
-        // }
-        const [secondUpperLine, secondMiddleLine, secondLowerLine] =
-          keltner.at(-2);
+        if (takeProfit === null) {
+          takeProfit = candles.at(-2).close + atr.at(-2) * 2;
+        }
 
-        // const [secondUpperLine, secondMiddleLine, secondLowerLine] =
-        //   envelope.at(-2);
+        const triggerStopLoss = price < stopLoss;
+        const triggerShort = price > takeProfit;
+        const criterionSell = triggerStopLoss || triggerShort;
 
-        // const crossMacd =
-        //   macd.at(-2) < signalMacd.at(-2) && macd.at(-3) > signalMacd.at(-3);
-        // const crossSma = sma200.at(-2) > secondLowerLine;
-        // const crossMiddleLine = candles.at(-2).close > secondUpperLine;
-        const crossUpperLine = candles.at(-2).close > secondUpperLine;
-        // const crossLowLine = candles.at(-2).close < secondLowerLine;
-        // const triggerStopLoss = price < stopLoss;
-        // const triggerShort = price > takeProfit;
-        const criterionSell = crossUpperLine;
-
-        console.log(criterionSell);
+        console.log(
+          criterionSell,
+          `price - ${price},
+          stopLoss - ${stopLoss}, takeProfit - ${takeProfit}`
+        );
         if (criterionSell) {
           await composeCreateSellOrder();
           clearInterval(checkSellCriterionInterval);
           resolve();
         }
-      }, 0.5 * 60 * 1000);
+      }, 0.25 * 60 * 1000);
     });
 
     await new Promise((resolve) => {
