@@ -4,7 +4,7 @@ const getKeltner = (
   closePrices,
   highPrice,
   lowPrice,
-  length = 50,
+  length = 20,
   deviations = 2
 ) => {
   const inputArray = closePrices.map((closePrice, index) => [

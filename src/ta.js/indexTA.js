@@ -4,6 +4,7 @@ const getKeltner = require('./keltner');
 const getEnvelope = require('./envelope');
 const getEMA = require('./ema');
 const getATR = require('./atr');
+const getMACD = require('./macd');
 
 module.exports = {
   getSMA,
@@ -12,4 +13,5 @@ module.exports = {
   getEnvelope,
   getEMA,
   getATR,
+  getMACD,
 };

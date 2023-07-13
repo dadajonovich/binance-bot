@@ -7,7 +7,8 @@ const getCoins =
     getKeltner = (f) => f,
     getEnvelope = (f) => f,
     getATR = (f) => f,
-    getEMA = (f) => f
+    getEMA = (f) => f,
+    getMACD = (f) => f
   ) =>
   async (pairs = []) => {
     try {
@@ -26,15 +27,19 @@ const getCoins =
             checkCandles();
           });
           const prices = getPrices(candles);
-          const { currentPrice, closePrices, highPrice, lowPrice } = prices;
+          const { currentPrice, closePrices, highPrice, lowPrice, volume } =
+            prices;
           const standartDeviation = getStandartDeviation(closePrices);
           const volatility = (standartDeviation / currentPrice) * 100;
           const sma50 = getSMA(closePrices, 50);
           const sma200 = getSMA(closePrices, 200);
           const keltner = getKeltner(closePrices, highPrice, lowPrice);
           const envelope = getEnvelope(closePrices);
-          const atr = getATR(closePrices, highPrice, lowPrice, 14);
+          const atr = getATR(closePrices, highPrice, lowPrice, 20);
+          const volOsc = getMACD(volume, 20, 50);
           const ema3 = getEMA(closePrices, 3);
+          const macd = getMACD(closePrices);
+          const signalMacd = getEMA(macd, 9);
 
           return {
             pair,
@@ -43,10 +48,12 @@ const getCoins =
             volatility,
             sma50,
             sma200,
-            ema3,
             keltner,
             envelope,
             atr,
+            volOsc,
+            macd,
+            signalMacd,
           };
         })
       );
