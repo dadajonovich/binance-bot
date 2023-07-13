@@ -9,10 +9,10 @@ const filter = (coin) => {
   const criterionSMA =
     secondLowerLine > coin.sma200.at(-2) && thirdLowerLine > coin.sma200.at(-3);
 
-  const crossSMA =
-    thirdUpperLine > thirdCandle.close && secondUpperLine < secondCandle.close;
+  const crossLowLine =
+    thirdLowerLine > coin.ema3.at(-3) && secondLowerLine < coin.ema3.at(-2);
 
-  if (criterionSMA && crossSMA) {
+  if (crossLowLine) {
     return true;
   }
   return false;

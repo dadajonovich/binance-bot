@@ -65,7 +65,8 @@ const curryGetCoins = getCoins(
   getStandartDeviation,
   getKeltner,
   getEnvelope,
-  getATR
+  getATR,
+  getEMA
 );
 
 const curryTradeAlgo = tradeAlgo(

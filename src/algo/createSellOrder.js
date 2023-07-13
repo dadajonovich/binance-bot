@@ -39,32 +39,34 @@ const createSellOrder = async (
       );
     };
 
-    const [{ candles, keltner, envelope, atr }] = await curryGetCoins([pair]);
-    const [secondUpperLine, secondMiddleLine, secondLowerLine] = keltner.at(-2);
-    // const [secondUpperLine, secondMiddleLine, secondLowerLine] =
-    //   envelope.at(-2);
-
     await new Promise((resolve) => {
       const checkSellCriterionInterval = setInterval(async () => {
         console.log('tick checkSellCriterionInterval...');
-        ({ [pair]: price } = await client.prices({ symbol: pair }));
+        const [{ candles, keltner, envelope, atr }] = await curryGetCoins([
+          pair,
+        ]);
+        const [secondUpperLine, secondMiddleLine, secondLowerLine] =
+          keltner.at(-2);
+        // const [secondUpperLine, secondMiddleLine, secondLowerLine] =
+        //   envelope.at(-2);
 
         if (stopLoss === null) {
-          stopLoss = secondMiddleLine;
+          stopLoss = Number(candles.at(-1).close) - atr.at(-2);
         }
 
         if (takeProfit === null) {
-          takeProfit = candles.at(-2).close + atr.at(-2) * 2;
+          takeProfit = Number(candles.at(-1).close) + atr.at(-2) * 3;
         }
 
-        const triggerStopLoss = price < stopLoss;
-        const triggerShort = price > takeProfit;
+        const triggerStopLoss = candles.at(-2).close < stopLoss;
+        const triggerShort = candles.at(-1).close > takeProfit;
         const criterionSell = triggerStopLoss || triggerShort;
 
         console.log(
           criterionSell,
           `price - ${price},
-          stopLoss - ${stopLoss}, takeProfit - ${takeProfit}`
+          stopLoss - ${stopLoss}, takeProfit - ${takeProfit},
+          atr - ${atr.at(-2)}`
         );
         if (criterionSell) {
           await composeCreateSellOrder();
