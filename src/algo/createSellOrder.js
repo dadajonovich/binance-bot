@@ -40,13 +40,9 @@ const createSellOrder = async (
     };
 
     await new Promise((resolve) => {
-      const checkSellCriterionInterval = setInterval(async () => {
+      const checkSellCriterionInterval = async () => {
         console.log('tick checkSellCriterionInterval...');
-        const [{ candles, keltner, atr }] = await curryGetCoins([pair]);
-        // const [secondUpperLine, secondMiddleLine, secondLowerLine] =
-        //   keltner.at(-2);
-        // const [secondUpperLine, secondMiddleLine, secondLowerLine] =
-        //   envelope.at(-2);
+        const [{ candles, atr }] = await curryGetCoins([pair]);
 
         if (stopLoss === null) {
           stopLoss = Number(candles.at(-1).close) - atr.at(-2);
@@ -68,14 +64,16 @@ const createSellOrder = async (
         );
         if (criterionSell) {
           await composeCreateSellOrder();
-          clearInterval(checkSellCriterionInterval);
           resolve();
+        } else {
+          setTimeout(checkSellCriterionInterval, 0.25 * 60 * 1000);
         }
-      }, 0.25 * 60 * 1000);
+      };
+      checkSellCriterionInterval();
     });
 
     await new Promise((resolve) => {
-      const checkSellInterval = setInterval(async () => {
+      const checkSellInterval = async () => {
         console.log('tick checkSellInterval...');
         const { sellOrderExists: sellMark } = await orderExist(
           client,
@@ -85,16 +83,17 @@ const createSellOrder = async (
         count += 1;
         if (!sellMark) {
           isSellOrder = true;
-          clearInterval(checkSellInterval);
           resolve();
-        }
-        if (count > 5) {
+        } else if (count > 5) {
           const orders = await getOpenOrders(client);
           await cancelOrders(client, orders);
           await composeCreateSellOrder();
           count = 0;
+        } else {
+          setTimeout(checkSellInterval, 0.25 * 60 * 1000);
         }
-      }, 0.5 * 60 * 1000);
+      };
+      checkSellInterval();
     });
 
     return isSellOrder;

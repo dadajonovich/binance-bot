@@ -3,8 +3,6 @@ const { client, bot, TELEGRAM_CHAT_ID, parameters } = require('./config');
 const {
   getSMA,
   getStandartDeviation,
-  getKeltner,
-  getEnvelope,
   getEMA,
   getATR,
   getMACD,
@@ -64,8 +62,6 @@ const curryGetCoins = getCoins(
   getPrice,
   getSMA,
   getStandartDeviation,
-  getKeltner,
-  getEnvelope,
   getATR,
   getEMA,
   getMACD

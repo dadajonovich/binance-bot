@@ -4,8 +4,6 @@ const getCoins =
     getPrices = (f) => f,
     getSMA = (f) => f,
     getStandartDeviation = (f) => f,
-    getKeltner = (f) => f,
-    getEnvelope = (f) => f,
     getATR = (f) => f,
     getEMA = (f) => f,
     getMACD = (f) => f
@@ -33,11 +31,8 @@ const getCoins =
           const volatility = (standartDeviation / currentPrice) * 100;
           const sma50 = getSMA(closePrices, 50);
           const sma200 = getSMA(closePrices, 200);
-          const keltner = getKeltner(closePrices, highPrice, lowPrice);
-          const envelope = getEnvelope(closePrices);
           const atr = getATR(closePrices, highPrice, lowPrice, 20);
-          const volOsc = getMACD(volume, 20, 50);
-          const ema3 = getEMA(closePrices, 3);
+          const volOsc = getMACD(volume, 5, 10);
           const macd = getMACD(closePrices);
           const signalMacd = getEMA(macd, 9);
 
@@ -48,8 +43,6 @@ const getCoins =
             volatility,
             sma50,
             sma200,
-            keltner,
-            envelope,
             atr,
             volOsc,
             macd,
