@@ -7,14 +7,13 @@ const filter = (coin) => {
     thirdCandle.close > coin.sma200.at(-3);
 
   const criterionVol = coin.volOsc.at(-2) > 0 && coin.volOsc.at(-3) > 0;
-
   const criterionMACD = coin.macd.at(-2) < 0;
 
   const crossMacd =
     coin.macd.at(-2) > coin.signalMacd.at(-2) &&
     coin.macd.at(-3) < coin.signalMacd.at(-3);
 
-  if (criterionSMA && criterionVol && criterionMACD && crossMacd) {
+  if (criterionVol && criterionMACD && crossMacd && criterionSMA) {
     return true;
   }
   return false;

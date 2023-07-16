@@ -13,6 +13,7 @@ const {
   getBalanceMessage,
   getStrCoinsInfo,
   getOrdersMessage,
+  getDifferenceBalanceMessage,
 } = require('./message/indexMessage');
 
 // Get functions
@@ -53,8 +54,6 @@ const sendMessage = (chatId) => async (message) => {
 // Currying
 const currySendMessage = sendMessage(TELEGRAM_CHAT_ID);
 
-const curryGetBalance = getBalance(client);
-
 const curryGetCandles = getCandles(client, parameters);
 
 const curryGetCoins = getCoins(
@@ -67,25 +66,39 @@ const curryGetCoins = getCoins(
   getMACD
 );
 
+const curryCreateBuyOrder = createBuyOrder(
+  client,
+  getValuesForOrder,
+  createOrder,
+  orderExist,
+  getOpenOrders,
+  cancelOrders
+);
+
+const curryCreateSellOrder = createSellOrder(
+  client,
+  curryGetCoins,
+  getValuesForOrder,
+  createOrder,
+  orderExist,
+  getOpenOrders,
+  cancelOrders
+);
+
 const curryTradeAlgo = tradeAlgo(
   client,
-  createOrder,
   getBalance,
   getLotParams,
-  getValuesForOrder,
   getOpenOrders,
   orderExist,
-  curryGetCoins,
-  createBuyOrder,
-  createSellOrder,
-  cancelOrders
+  curryCreateBuyOrder,
+  curryCreateSellOrder
 );
 
 const currySearchSignal = searchSignal(
   curryGetCoins,
   filterCoins,
   currySendMessage,
-  getStrCoinsInfo,
   curryTradeAlgo
 );
 
@@ -97,9 +110,17 @@ bot.on('message', async (msg) => {
   let coins;
   let filteredCoins;
   let topPairs;
+
   const cycle = async () => {
+    const prevBalance = await getBalance(client, 'USDT');
     const result = await currySearchSignal(topPairs);
     if (result) {
+      const currentBalace = await getBalance(client, 'USDT');
+      const diffBalance = getDifferenceBalanceMessage(
+        prevBalance,
+        currentBalace
+      );
+      await currySendMessage(diffBalance);
       console.log('restart tradeAlgo');
       setTimeout(cycle, 5000);
     }

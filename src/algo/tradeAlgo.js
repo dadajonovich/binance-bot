@@ -1,16 +1,12 @@
 const tradeAlgo =
   (
     client,
-    createOrder = (f) => f,
     getBalance = (f) => f,
     getLotParams = (f) => f,
-    getValuesForOrder = (f) => f,
     getOpenOrders = (f) => f,
     orderExist = (f) => f,
-    curryGetCoins = (f) => f,
-    createBuyOrder = (f) => f,
-    createSellOrder = (f) => f,
-    cancelOrders = (f) => f
+    curryCreateBuyOrder = (f) => f,
+    curryCreateSellOrder = (f) => f
   ) =>
   async (coins) => {
     try {
@@ -24,8 +20,8 @@ const tradeAlgo =
             pair,
             getOpenOrders
           );
-          let isBuyOrder;
-          let isSellOrder;
+          let isBuyOrder = false;
+          let isSellOrder = false;
           const { balanceFree: quantityUSDT } = await getBalance(
             client,
             'USDT'
@@ -39,36 +35,22 @@ const tradeAlgo =
             !sellOrderExists &&
             quantityAsset < stepSize
           ) {
-            isBuyOrder = await createBuyOrder(
-              client,
+            isBuyOrder = await curryCreateBuyOrder(
               pair,
               stepSize,
               tickSize,
-              quantityUSDT,
-              getValuesForOrder,
-              createOrder,
-              orderExist,
-              getOpenOrders,
-              cancelOrders
+              quantityUSDT
             );
 
             if (!isBuyOrder) throw new Error(`isBuyOrder - ${isBuyOrder}`);
             ({ balanceFree: quantityAsset } = await getBalance(client, asset));
           }
-
           if (quantityAsset > stepSize) {
-            isSellOrder = createSellOrder(
-              client,
+            isSellOrder = curryCreateSellOrder(
               pair,
               stepSize,
               tickSize,
-              quantityAsset,
-              curryGetCoins,
-              getValuesForOrder,
-              createOrder,
-              orderExist,
-              getOpenOrders,
-              cancelOrders
+              quantityAsset
             );
             if (!isSellOrder) throw new Error(`isSellOrder - ${isSellOrder}`);
           }

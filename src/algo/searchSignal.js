@@ -3,7 +3,6 @@ const searchSignal =
     curryGetCoins = (f) => f,
     filterCoins = (f) => f,
     currySendMessage = (f) => f,
-    getStrCoinsInfo = (f) => f,
     curryTradeAlgo = (f) => f
   ) =>
   async (topPairs = []) => {
@@ -23,8 +22,8 @@ const searchSignal =
         };
         searchCoins();
       });
-
-      await currySendMessage(getStrCoinsInfo(filteredCoins));
+      const [coin] = filteredCoins;
+      await currySendMessage(`🟣Buy ${coin}!`);
       const resultSearchSignal = await curryTradeAlgo(filteredCoins);
       console.log(`resultSearchSignal - ${resultSearchSignal}`);
       if (resultSearchSignal.every((elem) => elem === true)) {

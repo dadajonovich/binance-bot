@@ -32,9 +32,10 @@ const getCoins =
           const sma50 = getSMA(closePrices, 50);
           const sma200 = getSMA(closePrices, 200);
           const atr = getATR(closePrices, highPrice, lowPrice, 20);
-          const volOsc = getMACD(volume, 5, 10);
+          const volOsc = getMACD(volume);
           const macd = getMACD(closePrices);
           const signalMacd = getEMA(macd, 9);
+          const signalVolOsc = getEMA(volOsc, 9);
 
           return {
             pair,
@@ -47,6 +48,7 @@ const getCoins =
             volOsc,
             macd,
             signalMacd,
+            signalVolOsc,
           };
         })
       );
