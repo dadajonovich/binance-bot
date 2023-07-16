@@ -73,7 +73,7 @@ const createSellOrder = async (
     });
 
     await new Promise((resolve) => {
-      const checkSellInterval = async () => {
+      const checkSellInterval = setInterval(async () => {
         console.log('tick checkSellInterval...');
         const { sellOrderExists: sellMark } = await orderExist(
           client,
@@ -83,17 +83,16 @@ const createSellOrder = async (
         count += 1;
         if (!sellMark) {
           isSellOrder = true;
+          clearInterval(checkSellInterval);
           resolve();
-        } else if (count > 5) {
+        }
+        if (count > 5) {
           const orders = await getOpenOrders(client);
           await cancelOrders(client, orders);
           await composeCreateSellOrder();
           count = 0;
-        } else {
-          setTimeout(checkSellInterval, 0.25 * 60 * 1000);
         }
-      };
-      checkSellInterval();
+      }, 0.5 * 60 * 1000);
     });
 
     return isSellOrder;
