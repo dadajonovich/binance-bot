@@ -22,8 +22,7 @@ const searchSignal =
         };
         searchCoins();
       });
-      const [coin] = filteredCoins;
-      await currySendMessage(`🟣Buy ${coin}!`);
+      await currySendMessage(`🟣Buy ${filteredCoins[0].pair}!`);
       const resultSearchSignal = await curryTradeAlgo(filteredCoins);
       console.log(`resultSearchSignal - ${resultSearchSignal}`);
       if (resultSearchSignal.every((elem) => elem === true)) {

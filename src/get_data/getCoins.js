@@ -6,7 +6,9 @@ const getCoins =
     getStandartDeviation = (f) => f,
     getATR = (f) => f,
     getEMA = (f) => f,
-    getMACD = (f) => f
+    getMACD = (f) => f,
+    getKeltner = (f) => f,
+    getParabolic = (f) => f
   ) =>
   async (pairs = []) => {
     try {
@@ -32,23 +34,24 @@ const getCoins =
           const sma50 = getSMA(closePrices, 50);
           const sma200 = getSMA(closePrices, 200);
           const atr = getATR(closePrices, highPrice, lowPrice, 20);
-          const volOsc = getMACD(volume);
           const macd = getMACD(closePrices);
           const signalMacd = getEMA(macd, 9);
-          const signalVolOsc = getEMA(volOsc, 9);
+          const keltner = getKeltner(closePrices, highPrice, lowPrice);
+          const lineSignal = getSMA(closePrices, 3);
+          const parabolic = getParabolic(highPrice, lowPrice);
 
           return {
             pair,
-            currentPrice,
             candles,
             volatility,
             sma50,
             sma200,
             atr,
-            volOsc,
+            keltner,
             macd,
             signalMacd,
-            signalVolOsc,
+            lineSignal,
+            parabolic,
           };
         })
       );

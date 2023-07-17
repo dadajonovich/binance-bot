@@ -40,10 +40,13 @@ const createSellOrder =
       await new Promise((resolve) => {
         const checkSellCriterionInterval = async () => {
           console.log('tick checkSellCriterionInterval...');
-          const [{ candles, atr }] = await curryGetCoins([pair]);
+          const [{ candles, atr, keltner }] = await curryGetCoins([pair]);
+
+          const [secondUpperLine, secondMiddleLine, secondLowerLine] =
+            keltner.at(-2);
 
           if (stopLoss === null) {
-            stopLoss = Number(candles.at(-1).close) - atr.at(-2);
+            stopLoss = secondLowerLine;
           }
 
           if (takeProfit === null) {

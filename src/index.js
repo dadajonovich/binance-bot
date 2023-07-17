@@ -6,6 +6,8 @@ const {
   getEMA,
   getATR,
   getMACD,
+  getKeltner,
+  getParabolic,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -63,7 +65,9 @@ const curryGetCoins = getCoins(
   getStandartDeviation,
   getATR,
   getEMA,
-  getMACD
+  getMACD,
+  getKeltner,
+  getParabolic
 );
 
 const curryCreateBuyOrder = createBuyOrder(
@@ -112,10 +116,10 @@ bot.on('message', async (msg) => {
   let topPairs;
 
   const cycle = async () => {
-    const prevBalance = await getBalance(client, 'USDT');
+    const { balanceFree: prevBalance } = await getBalance(client, 'USDT');
     const result = await currySearchSignal(topPairs);
     if (result) {
-      const currentBalace = await getBalance(client, 'USDT');
+      const { balanceFree: currentBalace } = await getBalance(client, 'USDT');
       const diffBalance = getDifferenceBalanceMessage(
         prevBalance,
         currentBalace
@@ -129,9 +133,9 @@ bot.on('message', async (msg) => {
   switch (msg.text) {
     case '/tellme':
       topPairs = await getTopPairs(client, parameters);
-      coins = await curryGetCoins(topPairs, parameters);
+      coins = await curryGetCoins(topPairs);
       filteredCoins = filterCoins(coins);
-      await currySendMessage(getStrCoinsInfo(filteredCoins));
+      await currySendMessage(`${filteredCoins[0]?.pair}`);
       break;
 
     case '/balance':
