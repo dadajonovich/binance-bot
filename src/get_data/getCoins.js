@@ -6,9 +6,12 @@ const getCoins =
     getStandartDeviation = (f) => f,
     getATR = (f) => f,
     getEMA = (f) => f,
-    getMACD = (f) => f,
     getKeltner = (f) => f,
-    getParabolic = (f) => f
+    getMACD = (f) => f,
+    getMOM = (f) => f,
+    getParabolic = (f) => f,
+    getOBV = (f) => f,
+    getRSI = (f) => f
   ) =>
   async (pairs = []) => {
     try {
@@ -31,27 +34,38 @@ const getCoins =
             prices;
           const standartDeviation = getStandartDeviation(closePrices);
           const volatility = (standartDeviation / currentPrice) * 100;
-          const sma50 = getSMA(closePrices, 50);
-          const sma200 = getSMA(closePrices, 200);
+          const ma20 = getSMA(closePrices, 20);
+          const ma50 = getSMA(closePrices, 50);
+          const ma100 = getSMA(closePrices, 100);
+          const ma200 = getSMA(closePrices, 200);
           const atr = getATR(closePrices, highPrice, lowPrice, 20);
-          const macd = getMACD(closePrices);
-          const signalMacd = getEMA(macd, 9);
           const keltner = getKeltner(closePrices, highPrice, lowPrice);
-          const lineSignal = getSMA(closePrices, 3);
+          const obv = getOBV(closePrices, volume);
+          const macdVol = getMACD(volume);
+          const lineSignalVol = getEMA(macdVol, 9);
+          const macd = getMACD(closePrices);
+          const lineSignal = getEMA(macd, 9);
+          const mom = getMOM(closePrices);
           const parabolic = getParabolic(highPrice, lowPrice);
+          const rsi = getRSI(closePrices);
 
           return {
             pair,
             candles,
             volatility,
-            sma50,
-            sma200,
+            ma20,
+            ma50,
+            ma100,
+            ma200,
             atr,
             keltner,
-            macd,
-            signalMacd,
             lineSignal,
+            macdVol,
+            lineSignalVol,
+            macd,
+            mom,
             parabolic,
+            rsi,
           };
         })
       );

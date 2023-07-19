@@ -6,27 +6,29 @@ const filter = (coin) => {
     coin.keltner.at(-2);
   const [thirdUpperLine, thirdMiddleLine, thirdLowerLine] = coin.keltner.at(-3);
 
-  const criterionSMA =
-    secondCandle.close > coin.sma200.at(-2) &&
-    thirdCandle.close > coin.sma200.at(-3);
-
-  // const criterionMACD =
-  //   coin.macd.at(-3) > coin.signalMacd.at(-3) && coin.macd.at(-3) < 0;
-  const criterionTrend = secondMiddleLine < coin.sma50.at(-2);
-
-  const breakdownUpperLine =
-    thirdUpperLine > coin.lineSignal.at(-3) &&
-    secondUpperLine < coin.lineSignal.at(-2);
+  const criterionMA =
+    secondCandle.close > coin.ma200.at(-2) &&
+    thirdCandle.close > coin.ma200.at(-3);
 
   // const breakdownParabolic =
   //   thirdLowerLine < coin.parabolic.at(-3) &&
   //   secondLowerLine > coin.parabolic.at(-2);
 
-  // const crossMacd =
-  //   coin.macd.at(-2) > coin.signalMacd.at(-2) &&
-  //   coin.macd.at(-3) < coin.signalMacd.at(-3);
+  // const criterionVol = coin.macdVol.at(-2) > coin.lineSignalVol.at(-2);
 
-  if (criterionTrend && breakdownUpperLine && criterionSMA) {
+  // const criterionRSI = coin.rsi.at(-2) > 55;
+
+  // const criterionMOM = coin.mom.at(-2) > 0;
+
+  const criterionMACD = coin.macd.at(-2) < 0;
+
+  const crossMacd =
+    coin.macd.at(-2) > coin.lineSignal.at(-2) &&
+    coin.macd.at(-3) < coin.lineSignal.at(-3);
+
+  // const crossMacd = coin.macd.at(-2) > 0 && coin.macd.at(-3) < 0;
+
+  if (criterionMACD && crossMacd && criterionMA) {
     return true;
   }
   return false;

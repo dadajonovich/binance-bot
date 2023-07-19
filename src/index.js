@@ -5,9 +5,12 @@ const {
   getStandartDeviation,
   getEMA,
   getATR,
-  getMACD,
   getKeltner,
+  getMACD,
+  getMOM,
   getParabolic,
+  getOBV,
+  getRSI,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -65,9 +68,12 @@ const curryGetCoins = getCoins(
   getStandartDeviation,
   getATR,
   getEMA,
-  getMACD,
   getKeltner,
-  getParabolic
+  getMACD,
+  getMOM,
+  getParabolic,
+  getOBV,
+  getRSI
 );
 
 const curryCreateBuyOrder = createBuyOrder(

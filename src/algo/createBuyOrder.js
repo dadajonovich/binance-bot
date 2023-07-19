@@ -37,7 +37,7 @@ const createBuyOrder =
       await composeCreateBuyOrder();
 
       await new Promise((resolve) => {
-        const checkBuyInterval = setInterval(async () => {
+        const checkBuyInterval = async () => {
           console.log('tick checkBuyInterval...');
           const { buyOrderExists: buyMark } = await orderExist(
             client,
@@ -47,16 +47,18 @@ const createBuyOrder =
           count += 1;
           if (!buyMark) {
             isBuyOrder = true;
-            clearInterval(checkBuyInterval);
             resolve();
-          }
-          if (count > 5) {
+          } else if (count > 5) {
             const orders = await getOpenOrders(client);
             await cancelOrders(client, orders);
             await composeCreateBuyOrder();
             count = 0;
+            setTimeout(checkBuyInterval, 0.25 * 60 * 1000);
+          } else {
+            setTimeout(checkBuyInterval, 0.25 * 60 * 1000);
           }
-        }, 0.5 * 60 * 1000);
+        };
+        checkBuyInterval();
       });
 
       return isBuyOrder;
