@@ -10,8 +10,9 @@ const filter = (coin) => {
     secondCandle.close > coin.sma200.at(-2) &&
     thirdCandle.close > coin.sma200.at(-3);
 
-  const criterionMACD =
-    coin.macd.at(-3) > coin.signalMacd.at(-3) && coin.macd.at(-3) < 0;
+  // const criterionMACD =
+  //   coin.macd.at(-3) > coin.signalMacd.at(-3) && coin.macd.at(-3) < 0;
+  const criterionTrend = secondMiddleLine < coin.sma50.at(-2);
 
   const breakdownUpperLine =
     thirdUpperLine > coin.lineSignal.at(-3) &&
@@ -25,7 +26,7 @@ const filter = (coin) => {
   //   coin.macd.at(-2) > coin.signalMacd.at(-2) &&
   //   coin.macd.at(-3) < coin.signalMacd.at(-3);
 
-  if (criterionMACD && breakdownUpperLine && criterionSMA) {
+  if (criterionTrend && breakdownUpperLine && criterionSMA) {
     return true;
   }
   return false;

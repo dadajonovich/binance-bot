@@ -50,7 +50,7 @@ const createSellOrder =
           }
 
           if (takeProfit === null) {
-            takeProfit = Number(candles.at(-1).close) + atr.at(-2) * 2;
+            takeProfit = Number(candles.at(-1).close) + atr.at(-2) * 3;
           }
 
           const triggerStopLoss = candles.at(-2).close < stopLoss;
