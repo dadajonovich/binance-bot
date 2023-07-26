@@ -1,3 +1,5 @@
+const { CronJob } = require('cron');
+
 const searchSignal =
   (
     curryGetCoins = (f) => f,
@@ -10,17 +12,22 @@ const searchSignal =
       let filteredCoins = [];
       console.log('start searchSignal');
       await new Promise((resolve) => {
-        const searchCoins = async () => {
-          console.log('tick searchCoins');
-          const coins = await curryGetCoins(topPairs);
-          filteredCoins = filterCoins(coins);
-          if (filteredCoins.length > 0) {
-            resolve();
-          } else {
-            setTimeout(searchCoins, 1 * 60 * 1000);
-          }
-        };
-        searchCoins();
+        const searchCoins = new CronJob(
+          '1 */4 * * *',
+          async () => {
+            console.log('tick searchCoins');
+            const coins = await curryGetCoins(topPairs);
+            filteredCoins = filterCoins(coins);
+            if (filteredCoins.length > 0) {
+              searchCoins.stop();
+              resolve();
+            }
+          },
+          null,
+          false,
+          'UTC'
+        );
+        searchCoins.start();
       });
       await currySendMessage(`🟣Buy ${filteredCoins[0].pair}!`);
       const resultSearchSignal = await curryTradeAlgo(filteredCoins);

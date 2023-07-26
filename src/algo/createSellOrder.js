@@ -1,3 +1,5 @@
+const { CronJob } = require('cron');
+
 const createSellOrder =
   (
     client,
@@ -57,21 +59,26 @@ const createSellOrder =
       // console.log(shortSignalKaufman(AMA, filterValue));
 
       await new Promise((resolve) => {
-        const checkSellCriterionInterval = async () => {
-          console.log('tick checkSellCriterionInterval...');
-          const [{ filterKama, kama }] = await curryGetCoins([pair]);
+        const checkSellCriterionInterval = new CronJob(
+          '1 */4 * * *',
+          async () => {
+            console.log('tick checkSellCriterionInterval...');
+            const [{ filterKama, kama }] = await curryGetCoins([pair]);
 
-          const criterionSell = shortSignalKaufman(kama, filterKama);
+            const criterionSell = shortSignalKaufman(kama, filterKama);
 
-          console.log(criterionSell);
-          if (criterionSell) {
-            await composeCreateSellOrder();
-            resolve();
-          } else {
-            setTimeout(checkSellCriterionInterval, 0.1 * 60 * 1000);
-          }
-        };
-        checkSellCriterionInterval();
+            console.log(criterionSell);
+            if (criterionSell) {
+              await composeCreateSellOrder();
+              checkSellCriterionInterval.stop();
+              resolve();
+            }
+          },
+          null,
+          false,
+          'UTC'
+        );
+        checkSellCriterionInterval.start();
       });
 
       await new Promise((resolve) => {
