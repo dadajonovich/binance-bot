@@ -11,7 +11,8 @@ const getCoins =
     getMOM = (f) => f,
     getParabolic = (f) => f,
     getOBV = (f) => f,
-    getRSI = (f) => f
+    getRSI = (f) => f,
+    getKAMA = (f) => f
   ) =>
   async (pairs = []) => {
     try {
@@ -48,9 +49,11 @@ const getCoins =
           const mom = getMOM(closePrices);
           const parabolic = getParabolic(highPrice, lowPrice);
           const rsi = getRSI(closePrices);
+          const { kama, filterKama } = getKAMA(closePrices);
 
           return {
             pair,
+            closePrices,
             candles,
             volatility,
             ma20,
@@ -66,6 +69,8 @@ const getCoins =
             mom,
             parabolic,
             rsi,
+            kama,
+            filterKama,
           };
         })
       );

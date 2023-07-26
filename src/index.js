@@ -11,6 +11,7 @@ const {
   getParabolic,
   getOBV,
   getRSI,
+  getKAMA,
 } = require('./ta.js/indexTA');
 
 // Message
@@ -73,7 +74,8 @@ const curryGetCoins = getCoins(
   getMOM,
   getParabolic,
   getOBV,
-  getRSI
+  getRSI,
+  getKAMA
 );
 
 const curryCreateBuyOrder = createBuyOrder(

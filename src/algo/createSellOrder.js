@@ -37,51 +37,33 @@ const createSellOrder =
         );
       };
 
-      const shortTime = (macd, lineSignal) => {
-        const secondBarChart = macd.at(-2) - lineSignal.at(-2);
-        const thirdBarChart = macd.at(-3) - lineSignal.at(-3);
-        const fourthBarChart = macd.at(-4) - lineSignal.at(-4);
+      // const AMA = [15, 50, 100, 110, 115, 120, 160, 150, 130, 120];
+      // const filterValue = 15;
+      const shortSignalKaufman = (ama, filter) => {
+        let criterionShort = false;
 
-        if (macd.at(-2) < 0 && lineSignal.at(-2) > macd.at(-2)) {
-          return true;
+        const sliceArr = ama.slice(-4);
+        const maxKAMA = Math.max(...sliceArr);
+        const minKAMA = Math.min(...sliceArr);
+        const indexMax = sliceArr.indexOf(maxKAMA);
+        const indexMin = sliceArr.indexOf(minKAMA);
+
+        if (indexMax < indexMin) {
+          criterionShort = maxKAMA - ama.at(-2) > filter;
         }
-        if (
-          macd.at(-2) > 0 &&
-          secondBarChart < thirdBarChart &&
-          fourthBarChart < thirdBarChart
-        ) {
-          return true;
-        }
-        return false;
+        return criterionShort;
       };
+
+      // console.log(shortSignalKaufman(AMA, filterValue));
 
       await new Promise((resolve) => {
         const checkSellCriterionInterval = async () => {
           console.log('tick checkSellCriterionInterval...');
-          const [{ candles, atr, keltner, macd, lineSignal }] =
-            await curryGetCoins([pair]);
+          const [{ filterKama, kama }] = await curryGetCoins([pair]);
 
-          const [secondUpperLine, secondMiddleLine, secondLowerLine] =
-            keltner.at(-2);
+          const criterionSell = shortSignalKaufman(kama, filterKama);
 
-          // if (stopLoss === null) {
-          //   stopLoss = secondLowerLine;
-          // }
-
-          // if (takeProfit === null) {
-          //   takeProfit = Number(candles.at(-1).close) + atr.at(-2) * 3;
-          // }
-
-          // const triggerStopLoss = candles.at(-2).close < stopLoss;
-          // const triggerShort = candles.at(-1).close > takeProfit;
-          const criterionSell = shortTime(macd, lineSignal);
-
-          console.log(
-            criterionSell
-            // `stopLoss - ${stopLoss}, takeProfit - ${takeProfit}, atr - ${atr.at(
-            //   -2
-            // )}`
-          );
+          console.log(criterionSell);
           if (criterionSell) {
             await composeCreateSellOrder();
             resolve();

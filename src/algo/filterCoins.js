@@ -1,42 +1,27 @@
-const filter = (coin) => {
-  const secondCandle = coin.candles.at(-2);
-  const thirdCandle = coin.candles.at(-3);
+// const AMA = [15, 50, 100, 110, 115, 120, 90, 100, 130, 150];
+// const filterValue = 15;
 
-  const [secondUpperLine, secondMiddleLine, secondLowerLine] =
-    coin.keltner.at(-2);
-  const [thirdUpperLine, thirdMiddleLine, thirdLowerLine] = coin.keltner.at(-3);
+const longSignalKaufman = (ama, filter) => {
+  let criterionLong = false;
 
-  const criterionMA =
-    secondCandle.close > coin.ma200.at(-2) &&
-    thirdCandle.close > coin.ma200.at(-3);
+  const sliceArr = ama.slice(-4);
+  const maxKAMA = Math.max(...sliceArr);
+  const minKAMA = Math.min(...sliceArr);
+  const indexMax = sliceArr.indexOf(maxKAMA);
+  const indexMin = sliceArr.indexOf(minKAMA);
 
-  // const breakdownParabolic =
-  //   thirdLowerLine < coin.parabolic.at(-3) &&
-  //   secondLowerLine > coin.parabolic.at(-2);
-
-  // const criterionVol = coin.macdVol.at(-2) > coin.lineSignalVol.at(-2);
-
-  // const criterionRSI = coin.rsi.at(-2) > 55;
-
-  // const criterionMOM = coin.mom.at(-2) > 0;
-
-  const criterionMACD = coin.macd.at(-2) < 0;
-
-  const crossMacd =
-    coin.macd.at(-2) > coin.lineSignal.at(-2) &&
-    coin.macd.at(-3) < coin.lineSignal.at(-3);
-
-  // const crossMacd = coin.macd.at(-2) > 0 && coin.macd.at(-3) < 0;
-
-  if (criterionMACD && crossMacd && criterionMA) {
-    return true;
+  if (indexMax > indexMin) {
+    criterionLong = ama.at(-2) - minKAMA > filter;
   }
-  return false;
+  return criterionLong;
 };
+
+// console.log(longSignalKaufman(AMA, filterValue));
 
 const filterCoins = (coins) => {
   const filteredCoins = coins.filter(
-    (coin) => coin.volatility > 1 && filter(coin)
+    (coin) =>
+      coin.volatility > 1 && longSignalKaufman(coin.kama, coin.filterKama)
   );
   return filteredCoins.slice(0, 1);
 };

@@ -8,6 +8,7 @@ const getMOM = require('./mom');
 const getParabolic = require('./parabolic');
 const getOBV = require('./obv');
 const getRSI = require('./rsi');
+const getKAMA = require('./kama');
 
 module.exports = {
   getSMA,
@@ -20,4 +21,5 @@ module.exports = {
   getParabolic,
   getOBV,
   getRSI,
+  getKAMA,
 };
