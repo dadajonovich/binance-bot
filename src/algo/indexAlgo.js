@@ -6,6 +6,7 @@ const orderExist = require('./ordersExist');
 const createBuyOrder = require('./createBuyOrder');
 const createSellOrder = require('./createSellOrder');
 const searchSignal = require('./searchSignal');
+const composeCreateOrder = require('./composeCreateOrder');
 
 module.exports = {
   createOrder,
@@ -16,4 +17,5 @@ module.exports = {
   createBuyOrder,
   createSellOrder,
   tradeAlgo,
+  composeCreateOrder,
 };

@@ -1,10 +1,5 @@
 const getCoins =
-  (
-    curryGetCandles = (f) => f,
-    getPrices = (f) => f,
-    getStandartDeviation = (f) => f,
-    getKAMA = (f) => f
-  ) =>
+  (curryGetCandles = (f) => f, getPrices = (f) => f, getKAMA = (f) => f) =>
   async (pairs = []) => {
     try {
       const coins = await Promise.all(
@@ -22,14 +17,11 @@ const getCoins =
             checkCandles();
           });
           const prices = getPrices(candles);
-          const { currentPrice, closePrices } = prices;
-          const standartDeviation = getStandartDeviation(closePrices);
-          const volatility = (standartDeviation / currentPrice) * 100;
+          const { closePrices } = prices;
           const { kama, filterKama } = getKAMA(closePrices);
 
           return {
             pair,
-            volatility,
             kama,
             filterKama,
           };

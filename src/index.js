@@ -1,11 +1,10 @@
 const { client, bot, TELEGRAM_CHAT_ID, parameters } = require('./config');
 
-const { getStandartDeviation, getKAMA } = require('./ta.js/indexTA');
+const { getKAMA } = require('./ta.js/indexTA');
 
 // Message
 const {
   getBalanceMessage,
-  getStrCoinsInfo,
   getOrdersMessage,
   getDifferenceBalanceMessage,
 } = require('./message/indexMessage');
@@ -32,6 +31,7 @@ const {
   createBuyOrder,
   createSellOrder,
   tradeAlgo,
+  composeCreateOrder,
 } = require('./algo/indexAlgo');
 
 const sendMessage = (chatId) => async (message) => {
@@ -50,30 +50,30 @@ const currySendMessage = sendMessage(TELEGRAM_CHAT_ID);
 
 const curryGetCandles = getCandles(client, parameters);
 
-const curryGetCoins = getCoins(
-  curryGetCandles,
-  getPrice,
-  getStandartDeviation,
-  getKAMA
+const curryGetCoins = getCoins(curryGetCandles, getPrice, getKAMA);
+const curryComposeCreateOrder = composeCreateOrder(
+  client,
+  getValuesForOrder,
+  createOrder
 );
 
 const curryCreateBuyOrder = createBuyOrder(
   client,
-  getValuesForOrder,
-  createOrder,
   orderExist,
   getOpenOrders,
-  cancelOrders
+  cancelOrders,
+  curryComposeCreateOrder,
+  getBalance
 );
 
 const curryCreateSellOrder = createSellOrder(
   client,
   curryGetCoins,
-  getValuesForOrder,
-  createOrder,
   orderExist,
   getOpenOrders,
-  cancelOrders
+  cancelOrders,
+  curryComposeCreateOrder,
+  getBalance
 );
 
 const curryTradeAlgo = tradeAlgo(

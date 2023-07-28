@@ -4,72 +4,46 @@ const createSellOrder =
   (
     client,
     curryGetCoins = (f) => f,
-    getValuesForOrder = (f) => f,
-    createOrder = (f) => f,
     orderExist = (f) => f,
     getOpenOrders = (f) => f,
-    cancelOrders = (f) => f
+    cancelOrders = (f) => f,
+    curryComposeCreateOrder = (f) => f,
+    getBalance = (f) => f
   ) =>
-  async (pair, stepSize, tickSize, quantityAsset) => {
+  async (pair, asset, stepSize, tickSize, quantityAsset) => {
     try {
       console.log('Sell order!');
 
       let isSellOrder = false;
       let count = 0;
-      let price;
-      let stopLoss = null;
-      let takeProfit = null;
 
-      const composeCreateSellOrder = async () => {
-        ({ [pair]: price } = await client.prices({ symbol: pair }));
-        const { roundedPrice, quantitySell } = getValuesForOrder(
-          Number(price),
-          stepSize,
-          tickSize,
-          quantityAsset,
-          pair
-        );
-        await createOrder(
-          client,
-          pair,
-          'SELL',
-          'LIMIT',
-          quantitySell,
-          roundedPrice
-        );
-      };
-
-      // const AMA = [15, 50, 100, 110, 115, 120, 160, 150, 130, 120];
-      // const filterValue = 15;
-      const shortSignalKaufman = (ama, filter) => {
-        let criterionShort = false;
-
-        const sliceArr = ama.slice(-4);
-        const maxKAMA = Math.max(...sliceArr);
-        const minKAMA = Math.min(...sliceArr);
-        const indexMax = sliceArr.indexOf(maxKAMA);
-        const indexMin = sliceArr.indexOf(minKAMA);
-
-        if (indexMax < indexMin) {
-          criterionShort = maxKAMA - ama.at(-2) > filter;
+      const sellSignalKaufman = ({ kama, filterKama }) => {
+        let criterionSell = false;
+        if (kama.at(-2) < kama.at(-3)) {
+          criterionSell = kama.at(-3) - kama.at(-2) > filterKama;
         }
-        return criterionShort;
-      };
 
-      // console.log(shortSignalKaufman(AMA, filterValue));
+        return criterionSell;
+      };
 
       await new Promise((resolve) => {
         const checkSellCriterionInterval = new CronJob(
-          '1 */4 * * *',
+          '1 */1 * * *',
           async () => {
             console.log('tick checkSellCriterionInterval...');
-            const [{ filterKama, kama }] = await curryGetCoins([pair]);
+            const [coin] = await curryGetCoins([pair]);
 
-            const criterionSell = shortSignalKaufman(kama, filterKama);
+            const criterionSell = sellSignalKaufman(coin);
 
             console.log(criterionSell);
             if (criterionSell) {
-              await composeCreateSellOrder();
+              await curryComposeCreateOrder(
+                pair,
+                quantityAsset,
+                stepSize,
+                tickSize,
+                'SELL'
+              );
               checkSellCriterionInterval.stop();
               resolve();
             }
@@ -96,7 +70,17 @@ const createSellOrder =
           } else if (count > 5) {
             const orders = await getOpenOrders(client);
             await cancelOrders(client, orders);
-            await composeCreateSellOrder();
+            const { balanceFree: newQuantityAsset } = await getBalance(
+              client,
+              asset
+            );
+            await curryComposeCreateOrder(
+              pair,
+              newQuantityAsset,
+              stepSize,
+              tickSize,
+              'SELL'
+            );
             count = 0;
             setTimeout(checkSellInterval, 0.25 * 60 * 1000);
           } else {

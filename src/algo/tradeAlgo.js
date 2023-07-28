@@ -48,6 +48,7 @@ const tradeAlgo =
           if (quantityAsset > stepSize) {
             isSellOrder = curryCreateSellOrder(
               pair,
+              asset,
               stepSize,
               tickSize,
               quantityAsset

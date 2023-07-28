@@ -1,9 +1,3 @@
-// const toFixedHard = (number, x) => {
-//   const s = String(number);
-//   const [a, b = ''] = s.split('.');
-//   return parseFloat(`${a}.${b.substring(0, x)}`);
-// };
-
 const toFixedHard = (number, x) => Math.floor(number * 10 ** x) / 10 ** x;
 const decimalPlace = (size) =>
   parseFloat(size) === 1 ? 0 : size.indexOf('1') - 1;

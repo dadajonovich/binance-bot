@@ -10,9 +10,9 @@ const calculateValueBetweenPeriods = (array) => {
 };
 
 const getKAMA = (closePrices, length1 = 10, length2 = 2, length3 = 30) => {
-  const kama = ta.sma(closePrices, length1, length2, length3);
+  const kama = ta.kama(closePrices, length1, length2, length3);
   const stndDevKama = ta.std(calculateValueBetweenPeriods(kama), 10);
-  const filterKama = 1 * stndDevKama;
+  const filterKama = 2 * stndDevKama;
 
   return { kama, filterKama };
 };
