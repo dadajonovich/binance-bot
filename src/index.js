@@ -63,7 +63,8 @@ const curryCreateBuyOrder = createBuyOrder(
   getOpenOrders,
   cancelOrders,
   curryComposeCreateOrder,
-  getBalance
+  getBalance,
+  currySendMessage
 );
 
 const curryCreateSellOrder = createSellOrder(
@@ -73,7 +74,8 @@ const curryCreateSellOrder = createSellOrder(
   getOpenOrders,
   cancelOrders,
   curryComposeCreateOrder,
-  getBalance
+  getBalance,
+  currySendMessage
 );
 
 const curryTradeAlgo = tradeAlgo(
@@ -89,13 +91,10 @@ const curryTradeAlgo = tradeAlgo(
 const currySearchSignal = searchSignal(
   curryGetCoins,
   filterCoins,
-  currySendMessage,
   curryTradeAlgo
 );
 
 bot.on('message', async (msg) => {
-  await currySendMessage('Ща все будет...');
-
   let orders;
   let balance;
   let coins;
@@ -141,6 +140,7 @@ bot.on('message', async (msg) => {
       break;
 
     case '/start':
+      await currySendMessage('Ща все будет...');
       topPairs = await getTopPairs(client, parameters);
       cycle();
       break;

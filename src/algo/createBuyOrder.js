@@ -5,7 +5,8 @@ const createBuyOrder =
     getOpenOrders = (f) => f,
     cancelOrders = (f) => f,
     curryComposeCreateOrder = (f) => f,
-    getBalance = (f) => f
+    getBalance = (f) => f,
+    currySendMessage = (f) => f
   ) =>
   async (pair, stepSize, tickSize, quantityUSDT) => {
     try {
@@ -33,6 +34,7 @@ const createBuyOrder =
           count += 1;
           if (!buyMark) {
             isBuyOrder = true;
+            await currySendMessage(`Buy ${pair}!`);
             resolve();
           } else if (count > 5) {
             const orders = await getOpenOrders(client);
@@ -49,9 +51,9 @@ const createBuyOrder =
               'BUY'
             );
             count = 0;
-            setTimeout(checkBuyInterval, 0.25 * 60 * 1000);
+            setTimeout(checkBuyInterval, 0.5 * 60 * 1000);
           } else {
-            setTimeout(checkBuyInterval, 0.25 * 60 * 1000);
+            setTimeout(checkBuyInterval, 0.5 * 60 * 1000);
           }
         };
         checkBuyInterval();
