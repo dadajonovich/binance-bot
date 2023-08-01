@@ -11,7 +11,7 @@ const calculateValueBetweenPeriods = (array) => {
 
 const getKAMA = (closePrices, length1 = 10, length2 = 2, length3 = 30) => {
   const kama = ta.kama(closePrices, length1, length2, length3);
-  const stndDevKama = ta.std(calculateValueBetweenPeriods(kama), 10);
+  const stndDevKama = ta.std(calculateValueBetweenPeriods(kama));
   const filterKama = 1 * stndDevKama;
 
   return { kama, filterKama };

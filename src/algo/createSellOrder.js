@@ -18,23 +18,41 @@ const createSellOrder =
       let isSellOrder = false;
       let count = 0;
 
-      const sellSignalKaufman = ({ kama, filterKama }) => {
+      // const kama = [15, 50, 100, 110, 115, 120, 90, 150, 130, 80];
+      // const filterKama = 15;
+      // const sellSignalKaufman = ({ kama, filterKama }) => {
+      //   const criterionSell =
+      //     kama.at(-5) - kama.at(-2) > filterKama ||
+      //     kama.at(-4) - kama.at(-2) > filterKama ||
+      //     kama.at(-3) - kama.at(-2) > filterKama;
+
+      //   return criterionSell;
+      // };
+
+      const sellSignalKaufman = (ama, filter) => {
         let criterionSell = false;
-        if (kama.at(-2) < kama.at(-3)) {
-          criterionSell = kama.at(-3) - kama.at(-2) > filterKama;
+
+        const sliceArr = ama.slice(-5, -1);
+
+        for (let i = 0; i < sliceArr.length - 1; i++) {
+          const betweenPeriods = sliceArr.at(i) - sliceArr.at(-1);
+          if (betweenPeriods > filter) {
+            criterionSell = true;
+          }
         }
 
         return criterionSell;
       };
+      // console.log(sellSignalKaufman(kama, filterKama));
 
       await new Promise((resolve) => {
         const checkSellCriterionInterval = new CronJob(
-          '5 0 * * *',
+          '1 0 * * *',
           async () => {
             console.log('tick checkSellCriterionInterval...');
             const [coin] = await curryGetCoins([pair]);
 
-            const criterionSell = sellSignalKaufman(coin);
+            const criterionSell = sellSignalKaufman(coin.kama, coin.filterKama);
 
             console.log(criterionSell);
             if (criterionSell) {
