@@ -30,8 +30,11 @@ const filterCoins = (coins) => {
   const filteredCoins = coins.filter((coin) =>
     buySignalKaufman(coin.kama, coin.filterKama)
   );
-  console.log(filteredCoins);
-  return filteredCoins.slice(0, 1);
+  const sortCoins = filteredCoins.sort(
+    (a, b) => a.volatility.at(-2) - b.volatility.at(-2)
+  );
+  console.log(sortCoins);
+  return sortCoins.slice(0, 1);
 };
 
 module.exports = filterCoins;

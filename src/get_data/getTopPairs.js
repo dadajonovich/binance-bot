@@ -7,7 +7,8 @@ const getTopPairs = async (client, { quantityPairs = 50 } = {}) => {
         (symbol) =>
           symbol.status === 'TRADING' &&
           symbol.quoteAsset === 'USDT' &&
-          !symbol.symbol.includes('DOWN')
+          !symbol.symbol.includes('DOWN') &&
+          !symbol.baseAsset.includes('USD')
       )
       .map((symbol) => `${symbol.baseAsset}${symbol.quoteAsset}`)
       .slice(0, quantityPairs);
