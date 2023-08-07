@@ -12,7 +12,8 @@ const searchSignal =
       console.log('start searchSignal');
       await new Promise((resolve) => {
         const searchCoins = new CronJob(
-          '5 0 * * *',
+          '15 0 * * *',
+          // '1 */4 * * *',
           async () => {
             console.log('tick searchCoins');
             const coins = await curryGetCoins(topPairs);
@@ -25,8 +26,8 @@ const searchSignal =
           null,
           false,
           'UTC',
-          null,
-          true
+          null
+          // true
         );
         searchCoins.start();
       });

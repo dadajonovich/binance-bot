@@ -11,7 +11,7 @@ const createSellOrder =
     getBalance = (f) => f,
     currySendMessage = (f) => f
   ) =>
-  async (pair, asset, stepSize, tickSize, quantityAsset) => {
+  async (pair, asset, stepSize, tickSize) => {
     try {
       console.log('Sell order!');
 
@@ -47,7 +47,8 @@ const createSellOrder =
 
       await new Promise((resolve) => {
         const checkSellCriterionInterval = new CronJob(
-          '5 0 * * *',
+          '1 0 * * *',
+          // '1 */4 * * *',
           async () => {
             console.log('tick checkSellCriterionInterval...');
             const [coin] = await curryGetCoins([pair]);
@@ -56,6 +57,10 @@ const createSellOrder =
 
             console.log(criterionSell);
             if (criterionSell) {
+              const { balanceFree: quantityAsset } = await getBalance(
+                client,
+                asset
+              );
               await curryComposeCreateOrder(
                 pair,
                 quantityAsset,

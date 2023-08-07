@@ -46,13 +46,7 @@ const tradeAlgo =
             ({ balanceFree: quantityAsset } = await getBalance(client, asset));
           }
           if (quantityAsset > stepSize) {
-            isSellOrder = curryCreateSellOrder(
-              pair,
-              asset,
-              stepSize,
-              tickSize,
-              quantityAsset
-            );
+            isSellOrder = curryCreateSellOrder(pair, asset, stepSize, tickSize);
             if (!isSellOrder) throw new Error(`isSellOrder - ${isSellOrder}`);
           }
           return isSellOrder;
