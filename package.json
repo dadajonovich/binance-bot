@@ -9,7 +9,7 @@
     "lint:fix": "npx eslint --fix src"
   },
   "keywords": [],
-  "author": "",
+  "author": "Timur Norbaev",
   "license": "ISC",
   "dependencies": {
     "binance-api-node": "^0.12.4",
