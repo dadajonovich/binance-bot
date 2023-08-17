@@ -17,4 +17,4 @@ const getStrCoinsInfo = (coins = []) => {
     return '';
   }
 };
-module.exports = getStrCoinsInfo;
+export default getStrCoinsInfo;

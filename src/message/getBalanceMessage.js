@@ -11,4 +11,4 @@ const getBalanceMessage = (coins = []) => {
   return message;
 };
 
-module.exports = getBalanceMessage;
+export default getBalanceMessage;

@@ -59,4 +59,4 @@ const tradeAlgo =
       return [];
     }
   };
-module.exports = tradeAlgo;
+export default tradeAlgo;

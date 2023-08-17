@@ -28,4 +28,4 @@ const getBalance = async (client, asset = '') => {
   }
 };
 
-module.exports = getBalance;
+export default getBalance;

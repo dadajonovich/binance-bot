@@ -66,4 +66,4 @@ const createBuyOrder =
     }
   };
 
-module.exports = createBuyOrder;
+export default createBuyOrder;

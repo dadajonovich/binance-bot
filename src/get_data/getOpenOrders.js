@@ -16,4 +16,4 @@ const getOpenOrders = async (client, pair = '') => {
   }
 };
 
-module.exports = getOpenOrders;
+export default getOpenOrders;

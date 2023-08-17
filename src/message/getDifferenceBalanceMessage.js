@@ -1,4 +1,4 @@
-const ta = require('ta.js');
+import * as ta from 'ta.js';
 
 const getDifferenceBalanceMessage = (prevBalance, currentBalance) => {
   const diffBalance = ta.dif(currentBalance, prevBalance) * 100;
@@ -12,4 +12,4 @@ const getDifferenceBalanceMessage = (prevBalance, currentBalance) => {
   return `${status}The balance has changed to ${diffBalance.toFixed(2)}%`;
 };
 
-module.exports = getDifferenceBalanceMessage;
+export default getDifferenceBalanceMessage;

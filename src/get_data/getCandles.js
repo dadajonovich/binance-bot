@@ -14,4 +14,4 @@ const getCandles =
     }
   };
 
-module.exports = getCandles;
+export default getCandles;

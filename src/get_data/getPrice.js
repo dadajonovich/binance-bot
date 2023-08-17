@@ -16,4 +16,4 @@ const getPrice = (candles) => {
   };
 };
 
-module.exports = getPrice;
+export default getPrice;

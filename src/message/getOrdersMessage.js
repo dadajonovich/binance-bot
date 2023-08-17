@@ -15,4 +15,4 @@ const getOrdersMessage = (orders) => {
   return message;
 };
 
-module.exports = getOrdersMessage;
+export default getOrdersMessage;

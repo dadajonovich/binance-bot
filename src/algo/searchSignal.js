@@ -1,4 +1,4 @@
-const { CronJob } = require('cron');
+import { CronJob } from 'cron';
 
 const searchSignal =
   (
@@ -12,8 +12,8 @@ const searchSignal =
       console.log('start searchSignal');
       await new Promise((resolve) => {
         const searchCoins = new CronJob(
-          '15 0 * * *',
-          // '1 */4 * * *',
+          // '15 0 * * *',
+          '1 */1 * * *',
           async () => {
             console.log('tick searchCoins');
             const coins = await curryGetCoins(topPairs);
@@ -44,4 +44,4 @@ const searchSignal =
     }
   };
 
-module.exports = searchSignal;
+export default searchSignal;

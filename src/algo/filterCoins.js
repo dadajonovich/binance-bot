@@ -37,4 +37,4 @@ const filterCoins = (coins) => {
   return sortCoins.slice(0, 1);
 };
 
-module.exports = filterCoins;
+export default filterCoins;

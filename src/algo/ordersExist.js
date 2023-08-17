@@ -15,4 +15,4 @@ const orderExist = async (client, pair, getOpenOrders) => {
   return { buyOrderExists, sellOrderExists };
 };
 
-module.exports = orderExist;
+export default orderExist;

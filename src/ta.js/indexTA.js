@@ -1,5 +1,3 @@
-const getKAMA = require('./kama');
+import getKAMA from './kama.js';
 
-module.exports = {
-  getKAMA,
-};
+export default getKAMA;

@@ -19,4 +19,4 @@ const getTopPairs = async (client, { quantityPairs = 50 } = {}) => {
   }
 };
 
-module.exports = getTopPairs;
+export default getTopPairs;

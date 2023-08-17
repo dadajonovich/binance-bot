@@ -13,4 +13,4 @@ const cancelOrders = async (client, coins) => {
   }
 };
 
-module.exports = cancelOrders;
+export default cancelOrders;

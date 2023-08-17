@@ -1,4 +1,4 @@
-const ta = require('ta.js');
+import * as ta from 'ta.js';
 
 const getCoins =
   (curryGetCandles = (f) => f, getPrices = (f) => f, getKAMA = (f) => f) =>
@@ -38,4 +38,4 @@ const getCoins =
     }
   };
 
-module.exports = getCoins;
+export default getCoins;

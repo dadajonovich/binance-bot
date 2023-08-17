@@ -1,9 +1,9 @@
-const getStrCoinsInfo = require('./getStrCoinsInfo');
-const getBalanceMessage = require('./getBalanceMessage');
-const getOrdersMessage = require('./getOrdersMessage');
-const getDifferenceBalanceMessage = require('./getDifferenceBalanceMessage');
+import getStrCoinsInfo from './getStrCoinsInfo.js';
+import getBalanceMessage from './getBalanceMessage.js';
+import getOrdersMessage from './getOrdersMessage.js';
+import getDifferenceBalanceMessage from './getDifferenceBalanceMessage.js';
 
-module.exports = {
+export {
   getBalanceMessage,
   getStrCoinsInfo,
   getOrdersMessage,

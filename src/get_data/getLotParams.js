@@ -12,4 +12,4 @@ const getLotParams = async (client, symbol) => {
   }
 };
 
-module.exports = getLotParams;
+export default getLotParams;

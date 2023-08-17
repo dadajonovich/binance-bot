@@ -26,4 +26,4 @@ const composeCreateOrder =
     }
   };
 
-module.exports = composeCreateOrder;
+export default composeCreateOrder;

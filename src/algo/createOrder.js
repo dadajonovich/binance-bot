@@ -23,4 +23,4 @@ const createOrder = async (
   }
 };
 
-module.exports = createOrder;
+export default createOrder;

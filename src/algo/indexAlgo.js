@@ -1,14 +1,14 @@
-const createOrder = require('./createOrder');
-const tradeAlgo = require('./tradeAlgo');
-const cancelOrders = require('./cancelOrders');
-const filterCoins = require('./filterCoins');
-const orderExist = require('./ordersExist');
-const createBuyOrder = require('./createBuyOrder');
-const createSellOrder = require('./createSellOrder');
-const searchSignal = require('./searchSignal');
-const composeCreateOrder = require('./composeCreateOrder');
+import createOrder from './createOrder.js';
+import tradeAlgo from './tradeAlgo.js';
+import cancelOrders from './cancelOrders.js';
+import filterCoins from './filterCoins.js';
+import orderExist from './ordersExist.js';
+import createBuyOrder from './createBuyOrder.js';
+import createSellOrder from './createSellOrder.js';
+import searchSignal from './searchSignal.js';
+import composeCreateOrder from './composeCreateOrder.js';
 
-module.exports = {
+export {
   createOrder,
   searchSignal,
   cancelOrders,

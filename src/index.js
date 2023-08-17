@@ -1,16 +1,16 @@
-const { client, bot, TELEGRAM_CHAT_ID, parameters } = require('./config');
+import { client, bot, TELEGRAM_CHAT_ID, parameters } from './config.js';
 
-const { getKAMA } = require('./ta.js/indexTA');
+import getKAMA from './ta.js/indexTA.js';
 
 // Message
-const {
+import {
   getBalanceMessage,
   getOrdersMessage,
   getDifferenceBalanceMessage,
-} = require('./message/indexMessage');
+} from './message/indexMessage.js';
 
 // Get functions
-const {
+import {
   getBalance,
   getCandles,
   getCoins,
@@ -19,10 +19,10 @@ const {
   getLotParams,
   getValuesForOrder,
   getTopPairs,
-} = require('./get_data/indexGetData');
+} from './get_data/indexGetData.js';
 
 // Algo
-const {
+import {
   createOrder,
   searchSignal,
   cancelOrders,
@@ -32,7 +32,7 @@ const {
   createSellOrder,
   tradeAlgo,
   composeCreateOrder,
-} = require('./algo/indexAlgo');
+} from './algo/indexAlgo.js';
 
 const sendMessage = (chatId) => async (message) => {
   try {

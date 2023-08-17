@@ -1,13 +1,13 @@
-const getBalance = require('./getBalance');
-const getCandles = require('./getCandles');
-const getCoins = require('./getCoins');
-const getOpenOrders = require('./getOpenOrders');
-const getPrice = require('./getPrice');
-const getLotParams = require('./getLotParams');
-const getValuesForOrder = require('./getValuesForOrder');
-const getTopPairs = require('./getTopPairs');
+import getBalance from './getBalance.js';
+import getCandles from './getCandles.js';
+import getCoins from './getCoins.js';
+import getOpenOrders from './getOpenOrders.js';
+import getPrice from './getPrice.js';
+import getLotParams from './getLotParams.js';
+import getValuesForOrder from './getValuesForOrder.js';
+import getTopPairs from './getTopPairs.js';
 
-module.exports = {
+export {
   getBalance,
   getCandles,
   getCoins,

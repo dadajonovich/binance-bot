@@ -1,4 +1,4 @@
-const { CronJob } = require('cron');
+import { CronJob } from 'cron';
 
 const createSellOrder =
   (
@@ -47,8 +47,8 @@ const createSellOrder =
 
       await new Promise((resolve) => {
         const checkSellCriterionInterval = new CronJob(
-          '1 0 * * *',
-          // '1 */4 * * *',
+          // '1 0 * * *',
+          '1 */1 * * *',
           async () => {
             console.log('tick checkSellCriterionInterval...');
             const [coin] = await curryGetCoins([pair]);
@@ -122,4 +122,4 @@ const createSellOrder =
     }
   };
 
-module.exports = createSellOrder;
+export default createSellOrder;

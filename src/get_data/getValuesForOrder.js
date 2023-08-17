@@ -45,4 +45,4 @@ const getValuesForOrder = (
   }
 };
 
-module.exports = getValuesForOrder;
+export default getValuesForOrder;
