@@ -21,7 +21,7 @@ const getCoins =
           const prices = getPrices(candles);
           const { closePrices } = prices;
           const { kama, filterKama } = getKAMA(closePrices);
-          const volatility = ta.hv(closePrices);
+          const volatility = ta.hv(closePrices, 10);
 
           return {
             pair,

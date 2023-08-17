@@ -27,8 +27,10 @@ const buySignalKaufman = (ama, filter) => {
 // console.log(buySignalKaufman(AMA, filterValue));
 
 const filterCoins = (coins) => {
-  const filteredCoins = coins.filter((coin) =>
-    buySignalKaufman(coin.kama, coin.filterKama)
+  const filteredCoins = coins.filter(
+    (coin) =>
+      buySignalKaufman(coin.kama, coin.filterKama) &&
+      coin.volatility.at(-2) < 90
   );
   const sortCoins = filteredCoins.sort(
     (a, b) => a.volatility.at(-2) - b.volatility.at(-2)

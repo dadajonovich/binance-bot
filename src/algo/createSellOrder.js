@@ -48,12 +48,14 @@ const createSellOrder =
       await new Promise((resolve) => {
         const checkSellCriterionInterval = new CronJob(
           '1 0 * * *',
-          // '1 */4 * * *',
+          // '1 */1 * * *',
           async () => {
             console.log('tick checkSellCriterionInterval...');
             const [coin] = await curryGetCoins([pair]);
 
-            const criterionSell = sellSignalKaufman(coin.kama, coin.filterKama);
+            const criterionSell =
+              sellSignalKaufman(coin.kama, coin.filterKama) &&
+              coin.volatility.at(-2) < 90;
 
             console.log(criterionSell);
             if (criterionSell) {
