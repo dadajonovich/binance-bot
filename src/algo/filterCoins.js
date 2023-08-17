@@ -9,16 +9,27 @@
 //   return criterionBuy;
 // };
 
+// const buySignalKaufman = (ama, filter) => {
+//   let criterionBuy = false;
+
+//   const sliceArr = ama.slice(-5, -1);
+
+//   for (let i = 0; i < sliceArr.length - 1; i++) {
+//     const betweenPeriods = sliceArr.at(-1) - sliceArr.at(i);
+//     if (betweenPeriods > filter) {
+//       criterionBuy = true;
+//     }
+//   }
+
+//   return criterionBuy;
+// };
+
 const buySignalKaufman = (ama, filter) => {
   let criterionBuy = false;
+  const betweenPeriods = ama.at(-2) - ama.at(-3);
 
-  const sliceArr = ama.slice(-5, -1);
-
-  for (let i = 0; i < sliceArr.length - 1; i++) {
-    const betweenPeriods = sliceArr.at(-1) - sliceArr.at(i);
-    if (betweenPeriods > filter) {
-      criterionBuy = true;
-    }
+  if (betweenPeriods > filter) {
+    criterionBuy = true;
   }
 
   return criterionBuy;
@@ -27,10 +38,8 @@ const buySignalKaufman = (ama, filter) => {
 // console.log(buySignalKaufman(AMA, filterValue));
 
 const filterCoins = (coins) => {
-  const filteredCoins = coins.filter(
-    (coin) =>
-      buySignalKaufman(coin.kama, coin.filterKama) &&
-      coin.volatility.at(-2) < 90
+  const filteredCoins = coins.filter((coin) =>
+    buySignalKaufman(coin.kama, coin.filterKama)
   );
   const sortCoins = filteredCoins.sort(
     (a, b) => a.volatility.at(-2) - b.volatility.at(-2)
