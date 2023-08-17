@@ -1,4 +1,4 @@
-import { client, bot, TELEGRAM_CHAT_ID, parameters } from './config.js';
+import { client, bot, TELEGRAM_CHAT_ID, parameters, pairs } from './config.js';
 
 import getKAMA from './ta.js/indexTA.js';
 
@@ -118,7 +118,7 @@ bot.on('message', async (msg) => {
 
   switch (msg.text) {
     case '/tellme':
-      topPairs = await getTopPairs(client, parameters);
+      topPairs = pairs || (await getTopPairs(client, parameters));
       coins = await curryGetCoins(topPairs);
       filteredCoins = filterCoins(coins);
       await currySendMessage(`${filteredCoins[0]?.pair}`);
@@ -141,7 +141,7 @@ bot.on('message', async (msg) => {
 
     case '/start':
       await currySendMessage('Ща все будет...');
-      topPairs = await getTopPairs(client, parameters);
+      topPairs = pairs || (await getTopPairs(client, parameters));
       cycle();
       break;
 
