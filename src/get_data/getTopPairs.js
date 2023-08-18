@@ -12,6 +12,7 @@ const getTopPairs = async (client, { quantityPairs = 50 } = {}) => {
       )
       .map((symbol) => `${symbol.baseAsset}${symbol.quoteAsset}`)
       .slice(0, quantityPairs);
+    console.log(topPairs);
     return topPairs;
   } catch (err) {
     console.error('Error in getTopPairs', err);
