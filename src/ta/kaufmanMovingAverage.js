@@ -1,8 +1,8 @@
 import ema from './ema.js';
+// import sma from './sma.js';
 
 const kaufmanMovingAverage = (data, len1 = 10, len2 = 2, len3 = 30) => {
-  let ka = ema(data, len1);
-  ka = [ka[ka.length - 1]];
+  const ka = [ema(data, len1).at(-1)];
 
   for (let i = len1 + 1; i < data.length; i++) {
     let vola = 0;
@@ -12,7 +12,7 @@ const kaufmanMovingAverage = (data, len1 = 10, len2 = 2, len3 = 30) => {
     const sc =
       ((change / vola) * (2 / (len2 + 1) - 2 / (len3 + 1) + 2 / (len3 + 1))) **
       2;
-    ka.push(ka[ka.length - 1] + sc * (data[i] - ka[ka.length - 1]));
+    ka.push(ka.at(-1) + sc * (data[i] - ka.at(-1)));
   }
   return ka;
 };
