@@ -1,9 +1,13 @@
 const buySignalKaufman = (ama, filter) => {
   let criterionBuy = false;
-  const betweenPeriods = ama.at(-2) - ama.at(-3);
 
-  if (betweenPeriods > filter) {
-    criterionBuy = true;
+  const sliceArr = ama.slice(-4, -1);
+
+  for (let i = 0; i < sliceArr.length - 1; i++) {
+    const betweenPeriods = sliceArr.at(-1) - sliceArr.at(i);
+    if (betweenPeriods > filter) {
+      criterionBuy = true;
+    }
   }
 
   return criterionBuy;
