@@ -1,5 +1,3 @@
-import * as ta from 'ta.js';
-
 const getCoins =
   (curryGetCandles = (f) => f, getPrices = (f) => f, getKAMA = (f) => f) =>
   async (pairs = []) => {
@@ -21,13 +19,11 @@ const getCoins =
           const prices = getPrices(candles);
           const { closePrices } = prices;
           const { kama, filterKama } = getKAMA(closePrices);
-          const volatility = ta.hv(closePrices, 10);
 
           return {
             pair,
             kama,
             filterKama,
-            volatility,
           };
         })
       );

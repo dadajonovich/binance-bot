@@ -1,6 +1,6 @@
 import { client, bot, TELEGRAM_CHAT_ID, parameters, pairs } from './config.js';
 
-import getKAMA from './ta.js/indexTA.js';
+import getKAMA from './ta/indexTA.js';
 
 // Message
 import {
