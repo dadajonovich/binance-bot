@@ -3,8 +3,8 @@ import std from './std.js';
 
 const calculateValueBetweenPeriods = (array) => {
   const valueDifferences = [];
-  for (let i = 0; i < array.length - 1; i++) {
-    const difference = array[i + 1] - array[i];
+  for (let i = 1; i < array.length; i++) {
+    const difference = array[i] - array[i - 1];
     valueDifferences.push(difference);
   }
   return valueDifferences;

@@ -18,7 +18,7 @@ const getCoins =
           });
           const prices = getPrices(candles);
           const { closePrices } = prices;
-          const { kama, filterKama } = getKAMA(closePrices);
+          const { kama, filterKama } = getKAMA(closePrices, 10, 5, 30);
 
           return {
             pair,

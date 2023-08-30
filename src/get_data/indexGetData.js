@@ -5,7 +5,6 @@ import getOpenOrders from './getOpenOrders.js';
 import getPrice from './getPrice.js';
 import getLotParams from './getLotParams.js';
 import getValuesForOrder from './getValuesForOrder.js';
-import getTopPairs from './getTopPairs.js';
 
 export {
   getBalance,
@@ -15,5 +14,4 @@ export {
   getPrice,
   getLotParams,
   getValuesForOrder,
-  getTopPairs,
 };

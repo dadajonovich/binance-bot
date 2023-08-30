@@ -18,7 +18,6 @@ import {
   getPrice,
   getLotParams,
   getValuesForOrder,
-  getTopPairs,
 } from './get_data/indexGetData.js';
 
 // Algo
@@ -99,11 +98,10 @@ bot.on('message', async (msg) => {
   let balance;
   let coins;
   let filteredCoins;
-  let topPairs;
 
   const cycle = async () => {
     const { balanceFree: prevBalance } = await getBalance(client, 'USDT');
-    const result = await currySearchSignal(topPairs);
+    const result = await currySearchSignal(pairs);
     if (result) {
       const { balanceFree: currentBalace } = await getBalance(client, 'USDT');
       const diffBalance = getDifferenceBalanceMessage(
@@ -118,8 +116,7 @@ bot.on('message', async (msg) => {
 
   switch (msg.text) {
     case '/tellme':
-      topPairs = pairs || (await getTopPairs(client, parameters));
-      coins = await curryGetCoins(topPairs);
+      coins = await curryGetCoins(pairs);
       filteredCoins = filterCoins(coins);
       await currySendMessage(`${filteredCoins[0]?.pair}`);
       break;
@@ -141,7 +138,6 @@ bot.on('message', async (msg) => {
 
     case '/start':
       await currySendMessage('Ща все будет...');
-      topPairs = pairs || (await getTopPairs(client, parameters));
       cycle();
       break;
 

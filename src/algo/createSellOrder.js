@@ -31,8 +31,8 @@ const createSellOrder =
 
       await new Promise((resolve) => {
         const checkSellCriterionInterval = new CronJob(
-          // '1 0 * * *',
-          '1 */4 * * *',
+          '1 0 * * *',
+          // '1 */4 * * *',
           async () => {
             console.log('tick checkSellCriterionInterval...');
             const [coin] = await curryGetCoins([pair]);
