@@ -19,20 +19,22 @@ const createSellOrder =
       let count = 0;
 
       const sellSignalKaufman = (ama, filter) => {
-        let criterionSell = false;
-        const betweenPeriods = ama.at(-3) - ama.at(-2);
-
-        if (betweenPeriods > filter.at(-2)) {
-          criterionSell = true;
+        let exthigh = null;
+        for (let i = 2; i < ama.length - 1; i++) {
+          if (ama.at(i) < ama.at(i - 1) && ama.at(i - 1) > ama.at(i - 2)) {
+            exthigh = ama.at(i - 1);
+          }
         }
-
-        return criterionSell;
+        if (ama.at(-2) < ama.at(-3) && exthigh - ama.at(-2) > 0) {
+          return true;
+        }
+        return false;
       };
 
       await new Promise((resolve) => {
         const checkSellCriterionInterval = new CronJob(
-          // '1 0 * * *',
-          '1 */1 * * *',
+          '1 0 * * *',
+          // '1 */1 * * *',
           async () => {
             console.log('tick checkSellCriterionInterval...');
             const [coin] = await curryGetCoins([pair]);

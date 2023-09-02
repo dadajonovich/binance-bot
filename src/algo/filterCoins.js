@@ -1,31 +1,15 @@
 const buySignalKaufman = (ama, filter) => {
-  const criterionFilter = [];
-  const dataKama = ama.slice(-5, -1);
-  const dataFilter = filter.slice(-5, -1);
-  // console.log(dataKama);
-  // console.log(dataFilter);
-  for (let i = 1; i < dataKama.length; i++) {
-    const betweenPeriods = dataKama[i] - dataKama[i - 1];
-    // console.log(`${dataKama[i]} - ${dataKama[i - 1]} > ${dataFilter[i]}`);
-    if (betweenPeriods > dataFilter[i]) {
-      criterionFilter.push(true);
-    } else criterionFilter.push(false);
+  let extlow = null;
+  for (let i = 2; i < ama.length - 1; i++) {
+    if (ama.at(i) > ama.at(i - 1) && ama.at(i - 1) < ama.at(i - 2)) {
+      extlow = ama.at(i - 1);
+    }
   }
-  const criterionBuy = criterionFilter.every((elem) => elem === true);
-  // console.log(criterionBuy);
-  return criterionBuy;
+  if (ama.at(-2) > ama.at(-3) && ama.at(-2) - extlow > filter.at(-2)) {
+    return true;
+  }
+  return false;
 };
-
-// const buySignalKaufman = (ama, filter) => {
-//   let criterionBuy = false;
-//   const betweenPeriods = ama.at(-2) - ama.at(-3);
-
-//   if (betweenPeriods > filter.at(-2)) {
-//     criterionBuy = true;
-//   }
-
-//   return criterionBuy;
-// };
 
 const filterCoins = (coins) => {
   const filteredCoins = coins.filter((coin) =>
@@ -62,4 +46,4 @@ export default filterCoins;
 //   6534.031595997395, 6534.315542290985,
 // ];
 
-// buySignalKaufman(ama, filter);
+// console.log(buySignalKaufman(ama, filter));

@@ -17,6 +17,7 @@ const calcucalteFilter = (data, filter = 1, length1 = 10) => {
   for (let i = 0; i <= data.length - length1; i++) {
     arrStd.push(std(data.slice(i, i + length1)) * filter);
   }
+  // console.log(arrStd);
   return arrStd;
 };
 
@@ -46,3 +47,6 @@ export default getKAMA;
 //   6531.862378839739, 6531.972574950088, 6532.161746689747, 6534.30701550104,
 //   6534.031595997395, 6534.315542290985,
 // ];
+
+// const diff = calculateValueBetweenPeriods(arr);
+// const stdFilter = calcucalteFilter(diff, 1);
