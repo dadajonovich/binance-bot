@@ -1,3 +1,4 @@
-import getKAMA from './kama.js';
+import getKAMA from './getKama.js';
+import getATR from './getAtr.js';
 
-export default getKAMA;
+export { getKAMA, getATR };

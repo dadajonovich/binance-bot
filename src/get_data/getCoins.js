@@ -1,5 +1,10 @@
 const getCoins =
-  (curryGetCandles = (f) => f, getPrices = (f) => f, getKAMA = (f) => f) =>
+  (
+    curryGetCandles = (f) => f,
+    getPrices = (f) => f,
+    getKAMA = (f) => f,
+    getATR = (f) => f
+  ) =>
   async (pairs = []) => {
     try {
       const coins = await Promise.all(
@@ -17,13 +22,21 @@ const getCoins =
             checkCandles();
           });
           const prices = getPrices(candles);
-          const { closePrices } = prices;
-          const { kama, filterKama } = getKAMA(closePrices, 10, 2, 30, 2);
+          const { closePrices, highPrice, lowPrice } = prices;
+          const { kama, filterKama } = getKAMA(closePrices, 10, 2, 30);
+          const { atr, filterAtr } = getATR(
+            closePrices,
+            highPrice,
+            lowPrice,
+            10
+          );
 
           return {
             pair,
             kama,
             filterKama,
+            atr,
+            filterAtr,
           };
         })
       );

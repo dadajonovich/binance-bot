@@ -25,7 +25,10 @@ const createSellOrder =
             exthigh = ama.at(i - 1);
           }
         }
-        if (ama.at(-2) < ama.at(-3) && exthigh - ama.at(-2) > 0) {
+        if (
+          ama.at(-2) < ama.at(-3) &&
+          exthigh - ama.at(-2) > filter.at(-2) * 1
+        ) {
           return true;
         }
         return false;
@@ -33,8 +36,8 @@ const createSellOrder =
 
       await new Promise((resolve) => {
         const checkSellCriterionInterval = new CronJob(
-          '1 0 * * *',
-          // '1 */1 * * *',
+          // '1 0 * * *',
+          '1 */1 * * *',
           async () => {
             console.log('tick checkSellCriterionInterval...');
             const [coin] = await curryGetCoins([pair]);

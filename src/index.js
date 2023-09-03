@@ -1,6 +1,6 @@
 import { client, bot, TELEGRAM_CHAT_ID, parameters, pairs } from './config.js';
 
-import getKAMA from './ta/indexTA.js';
+import { getKAMA, getATR } from './ta/indexTA.js';
 
 // Message
 import {
@@ -49,7 +49,7 @@ const currySendMessage = sendMessage(TELEGRAM_CHAT_ID);
 
 const curryGetCandles = getCandles(client, parameters);
 
-const curryGetCoins = getCoins(curryGetCandles, getPrice, getKAMA);
+const curryGetCoins = getCoins(curryGetCandles, getPrice, getKAMA, getATR);
 const curryComposeCreateOrder = composeCreateOrder(
   client,
   getValuesForOrder,
