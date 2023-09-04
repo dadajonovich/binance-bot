@@ -17,32 +17,48 @@ const createSellOrder =
 
       let isSellOrder = false;
       let count = 0;
+      let stopLoss;
+      let takeProfit;
 
-      const sellSignalKaufman = (ama, filter) => {
-        let exthigh = null;
-        for (let i = 2; i < ama.length - 1; i++) {
-          if (ama.at(i) < ama.at(i - 1) && ama.at(i - 1) > ama.at(i - 2)) {
-            exthigh = ama.at(i - 1);
-          }
-        }
-        if (
-          ama.at(-2) < ama.at(-3) &&
-          exthigh - ama.at(-2) > filter.at(-2) * 1
-        ) {
-          return true;
-        }
-        return false;
-      };
+      // const sellSignalKaufman = (ama, filter) => {
+      //   let exthigh = null;
+      //   for (let i = 2; i < ama.length - 1; i++) {
+      //     if (ama.at(i) < ama.at(i - 1) && ama.at(i - 1) > ama.at(i - 2)) {
+      //       exthigh = ama.at(i - 1);
+      //     }
+      //   }
+      //   if (
+      //     ama.at(-2) < ama.at(-3) &&
+      //     exthigh - ama.at(-2) > filter.at(-2) * 1
+      //   ) {
+      //     return true;
+      //   }
+      //   return false;
+      // };
 
       await new Promise((resolve) => {
         const checkSellCriterionInterval = new CronJob(
           // '1 0 * * *',
-          '1 */1 * * *',
+          // '1 */1 * * *',
+          '*/1 * * * *',
           async () => {
             console.log('tick checkSellCriterionInterval...');
             const [coin] = await curryGetCoins([pair]);
+            const { [pair]: price } = await client.prices({ symbol: pair });
 
-            const criterionSell = sellSignalKaufman(coin.kama, coin.filterKama);
+            if (stopLoss === null) {
+              stopLoss = Number(price) - coin.atr.at(-2) * 1;
+            }
+
+            if (takeProfit === null) {
+              takeProfit = Number(price) + coin.atr.at(-2) * 3;
+            }
+
+            const triggerStopLoss = coin.candles.at(-2).close < stopLoss;
+            const triggerShort = price > takeProfit;
+
+            // const criterionSell = sellSignalKaufman(coin.kama, coin.filterKama);
+            const criterionSell = triggerShort || triggerStopLoss;
 
             console.log(criterionSell);
             if (criterionSell) {

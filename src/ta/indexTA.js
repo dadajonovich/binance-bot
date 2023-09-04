@@ -1,4 +1,5 @@
 import getKAMA from './getKama.js';
-import getATR from './getAtr.js';
+import efficiencyRatio from './er.js';
+import keltner from './keltner.js';
 
-export { getKAMA, getATR };
+export { getKAMA, efficiencyRatio, keltner };

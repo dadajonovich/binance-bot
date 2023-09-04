@@ -1,9 +1,4 @@
-const averageTrueRange = (closePrices, highPrice, lowPrice, length = 14) => {
-  const data = closePrices.map((closePrice, index) => [
-    highPrice[index],
-    closePrice,
-    lowPrice[index],
-  ]);
+const averageTrueRange = (data, length = 14) => {
   const atr = [data[0][0] - data[0][2]];
   for (let i = 1; i < data.length; i++) {
     const t0 = Math.max(
