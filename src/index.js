@@ -52,7 +52,6 @@ const curryGetCandles = getCandles(client, parameters);
 const curryGetCoins = getCoins(
   curryGetCandles,
   getPrice,
-  getKAMA,
   efficiencyRatio,
   keltner
 );

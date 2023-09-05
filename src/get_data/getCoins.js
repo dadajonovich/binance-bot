@@ -2,7 +2,6 @@ const getCoins =
   (
     curryGetCandles = (f) => f,
     getPrices = (f) => f,
-    getKAMA = (f) => f,
     efficiencyRatio = (f) => f,
     keltner = (f) => f
   ) =>
@@ -24,8 +23,7 @@ const getCoins =
           });
           const prices = getPrices(candles);
           const { closePrices, highPrice, lowPrice } = prices;
-          // const { kama, filterKama } = getKAMA(closePrices, 10, 2, 30);
-          const er = efficiencyRatio(closePrices, 10);
+          const er = efficiencyRatio(closePrices, 20);
           const { keltnerBands: kelt, atr } = keltner(
             closePrices,
             highPrice,
@@ -37,14 +35,13 @@ const getCoins =
           return {
             pair,
             candles,
-            // kama,
-            // filterKama,
             er,
             kelt,
             atr,
           };
         })
       );
+      // console.log(coins[0]);
       return coins;
     } catch (err) {
       console.error('Error in getting coins', err);
