@@ -16,8 +16,10 @@ const kaufmanMovingAverage = (data, len1 = 10, len2 = 2, len3 = 30) => {
     const er = direction / volatility;
     // console.log(er);
     const smooth = (er * (fasted - slowest) + slowest) ** 2;
+    // const smooth = er * (fasted - slowest) + slowest;
     // console.log(`${kama.at(-1)} + ${smooth} * (${data[i]} - ${kama.at(-1)})`);
     kama.push(kama.at(-1) + smooth * (data[i] - kama.at(-1)));
+    // kama.push(data[i] * smooth + kama.at(-1) * (1 - smooth));
   }
   return kama;
 };

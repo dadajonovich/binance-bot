@@ -5,7 +5,7 @@ import calculateFilter from './calculatelteFilter.js';
 const getKAMA = (closePrices, length1 = 10, length2 = 2, length3 = 30) => {
   const kama = kaufmanMovingAverage(closePrices, length1, length2, length3);
   const valueBetweenPeriods = calculateValueBetweenPeriods(kama);
-  const filterKama = calculateFilter(valueBetweenPeriods);
+  const filterKama = calculateFilter(valueBetweenPeriods, 20);
   return { kama, filterKama };
 };
 

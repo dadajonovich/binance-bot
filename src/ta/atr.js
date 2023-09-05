@@ -1,24 +1,15 @@
 const averageTrueRange = (closePrices, highPrice, lowPrice, length = 14) => {
-  const atr = [];
+  const atr = [highPrice[0] - lowPrice[0]];
 
-  for (let i = 0; i < closePrices.length; i++) {
-    let tr;
-    if (i === 0) {
-      tr = highPrice[i] - lowPrice[i];
-    } else {
-      tr = Math.max(
-        highPrice[i] - lowPrice[i],
-        Math.abs(highPrice[i] - closePrices[i - 1]),
-        Math.abs(lowPrice[i] - closePrices[i - 1])
-      );
-    }
+  for (let i = 1; i < closePrices.length; i++) {
+    const tr = Math.max(
+      highPrice[i] - lowPrice[i],
+      Math.abs(highPrice[i] - closePrices[i - 1]),
+      Math.abs(lowPrice[i] - closePrices[i - 1])
+    );
 
-    let atrValue = 0;
-    if (i < length) {
-      atrValue = tr;
-    } else {
-      atrValue = (atr[i - 1] * (length - 1) + tr) / length;
-    }
+    const atrValue = (atr[i - 1] * (length - 1) + tr) / length;
+
     atr.push(atrValue);
   }
 

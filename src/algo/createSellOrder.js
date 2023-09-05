@@ -17,36 +17,58 @@ const createSellOrder =
 
       let isSellOrder = false;
       let count = 0;
-      let stopLoss;
-      let takeProfit;
+
+      const sellSignalKaufman = (ama, filter) => {
+        let exthigh = null;
+        for (let i = 2; i < ama.length - 1; i++) {
+          if (ama.at(i) < ama.at(i - 1) && ama.at(i - 1) > ama.at(i - 2)) {
+            exthigh = ama.at(i - 1);
+          }
+        }
+        if (
+          ama.at(-2) < ama.at(-3) &&
+          exthigh - ama.at(-2) > filter.at(-2) * 0.1
+        ) {
+          return true;
+        }
+        return false;
+      };
+
+      // const sellSignalKaufman = (ama, filter) => {
+      //   let criterionSell = false;
+      //   const betweenPeriods = ama.at(-3) - ama.at(-2);
+
+      //   if (betweenPeriods > filter.at(-2) * 0.1) {
+      //     criterionSell = true;
+      //   }
+
+      //   return criterionSell;
+      // };
+
+      const volatilityFilter = (atr, filter) => {
+        let criterionVolatility = false;
+        const betweenPeriods = atr.at(-2) - atr.at(-3);
+
+        if (betweenPeriods > filter.at(-2) * 1) {
+          criterionVolatility = true;
+        }
+
+        return criterionVolatility;
+      };
 
       await new Promise((resolve) => {
         const checkSellCriterionInterval = new CronJob(
-          '* */1 * * * *',
+          // '0 5 */1 * * *',
+          '0 5 0 * * *',
           async () => {
             console.log('tick checkSellCriterionInterval...');
             const [coin] = await curryGetCoins([pair]);
-            const { [pair]: price } = await client.prices({ symbol: pair });
 
-            if (stopLoss === null) {
-              stopLoss =
-                Number(coin.candles.at(-2).close) - coin.atr.at(-2) * 1;
-            }
+            const criterionSell =
+              sellSignalKaufman(coin.kama, coin.filterKama) ||
+              volatilityFilter(coin.atr, coin.filterAtr);
 
-            if (takeProfit === null) {
-              takeProfit =
-                Number(coin.candles.at(-2).close) + coin.atr.at(-2) * 3;
-            }
-
-            const triggerStopLoss = coin.candles.at(-2).close < stopLoss;
-            const triggerShort = price > takeProfit;
-
-            const criterionSell = triggerShort || triggerStopLoss;
-
-            console.log(`criterionSell - ${createSellOrder},
-            price - ${price},
-            takeProfit - ${takeProfit},
-            stopLoss - ${stopLoss}`);
+            console.log(criterionSell);
             if (criterionSell) {
               const { balanceFree: quantityAsset } = await getBalance(
                 client,

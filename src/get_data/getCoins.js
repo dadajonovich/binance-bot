@@ -2,8 +2,8 @@ const getCoins =
   (
     curryGetCandles = (f) => f,
     getPrices = (f) => f,
-    efficiencyRatio = (f) => f,
-    keltner = (f) => f
+    getKAMA = (f) => f,
+    getATR = (f) => f
   ) =>
   async (pairs = []) => {
     try {
@@ -23,21 +23,20 @@ const getCoins =
           });
           const prices = getPrices(candles);
           const { closePrices, highPrice, lowPrice } = prices;
-          const er = efficiencyRatio(closePrices, 20);
-          const { keltnerBands: kelt, atr } = keltner(
+          const { kama, filterKama } = getKAMA(closePrices, 10, 2, 30);
+          const { atr, filterAtr } = getATR(
             closePrices,
             highPrice,
             lowPrice,
-            20,
-            2
+            10
           );
 
           return {
             pair,
-            candles,
-            er,
-            kelt,
+            kama,
+            filterKama,
             atr,
+            filterAtr,
           };
         })
       );
