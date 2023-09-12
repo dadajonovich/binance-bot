@@ -12,36 +12,23 @@ const buySignalKaufman = (ama, filter) => {
   return false;
 };
 
-// const buySignalKaufman = (ama, filter) => {
-//   let criterionBuy = false;
-//   const betweenPeriods = ama.at(-2) - ama.at(-3);
+const filterVolatility = (atr, bands) => {
+  const currentATR = atr.at(-2);
+  const [secondUpperLine, secondMiddleLine, secondLowerLine] = bands.at(-2);
 
-//   if (betweenPeriods > filter.at(-2) * 1) {
-//     criterionBuy = true;
-//   }
-
-//   return criterionBuy;
-// };
-
-const volatilityFilter = (atr, filter) => {
-  let criterionVolatility = false;
-  const betweenPeriods = atr.at(-2) - atr.at(-3);
-
-  if (betweenPeriods < filter.at(-2) * 1) {
-    criterionVolatility = true;
+  if (currentATR < secondUpperLine) {
+    return true;
   }
-
-  return criterionVolatility;
+  return false;
 };
 
 const filterCoins = (coins) => {
   const filteredCoins = coins.filter(
     (coin) =>
-      buySignalKaufman(coin.kama, coin.filterKama) &&
-      volatilityFilter(coin.atr, coin.filterAtr)
+      buySignalKaufman(coin.kama, coin.filterKAMA) &&
+      filterVolatility(coin.atr, coin.bandsATR)
   );
   console.log(filteredCoins);
-
   return filteredCoins.slice(0, 1);
 };
 

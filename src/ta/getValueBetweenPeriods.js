@@ -1,4 +1,4 @@
-const calculateValueBetweenPeriods = (array) => {
+const getValueBetweenPeriods = (array) => {
   const valueDifferences = [];
   for (let i = 1; i < array.length; i++) {
     const difference = array[i] - array[i - 1];
@@ -9,4 +9,4 @@ const calculateValueBetweenPeriods = (array) => {
   return valueDifferences;
 };
 
-export default calculateValueBetweenPeriods;
+export default getValueBetweenPeriods;

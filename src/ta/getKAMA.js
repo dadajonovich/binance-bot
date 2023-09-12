@@ -1,12 +1,12 @@
 import kaufmanMovingAverage from './kaufmanMovingAverage.js';
-import calculateValueBetweenPeriods from './calculateValueBetweenPeriods.js';
-import calculateFilter from './calculatelteFilter.js';
+import getValueBetweenPeriods from './getValueBetweenPeriods.js';
+import std from './stdArray.js';
 
 const getKAMA = (closePrices, length1 = 10, length2 = 2, length3 = 30) => {
   const kama = kaufmanMovingAverage(closePrices, length1, length2, length3);
-  const valueBetweenPeriods = calculateValueBetweenPeriods(kama);
-  const filterKama = calculateFilter(valueBetweenPeriods, 20);
-  return { kama, filterKama };
+  const valueBetweenPeriods = getValueBetweenPeriods(kama);
+  const filterKAMA = std(valueBetweenPeriods, 20);
+  return { kama, filterKAMA };
 };
 
 export default getKAMA;
@@ -23,5 +23,6 @@ export default getKAMA;
 //   6534.031595997395, 6534.315542290985,
 // ];
 
-// const diff = calculateValueBetweenPeriods(arr);
-// const stdFilter = calculateFilter(diff);
+// const diff = getValueBetweenPeriods(arr);
+// const stdFilter = std(diff, 10);
+// console.log(stdFilter);

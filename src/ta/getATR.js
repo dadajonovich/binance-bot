@@ -1,4 +1,4 @@
-const averageTrueRange = (closePrices, highPrice, lowPrice, length = 14) => {
+const getATR = (closePrices, highPrice, lowPrice, length = 14) => {
   const atr = [highPrice[0] - lowPrice[0]];
 
   for (let i = 1; i < closePrices.length; i++) {
@@ -16,4 +16,4 @@ const averageTrueRange = (closePrices, highPrice, lowPrice, length = 14) => {
   return atr;
 };
 
-export default averageTrueRange;
+export default getATR;

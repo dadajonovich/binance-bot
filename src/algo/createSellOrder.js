@@ -27,33 +27,22 @@ const createSellOrder =
         }
         if (
           ama.at(-2) < ama.at(-3) &&
-          exthigh - ama.at(-2) > filter.at(-2) * 0.1
+          exthigh - ama.at(-2) > filter.at(-2) * 1
         ) {
           return true;
         }
         return false;
       };
 
-      // const sellSignalKaufman = (ama, filter) => {
-      //   let criterionSell = false;
-      //   const betweenPeriods = ama.at(-3) - ama.at(-2);
+      const filterVolatility = (atr, bands) => {
+        const currentATR = atr.at(-2);
+        const [secondUpperLine, secondMiddleLine, secondLowerLine] =
+          bands.at(-2);
 
-      //   if (betweenPeriods > filter.at(-2) * 0.1) {
-      //     criterionSell = true;
-      //   }
-
-      //   return criterionSell;
-      // };
-
-      const volatilityFilter = (atr, filter) => {
-        let criterionVolatility = false;
-        const betweenPeriods = atr.at(-2) - atr.at(-3);
-
-        if (betweenPeriods > filter.at(-2) * 1) {
-          criterionVolatility = true;
+        if (currentATR < secondUpperLine) {
+          return true;
         }
-
-        return criterionVolatility;
+        return false;
       };
 
       await new Promise((resolve) => {
@@ -65,8 +54,8 @@ const createSellOrder =
             const [coin] = await curryGetCoins([pair]);
 
             const criterionSell =
-              sellSignalKaufman(coin.kama, coin.filterKama) ||
-              volatilityFilter(coin.atr, coin.filterAtr);
+              sellSignalKaufman(coin.kama, coin.filterKAMA) ||
+              filterVolatility(coin.atr, coin.bandsATR);
 
             console.log(criterionSell);
             if (criterionSell) {

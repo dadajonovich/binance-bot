@@ -3,7 +3,8 @@ const getCoins =
     curryGetCandles = (f) => f,
     getPrices = (f) => f,
     getKAMA = (f) => f,
-    getATR = (f) => f
+    getATR = (f) => f,
+    getBollinger = (f) => f
   ) =>
   async (pairs = []) => {
     try {
@@ -23,20 +24,16 @@ const getCoins =
           });
           const prices = getPrices(candles);
           const { closePrices, highPrice, lowPrice } = prices;
-          const { kama, filterKama } = getKAMA(closePrices, 10, 2, 30);
-          const { atr, filterAtr } = getATR(
-            closePrices,
-            highPrice,
-            lowPrice,
-            10
-          );
+          const { kama, filterKAMA } = getKAMA(closePrices, 10, 2, 30);
+          const atr = getATR(closePrices, highPrice, lowPrice, 10);
+          const bandsATR = getBollinger(atr, 20, 1);
 
           return {
             pair,
             kama,
-            filterKama,
+            filterKAMA,
             atr,
-            filterAtr,
+            bandsATR,
           };
         })
       );

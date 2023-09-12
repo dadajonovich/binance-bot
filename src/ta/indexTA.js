@@ -1,4 +1,6 @@
-import getKAMA from './getKama.js';
-import getATR from './getAtr.js';
+import getKAMA from './getKAMA.js';
+import getATR from './getATR.js';
+import getBollinger from './getBollinger.js';
+import getEMA from './getEMA.js';
 
-export { getKAMA, getATR };
+export { getKAMA, getATR, getBollinger, getEMA };
