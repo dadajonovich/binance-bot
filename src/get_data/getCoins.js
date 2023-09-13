@@ -4,7 +4,7 @@ const getCoins =
     getPrices = (f) => f,
     getKAMA = (f) => f,
     getATR = (f) => f,
-    getBollinger = (f) => f
+    getFilter = (f) => f
   ) =>
   async (pairs = []) => {
     try {
@@ -24,16 +24,17 @@ const getCoins =
           });
           const prices = getPrices(candles);
           const { closePrices, highPrice, lowPrice } = prices;
-          const { kama, filterKAMA } = getKAMA(closePrices, 10, 2, 30);
+          const kama = getKAMA(closePrices, 10, 2, 30);
           const atr = getATR(closePrices, highPrice, lowPrice, 10);
-          const bandsATR = getBollinger(atr, 20, 1);
+          const filterKAMA = getFilter(kama);
+          const filterATR = getFilter(atr);
 
           return {
             pair,
             kama,
-            filterKAMA,
             atr,
-            bandsATR,
+            filterKAMA,
+            filterATR,
           };
         })
       );

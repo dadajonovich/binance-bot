@@ -5,6 +5,13 @@ const getPrice = (candles) => {
   const highPrice = candles.map((candle) => parseFloat(candle.high));
   const lowPrice = candles.map((candle) => parseFloat(candle.low));
   // const volume = candles.map((candle) => parseFloat(candle.volume));
+  // const typicalPrices = candles.map(
+  //   (candle) =>
+  //     (parseFloat(candle.high) +
+  //       parseFloat(candle.low) +
+  //       parseFloat(candle.close)) /
+  //     3
+  // );
 
   return {
     closePrices,
@@ -13,6 +20,7 @@ const getPrice = (candles) => {
     highPrice,
     lowPrice,
     // volume,
+    // typicalPrices,
   };
 };
 

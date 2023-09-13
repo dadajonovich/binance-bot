@@ -1,28 +1,36 @@
-import kaufmanMovingAverage from './kaufmanMovingAverage.js';
-import getValueBetweenPeriods from './getValueBetweenPeriods.js';
-import std from './stdArray.js';
+const getKAMA = (data, len1 = 10, len2 = 2, len3 = 30) => {
+  const fasted = 2 / (len2 + 1);
+  const slowest = 2 / (len3 + 1);
+  const kama = data.slice(0, len1);
 
-const getKAMA = (closePrices, length1 = 10, length2 = 2, length3 = 30) => {
-  const kama = kaufmanMovingAverage(closePrices, length1, length2, length3);
-  const valueBetweenPeriods = getValueBetweenPeriods(kama);
-  const filterKAMA = std(valueBetweenPeriods, 20);
-  return { kama, filterKAMA };
+  for (let i = len1; i < data.length; i++) {
+    let volatility = 0;
+    const direction = Math.abs(data[i] - data[i - len1]);
+    // console.log('One tick');
+    // console.log(data[i], data[i - len1], direction);
+    for (let a = 0; a < len1; a++) {
+      volatility += Math.abs(data[i - a] - data[i - a - 1]);
+      // console.log(data[i - a], data[i - a - 1], volatility);
+    }
+
+    const er = direction / volatility;
+    // console.log(er);
+    const smooth = (er * (fasted - slowest) + slowest) ** 2;
+    // const smooth = er * (fasted - slowest) + slowest;
+    // console.log(`${kama.at(-1)} + ${smooth} * (${data[i]} - ${kama.at(-1)})`);
+    kama.push(kama.at(-1) + smooth * (data[i] - kama.at(-1)));
+    // kama.push(data[i] * smooth + kama.at(-1) * (1 - smooth));
+  }
+  return kama;
 };
 
 export default getKAMA;
 
-// const arr = [
-//   6063, 6041, 6065, 6078, 6114, 6121, 6106, 6101, 6166, 6169,
-//   6173.8633953257995, 6188.834223220775, 6188.430925674707, 6192.414842335993,
-//   6191.980911048277, 6193.220691200195, 6196.358249615615, 6210.195220657128,
-//   6228.4229321449675, 6248.600756698224, 6282.719402924608, 6296.908873143119,
-//   6318.935240872848, 6347.362412909954, 6376.271518891558, 6431.390105480862,
-//   6470.440626721937, 6468.065992324839, 6472.673287116851, 6487.965105840851,
-//   6492.943657392142, 6500.980186010626, 6512.250934708962, 6531.7419807408605,
-//   6531.862378839739, 6531.972574950088, 6532.161746689747, 6534.30701550104,
-//   6534.031595997395, 6534.315542290985,
+// const array = [
+//   6063, 6041, 6065, 6078, 6114, 6121, 6106, 6101, 6166, 6169, 6195, 6222, 6186,
+//   6214, 6185, 6209, 6221, 6278, 6326, 6347, 6420, 6394, 6400, 6446, 6442, 6543,
+//   6550, 6442, 6516, 6597, 6568, 6580, 6610, 6682, 6537, 6552, 6563, 6573, 6498,
+//   6593,
 // ];
 
-// const diff = getValueBetweenPeriods(arr);
-// const stdFilter = std(diff, 10);
-// console.log(stdFilter);
+// console.log(getKAMA(array));

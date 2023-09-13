@@ -34,20 +34,18 @@ const createSellOrder =
         return false;
       };
 
-      const filterVolatility = (atr, bands) => {
-        const currentATR = atr.at(-2);
-        const [secondUpperLine, secondMiddleLine, secondLowerLine] =
-          bands.at(-2);
+      const volatilityFilter = (atr, filter) => {
+        const betweenPeriods = atr.at(-2) - atr.at(-3);
 
-        if (currentATR < secondUpperLine) {
+        if (betweenPeriods > filter.at(-2) * 1) {
           return true;
         }
+
         return false;
       };
 
       await new Promise((resolve) => {
         const checkSellCriterionInterval = new CronJob(
-          // '0 5 */1 * * *',
           '0 5 0 * * *',
           async () => {
             console.log('tick checkSellCriterionInterval...');
@@ -55,7 +53,7 @@ const createSellOrder =
 
             const criterionSell =
               sellSignalKaufman(coin.kama, coin.filterKAMA) ||
-              filterVolatility(coin.atr, coin.bandsATR);
+              volatilityFilter(coin.atr, coin.filterATR);
 
             console.log(criterionSell);
             if (criterionSell) {
@@ -76,7 +74,10 @@ const createSellOrder =
           },
           null,
           null,
-          'UTC'
+          null,
+          null,
+          null,
+          0
         );
         checkSellCriterionInterval.start();
       });

@@ -12,13 +12,13 @@ const buySignalKaufman = (ama, filter) => {
   return false;
 };
 
-const filterVolatility = (atr, bands) => {
-  const currentATR = atr.at(-2);
-  const [secondUpperLine, secondMiddleLine, secondLowerLine] = bands.at(-2);
+const volatilityFilter = (atr, filter) => {
+  const betweenPeriods = atr.at(-2) - atr.at(-3);
 
-  if (currentATR < secondUpperLine) {
+  if (betweenPeriods < filter.at(-2) * 1) {
     return true;
   }
+
   return false;
 };
 
@@ -26,7 +26,7 @@ const filterCoins = (coins) => {
   const filteredCoins = coins.filter(
     (coin) =>
       buySignalKaufman(coin.kama, coin.filterKAMA) &&
-      filterVolatility(coin.atr, coin.bandsATR)
+      volatilityFilter(coin.atr, coin.filterATR)
   );
   console.log(filteredCoins);
   return filteredCoins.slice(0, 1);
