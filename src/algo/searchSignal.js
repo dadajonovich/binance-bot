@@ -4,7 +4,7 @@ const searchSignal =
   (
     curryGetCoins = (f) => f,
     filterCoins = (f) => f,
-    curryTradeAlgo = (f) => f
+    curryTradeAlgo = (f) => f,
   ) =>
   async (topPairs = []) => {
     try {
@@ -12,7 +12,7 @@ const searchSignal =
       console.log('start searchSignal');
       await new Promise((resolve) => {
         const searchCoins = new CronJob(
-          '0 5 0 * * *',
+          '0 15 0 * * *',
           async () => {
             console.log('tick searchCoins');
             const coins = await curryGetCoins(topPairs);
@@ -26,8 +26,9 @@ const searchSignal =
           null,
           null,
           null,
-          true,
-          0
+          // true,
+          null,
+          0,
         );
         searchCoins.start();
       });

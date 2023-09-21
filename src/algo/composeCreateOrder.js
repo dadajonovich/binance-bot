@@ -8,7 +8,7 @@ const composeCreateOrder =
         stepSize,
         tickSize,
         quantityAsset,
-        pair
+        pair,
       );
 
       const quantityForOrder = buyOrSell === 'BUY' ? quantityBuy : quantitySell;
@@ -19,7 +19,7 @@ const composeCreateOrder =
         buyOrSell,
         'LIMIT',
         quantityForOrder,
-        roundedPrice
+        roundedPrice,
       );
     } catch (err) {
       console.error('Error in composeCreateSellOrder', err);

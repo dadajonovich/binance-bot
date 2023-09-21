@@ -44,7 +44,7 @@ const sendMessage = (chatId) => async (message) => {
   try {
     await bot.sendMessage(
       chatId,
-      message !== '' ? message : 'В Багдаде все спокойно...'
+      message !== '' ? message : 'В Багдаде все спокойно...',
     );
   } catch (err) {
     console.error('Error in sendMessage', err);
@@ -61,12 +61,12 @@ const curryGetCoins = getCoins(
   getPrice,
   getKAMA,
   getATR,
-  getFilter
+  getFilter,
 );
 const curryComposeCreateOrder = composeCreateOrder(
   client,
   getValuesForOrder,
-  createOrder
+  createOrder,
 );
 
 const curryCreateBuyOrder = createBuyOrder(
@@ -76,7 +76,7 @@ const curryCreateBuyOrder = createBuyOrder(
   cancelOrders,
   curryComposeCreateOrder,
   getBalance,
-  currySendMessage
+  currySendMessage,
 );
 
 const curryCreateSellOrder = createSellOrder(
@@ -87,7 +87,7 @@ const curryCreateSellOrder = createSellOrder(
   cancelOrders,
   curryComposeCreateOrder,
   getBalance,
-  currySendMessage
+  currySendMessage,
 );
 
 const curryTradeAlgo = tradeAlgo(
@@ -97,13 +97,13 @@ const curryTradeAlgo = tradeAlgo(
   getOpenOrders,
   orderExist,
   curryCreateBuyOrder,
-  curryCreateSellOrder
+  curryCreateSellOrder,
 );
 
 const currySearchSignal = searchSignal(
   curryGetCoins,
   filterCoins,
-  curryTradeAlgo
+  curryTradeAlgo,
 );
 
 bot.on('message', async (msg) => {
@@ -119,7 +119,7 @@ bot.on('message', async (msg) => {
       const { balanceFree: currentBalace } = await getBalance(client, 'USDT');
       const diffBalance = getDifferenceBalanceMessage(
         prevBalance,
-        currentBalace
+        currentBalace,
       );
       await currySendMessage(diffBalance);
       console.log('restart tradeAlgo');

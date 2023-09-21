@@ -4,7 +4,7 @@ const createOrder = async (
   side,
   type,
   quantity,
-  price = null
+  price = null,
 ) => {
   try {
     const orderParams = {

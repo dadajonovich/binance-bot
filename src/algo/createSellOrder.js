@@ -9,7 +9,7 @@ const createSellOrder =
     cancelOrders = (f) => f,
     curryComposeCreateOrder = (f) => f,
     getBalance = (f) => f,
-    currySendMessage = (f) => f
+    currySendMessage = (f) => f,
   ) =>
   async (pair, asset, stepSize, tickSize) => {
     try {
@@ -27,7 +27,7 @@ const createSellOrder =
         }
         if (
           ama.at(-2) < ama.at(-3) &&
-          exthigh - ama.at(-2) > filter.at(-2) * 1
+          exthigh - ama.at(-2) > filter.at(-2) * 0.1
         ) {
           return true;
         }
@@ -59,14 +59,14 @@ const createSellOrder =
             if (criterionSell) {
               const { balanceFree: quantityAsset } = await getBalance(
                 client,
-                asset
+                asset,
               );
               await curryComposeCreateOrder(
                 pair,
                 quantityAsset,
                 stepSize,
                 tickSize,
-                'SELL'
+                'SELL',
               );
               checkSellCriterionInterval.stop();
               resolve();
@@ -77,7 +77,7 @@ const createSellOrder =
           null,
           null,
           null,
-          0
+          0,
         );
         checkSellCriterionInterval.start();
       });
@@ -88,7 +88,7 @@ const createSellOrder =
           const { sellOrderExists: sellMark } = await orderExist(
             client,
             pair,
-            getOpenOrders
+            getOpenOrders,
           );
           count += 1;
           if (!sellMark) {
@@ -100,14 +100,14 @@ const createSellOrder =
             await cancelOrders(client, orders);
             const { balanceFree: newQuantityAsset } = await getBalance(
               client,
-              asset
+              asset,
             );
             await curryComposeCreateOrder(
               pair,
               newQuantityAsset,
               stepSize,
               tickSize,
-              'SELL'
+              'SELL',
             );
             count = 0;
             setTimeout(checkSellInterval, 0.5 * 60 * 1000);

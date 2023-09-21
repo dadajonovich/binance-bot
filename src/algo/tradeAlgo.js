@@ -6,7 +6,7 @@ const tradeAlgo =
     getOpenOrders = (f) => f,
     orderExist = (f) => f,
     curryCreateBuyOrder = (f) => f,
-    curryCreateSellOrder = (f) => f
+    curryCreateSellOrder = (f) => f,
   ) =>
   async (coins) => {
     try {
@@ -18,13 +18,13 @@ const tradeAlgo =
           const { buyOrderExists, sellOrderExists } = await orderExist(
             client,
             pair,
-            getOpenOrders
+            getOpenOrders,
           );
           let isBuyOrder = false;
           let isSellOrder = false;
           const { balanceFree: quantityUSDT } = await getBalance(
             client,
-            'USDT'
+            'USDT',
           );
           let { balanceFree: quantityAsset } = await getBalance(client, asset);
           const { stepSize, tickSize } = await getLotParams(client, pair);
@@ -39,7 +39,7 @@ const tradeAlgo =
               pair,
               stepSize,
               tickSize,
-              quantityUSDT
+              quantityUSDT,
             );
 
             if (!isBuyOrder) throw new Error(`isBuyOrder - ${isBuyOrder}`);
@@ -50,7 +50,7 @@ const tradeAlgo =
             if (!isSellOrder) throw new Error(`isSellOrder - ${isSellOrder}`);
           }
           return isSellOrder;
-        })
+        }),
       );
       console.log(resultTradeAlgo);
       return resultTradeAlgo;

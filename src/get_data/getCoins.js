@@ -4,7 +4,7 @@ const getCoins =
     getPrices = (f) => f,
     getKAMA = (f) => f,
     getATR = (f) => f,
-    getFilter = (f) => f
+    getFilter = (f) => f,
   ) =>
   async (pairs = []) => {
     try {
@@ -36,7 +36,7 @@ const getCoins =
             filterKAMA,
             filterATR,
           };
-        })
+        }),
       );
       // console.log(coins[0]);
       return coins;

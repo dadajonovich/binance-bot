@@ -9,7 +9,7 @@ const getOrdersMessage = (orders) => {
 - status: ${order.status},
 - type: ${order.type},
 - side: ${order.side}
-`
+`,
     )
     .join('');
   return message;

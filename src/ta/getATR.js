@@ -5,7 +5,7 @@ const getATR = (closePrices, highPrice, lowPrice, length = 14) => {
     const tr = Math.max(
       highPrice[i] - lowPrice[i],
       Math.abs(highPrice[i] - closePrices[i - 1]),
-      Math.abs(lowPrice[i] - closePrices[i - 1])
+      Math.abs(lowPrice[i] - closePrices[i - 1]),
     );
 
     const atrValue = (atr[i - 1] * (length - 1) + tr) / length;

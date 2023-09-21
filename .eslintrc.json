@@ -1,11 +1,16 @@
 {
   "env": {},
-  "extends": ["airbnb-base", "prettier"],
+  "extends": [
+    "airbnb",
+    "plugin:import/recommended",
+    "plugin:prettier/recommended"
+  ],
   "overrides": [],
   "parserOptions": {
     "ecmaVersion": "latest"
   },
   "rules": {
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "no-plusplus": "off",
     // "no-console": "off",
     "import/extensions": [

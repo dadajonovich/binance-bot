@@ -6,7 +6,7 @@ const createBuyOrder =
     cancelOrders = (f) => f,
     curryComposeCreateOrder = (f) => f,
     getBalance = (f) => f,
-    currySendMessage = (f) => f
+    currySendMessage = (f) => f,
   ) =>
   async (pair, stepSize, tickSize, quantityUSDT) => {
     try {
@@ -20,7 +20,7 @@ const createBuyOrder =
         quantityUSDT,
         stepSize,
         tickSize,
-        'BUY'
+        'BUY',
       );
 
       await new Promise((resolve) => {
@@ -29,7 +29,7 @@ const createBuyOrder =
           const { buyOrderExists: buyMark } = await orderExist(
             client,
             pair,
-            getOpenOrders
+            getOpenOrders,
           );
           count += 1;
           if (!buyMark) {
@@ -41,14 +41,14 @@ const createBuyOrder =
             await cancelOrders(client, orders);
             const { balanceFree: newQuantityUSDT } = await getBalance(
               client,
-              'USDT'
+              'USDT',
             );
             await curryComposeCreateOrder(
               pair,
               newQuantityUSDT,
               stepSize,
               tickSize,
-              'BUY'
+              'BUY',
             );
             count = 0;
             setTimeout(checkBuyInterval, 0.5 * 60 * 1000);

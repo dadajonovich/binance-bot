@@ -7,7 +7,7 @@ const getValuesForOrder = (
   stepSize,
   tickSize,
   balanceFree,
-  pair
+  pair,
 ) => {
   try {
     console.log(
@@ -15,7 +15,7 @@ const getValuesForOrder = (
       typeof stepSize,
       typeof tickSize,
       typeof balanceFree,
-      typeof pair
+      typeof pair,
     );
     const decimalPlacesQuantity = decimalPlace(stepSize);
 
@@ -25,7 +25,7 @@ const getValuesForOrder = (
 
     const quantityBuy = toFixedHard(
       balanceFree / roundedPrice,
-      decimalPlacesQuantity
+      decimalPlacesQuantity,
     );
     const quantitySell = toFixedHard(balanceFree, decimalPlacesQuantity);
     console.log(
@@ -36,7 +36,7 @@ const getValuesForOrder = (
       stepSize: ${stepSize}, 
       quantityBuy: ${quantityBuy}, 
       quantitySell: ${quantitySell}
-      `
+      `,
     );
     return { roundedPrice, quantityBuy, quantitySell };
   } catch (err) {

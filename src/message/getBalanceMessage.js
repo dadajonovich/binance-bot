@@ -5,7 +5,7 @@ const getBalanceMessage = (coins = []) => {
       (coin) => `\nCoin: ${coin.asset}
 - Free balance: ${coin.balanceFree}
 - Locked balance: ${coin.balanceLocked}
-  `
+  `,
     )
     .join('');
   return message;

@@ -6,7 +6,7 @@ const getKeltner = (
   highPrice,
   lowPrice,
   length = 20,
-  devi = 2
+  devi = 2,
 ) => {
   const atr = getATR(closePrices, highPrice, lowPrice, length);
   const emaValues = getEMA(closePrices, length);

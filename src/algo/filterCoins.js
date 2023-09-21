@@ -26,7 +26,7 @@ const filterCoins = (coins) => {
   const filteredCoins = coins.filter(
     (coin) =>
       buySignalKaufman(coin.kama, coin.filterKAMA) &&
-      volatilityFilter(coin.atr, coin.filterATR)
+      volatilityFilter(coin.atr, coin.filterATR),
   );
   console.log(filteredCoins);
   return filteredCoins.slice(0, 1);
